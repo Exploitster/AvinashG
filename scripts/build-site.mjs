@@ -62,7 +62,7 @@ const DESCRIPTION =
   "agentic products, and the business case underneath them.";
 
 // Canonical home of the site. Everything that reports a URL points here.
-const SITE_URL = "https://expoitster.github.io/AvinashG/";
+const SITE_URL = "https://exploitster.github.io/AvinashG/";
 
 const page = `<!doctype html>
 <html lang="en">
