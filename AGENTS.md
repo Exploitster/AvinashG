@@ -30,7 +30,7 @@ at a 980px fallback width.
 | `design/avinash-console.html` | the site — edit this |
 | `docs/index.html` | generated output, served by GitHub Pages |
 | `scripts/build-site.mjs` | wraps the fragment into a standalone page |
-| `scripts/qa-responsive.cjs` | device-matrix audit, 10 viewports x 14 routes |
+| `scripts/qa-responsive.cjs` | device-matrix audit, 13 viewports x 14 routes |
 | `rag/` | the assistant's backend — see `rag/README.md` |
 | `assets/` | source documents not published by the site |
 

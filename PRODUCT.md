@@ -85,21 +85,28 @@ Chat360?") can be asked instead of hunted for.
 - Name in full: Avinashdev Ravikumar Garudapalli. Shortened to "Avinash" in the
   masthead and the desk screen.
 - "a Metacognist & Philomath" — the line on the monitor in the opening scene.
-- Black ground (`#000000`) with a single acid-lime accent (`#9AEE30`), and
-  full-bleed lime sections that swap the whole viewport rather than gradating
-  into it. The palette is sampled from a reference the owner supplied, not
-  chosen in the abstract.
+- Black ground (`#000000`) with a single soft-mint accent (`#7FCFAB`), and
+  full-bleed mint sections that swap the whole viewport rather than gradating
+  into it. The owner chose mint from four softer greens in September 2026
+  because the earlier acid lime (`#9AEE30`) was fluorescent enough to tire the
+  eye on black; the structure of the palette did not change, only its hue.
 
-  This reverses an earlier decision. The site ran a light paper ground with
-  amber and teal for a while, which itself replaced an original dark console.
-  The light palette was not abandoned because it failed — it was replaced
-  because the owner chose a reference direction and asked for it. Anyone
-  reading this later should know the light theme is recoverable from history
-  (`scripts/relight.mjs` maps one way, `scripts/redark.mjs` the other) rather
-  than assume it was a mistake.
-- Sora for display, IBM Plex Sans for body, IBM Plex Mono for the instrument
-  register: the HUD readouts, section eyebrows and card labels, all tracked out
-  and uppercased. Mono is no longer reserved strictly for measured values.
+  The dark ground itself reverses an earlier decision. The site ran a light
+  paper ground with amber and teal for a while, which itself replaced an
+  original dark console. The light palette was not abandoned because it failed
+  — it was replaced because the owner chose a reference direction and asked for
+  it. Anyone reading this later should know the light theme is recoverable from
+  history (`scripts/relight.mjs` maps one way, `scripts/redark.mjs` the other)
+  rather than assume it was a mistake.
+- Apple's design language for clarity: the system font stack (San Francisco on
+  Apple devices, the platform UI face elsewhere, no web font to fetch), large
+  bold headings, 17px body text, a 12px floor for labels, rounded cards,
+  capsule buttons and a frosted top bar. Former monospace labels are set in the
+  same system face with tabular figures; true monospace is kept only for code
+  the assistant quotes.
+- A voice-wave loader opens the site once per browser session — bars moving
+  like speech, a nod to the Voice AI work — then hands over to the desk intro.
+  A tap, key or scroll skips it, and reduced motion never shows it.
 - The desk-scene opening, with the next section previewed inside the monitor.
 - A technical HUD across the top rail — availability lamp, city and the
   visitor's own local clock, coordinates — plus a vertical label on the right
@@ -113,9 +120,9 @@ Chat360?") can be asked instead of hunted for.
   to the pointer. GSAP with ScrollTrigger drives it, Lenis eases the wheel, and
   every one of them degrades to a static, readable page when the vendored
   scripts are absent or motion is reduced.
-- Material 3 still supplies the shape scale, state layers and easing curves.
-  Its elevation model does not survive on a black ground or a lime field, where
-  the reference uses hard edges instead.
+- Material 3 still supplies the state layers and easing curves; the shape
+  scale is now Apple-rounded. Its elevation model does not survive on a black
+  ground or a mint field, where the design uses flat surfaces instead.
 
 ## Evidence on Hand
 
