@@ -1,7 +1,4 @@
 <title>Avinash Garudapalli</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;450;500;600&display=swap">
 
 <!-- GSAP drives the scroll-linked motion. Pinned to an exact version: this is
      loaded as a plain script, not bundled, so there is nothing to lock a range
@@ -17,31 +14,36 @@
 
 <style>
   :root {
-    /* Black ground with a single acid-lime accent, per the supplied reference.
-       Designed rather than inverted: a straight inversion put the dimmed text
-       at #44484D, unreadable on black and failing AA outright. The surface
-       stack also had to be rebuilt — on paper the panel sat lighter than the
-       ground, and on black it must sit lighter still, which is the opposite
-       relationship, not the same one flipped. */
+    /* Black ground with a single soft-mint accent. The earlier acid lime
+       (#7FCFAB) was fluorescent enough to tire the eye on black, so the accent
+       moved to a lower-chroma mint and the neutrals lost their yellow-green
+       bias to match it. Every text token still clears WCAG AA on --ground. */
     --ground: #000000;
-    --ground-2: #0A0C09;
-    --panel: #0D100C;
-    --panel-2: #141812;
-    --rule: #22271F;
-    --rule-2: #39412F;
-    --paper: #FFFFFF;
-    --dim: #A9B0A3;
-    --dim-2: #8D9487;
-    --signal: #9AEE30;
-    --signal-deep: #6FB01F;
-    --data: #C8FF7A;
-    --data-deep: #7FA83F;
-    --good: #9AEE30;
+    --ground-2: #0A0C0B;
+    --panel: #0E1110;
+    --panel-2: #151917;
+    --rule: #232927;
+    --rule-2: #38413D;
+    --paper: #F5F5F7;
+    --dim: #A9B1AD;
+    --dim-2: #8E9793;
+    --signal: #7FCFAB;
+    --signal-deep: #4E9A7A;
+    --data: #A9E3C8;
+    --data-deep: #5F9E83;
+    --good: #7FCFAB;
+    /* the accent as an RGB triple, for tints: rgba(var(--signal-rgb), .1) */
+    --signal-rgb: 127, 207, 171;
+    --data-rgb: 169, 227, 200;
 
-    --f-display: "Sora", "Segoe UI", system-ui, sans-serif;
-    --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    /* Apple's own system faces: San Francisco on Apple devices, the
+       platform UI face (Segoe, Roboto) elsewhere. No web font to fetch. */
+    --f-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --f-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     /* mono is reserved for measured values — never for decorative labels */
-    --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --f-mono: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* true monospace, kept only for code the assistant quotes */
+    --f-code: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace;
 
     --topbar-h: 64px;
     --statusbar-h: 0px;
@@ -66,10 +68,10 @@
     --md-e3: 0 4px 8px 3px rgba(0, 0, 0,.08), 0 1px 3px rgba(0, 0, 0,.12);
 
     /* shape scale */
-    --md-r-xs: 4px;
-    --md-r-s: 8px;
-    --md-r-m: 12px;
-    --md-r-l: 16px;
+    --md-r-xs: 8px;
+    --md-r-s: 12px;
+    --md-r-m: 18px;
+    --md-r-l: 22px;
 
     /* state layer opacities */
     --md-hover: .08;
@@ -87,9 +89,13 @@
     background: var(--ground);
     color: var(--paper);
     font-family: var(--f-body);
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.58;
+    letter-spacing: -.011em;
     -webkit-font-smoothing: antialiased;
+    /* labels that were monospace are now SF Text; tabular figures keep
+       every number aligned the way the monospace face used to */
+    font-variant-numeric: tabular-nums;
     padding-bottom: var(--statusbar-h);
     overflow-x: hidden;
   }
@@ -110,7 +116,7 @@
 
   /* ---------- top bar ---------- */
   /* ---------- bento stat grid ----------
-     The reference's lime tile field: a coarse grid of notched cards, each
+     The reference's mint tile field: a coarse grid of rounded cards, each
      carrying one small uppercase label and one large figure or mark, with
      empty cells left empty so the field breathes. Sizes vary by tile rather
      than every cell being equal, which is what stops it reading as a table. */
@@ -127,13 +133,12 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* the folder-tab cut, top right */
-    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+    border-radius: var(--md-r-m);
   }
   .bento-cell.wide { grid-column: span 2; }
   .bento-label {
     font-family: var(--f-mono);
-    font-size: 9.5px;
+    font-size: 12px;
     letter-spacing: .15em;
     text-transform: uppercase;
     text-align: right;
@@ -148,7 +153,7 @@
   }
   .bento-note {
     font-family: var(--f-mono);
-    font-size: 10.5px;
+    font-size: 12px;
     line-height: 1.5;
     color: var(--dim);
     margin-top: 6px;
@@ -191,7 +196,7 @@
     align-items: center;
   }
   /* A banded section pins as a whole, so its usual vertical rhythm would add
-     dead lime above and below the track for the entire scrub. */
+     dead mint above and below the track for the entire scrub. */
   .band:has(.hs-viewport) { padding-top: 0; padding-bottom: 0; }
   .hs-track {
     display: flex;
@@ -240,7 +245,7 @@
     background: #06120A;
     color: var(--signal);
     font-family: var(--f-mono);
-    font-size: 9.5px;
+    font-size: 12px;
     letter-spacing: .14em;
     text-transform: uppercase;
     padding: 5px 9px;
@@ -256,7 +261,7 @@
     letter-spacing: .1em;
     text-transform: uppercase;
   }
-  .hs-visit { font-size: 10px; opacity: .72; white-space: nowrap; }
+  .hs-visit { font-size: 12px; opacity: .72; white-space: nowrap; }
   /* Connector between consecutive cards, matching the reference's thin
      right-angle linework. Drawn on the card so it travels with the track. */
   .hs-card::after {
@@ -280,9 +285,9 @@
     .hs-card:nth-child(odd), .hs-card:nth-child(even) { transform: none; }
   }
 
-  /* ---------- lime band ----------
+  /* ---------- mint band ----------
      The reference's structural signature: the ground does not gradate from
-     black to lime, it swaps outright, edge to edge, and the type inverts with
+     black to mint, it swaps outright, edge to edge, and the type inverts with
      it. Full-bleed out of the centred container via the 50vw margin trick,
      because the section sits inside a max-width wrapper and the colour must
      not.
@@ -302,24 +307,26 @@
        benefit of its children, and a custom property redefined on an element
        applies to that element's own declarations too — so var(--signal) here
        resolved to the inverted near-black and the band rendered dark. */
-    background: #9AEE30;
+    background: #7FCFAB;
 
-    --ground: #9AEE30;
-    --ground-2: #8FE026;
-    --panel: #93E52B;
-    --panel-2: #8AD91F;
-    --rule: #6FB01F;
-    --rule-2: #5C9418;
-    --paper: #06120A;
-    --dim: #17340E;
-    --dim-2: #1E400F;
-    --signal: #06120A;
-    --signal-deep: #2A5714;
-    --data: #06120A;
-    --data-deep: #3E7A1C;
+    --ground: #7FCFAB;
+    --ground-2: #77C6A2;
+    --panel: #88D4B1;
+    --panel-2: #93D9B9;
+    --rule: #5AA886;
+    --rule-2: #4A9375;
+    --paper: #04150E;
+    --dim: #12382A;
+    --dim-2: #184331;
+    --signal: #04150E;
+    --signal-deep: #1E5640;
+    --data: #04150E;
+    --data-deep: #2A6A50;
+    --signal-rgb: 4, 21, 14;
+    --data-rgb: 4, 21, 14;
     color: var(--paper);
   }
-  /* Elevation is a light-on-dark idea. On the lime field the reference uses
+  /* Elevation is a light-on-dark idea. On the mint field the reference uses
      hard edges, so the shadow tokens flatten rather than tint. */
   .band {
     --md-e1: none;
@@ -328,13 +335,11 @@
   }
   .band a { color: var(--paper); }
 
-  /* A notched corner, the folder-tab cut on the reference's cards. Pure clip
-     path so it costs nothing and scales with the box. */
-  .notch {
-    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
-  }
-  .notch-l {
-    clip-path: polygon(22px 0, 100% 0, 100% 100%, 0 100%, 0 22px);
+  /* Rounded, Apple-style: the notched folder-tab cut read as the old
+     technical aesthetic. The class names stay so markup is untouched. */
+  .notch, .notch-l {
+    border-radius: var(--md-r-m);
+    overflow: hidden;
   }
 
   /* ---------- ambient particle field ----------
@@ -368,7 +373,7 @@
   @media (prefers-reduced-motion: reduce) { #dust { display: none; } }
 
   @media (pointer: coarse) {
-    .topbar { backdrop-filter: none; background: rgba(6, 8, 5, .96); }
+    .topbar { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(0, 0, 0, .94); }
   }
 
   /* ---------- HUD chrome ----------
@@ -383,7 +388,7 @@
     gap: clamp(14px, 3vw, 46px);
     margin-left: clamp(12px, 4vw, 60px);
     font-family: var(--f-mono);
-    font-size: 9.5px;
+    font-size: 12px;
     line-height: 1.45;
     letter-spacing: .13em;
     text-transform: uppercase;
@@ -413,12 +418,12 @@
   .hud-led {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--signal);
-    box-shadow: 0 0 0 3px rgba(154, 238, 48, .16);
+    box-shadow: 0 0 0 3px rgba(var(--signal-rgb), .16);
   }
   body.anim .hud-led { animation: hudPulse 2.4s var(--md-ease) infinite; }
   @keyframes hudPulse {
-    0%, 100% { box-shadow: 0 0 0 3px rgba(154, 238, 48, .16); }
-    50%      { box-shadow: 0 0 0 6px rgba(154, 238, 48, .04); }
+    0%, 100% { box-shadow: 0 0 0 3px rgba(var(--signal-rgb), .16); }
+    50%      { box-shadow: 0 0 0 6px rgba(var(--signal-rgb), .04); }
   }
 
   .edge-rail {
@@ -436,7 +441,7 @@
     /* sideways-rl keeps the glyphs upright-rotated rather than stacked */
     writing-mode: vertical-rl;
     font-family: var(--f-mono);
-    font-size: 9.5px;
+    font-size: 12px;
     letter-spacing: .22em;
     color: #000;
   }
@@ -451,16 +456,16 @@
     align-items: center;
     gap: 24px;
     padding: 0 20px;
-    background: rgba(10, 12, 9,.88);
+    background: rgba(0, 0, 0,.78);
     /* Only where the device is likely to afford it. backdrop-filter repaints
        the blurred strip every frame that content moves beneath it, which on a
        throttled tablet was a measurable share of the dropped frames. A coarse
        pointer is the best proxy available for "touch device, tighter budget";
        the fallback is the same bar at a higher opacity, which reads almost
        identically. */
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
     border-bottom: 1px solid var(--rule);
-    box-shadow: var(--md-e1);
   }
 
   .mark {
@@ -480,7 +485,7 @@
     width: 7px; height: 7px;
     background: var(--signal);
     border-radius: 50%;
-    box-shadow: 0 0 0 3px rgba(154, 238, 48,.14);
+    box-shadow: 0 0 0 3px rgba(var(--signal-rgb), .14);
     animation: pulse 2.6s ease-in-out infinite;
   }
   @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.35 } }
@@ -503,19 +508,19 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    font-family: var(--f-mono);
-    font-size: .74rem;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    color: var(--signal);
+    font-family: var(--f-body);
+    font-size: .9rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: #04150E;
     text-decoration: none;
-    border: 1px solid var(--signal-deep);
-    background: rgba(154, 238, 48,.09);
-    padding: 8px 13px;
+    border: 1px solid var(--signal);
+    background: var(--signal);
+    padding: 8px 18px;
     white-space: nowrap;
     transition: background-color .16s, border-color .16s;
   }
-  .cta-top:hover { background: rgba(154, 238, 48,.16); border-color: var(--signal); }
+  .cta-top:hover { background: var(--data); border-color: var(--data); }
 
   /* ---------- menu drawer (all sizes) ---------- */
   .nav-toggle {
@@ -523,12 +528,14 @@
     align-items: center;
     gap: 9px;
     min-height: 40px;
-    padding: 8px 12px;
-    font-family: var(--f-mono);
-    font-size: .75rem;
+    padding: 8px 14px;
+    font-family: var(--f-body);
+    font-size: .88rem;
+    font-weight: 500;
     color: var(--paper);
-    background: var(--panel);
+    background: var(--panel-2);
     border: 1px solid var(--rule);
+    border-radius: 999px;
     cursor: pointer;
     transition: border-color .16s;
   }
@@ -570,7 +577,7 @@
     padding: 16px 18px;
     border-bottom: 1px solid var(--rule);
   }
-  .drawer-title { font-family: var(--f-mono); font-size: .76rem; color: var(--dim-2); letter-spacing: .05em; }
+  .drawer-title { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); letter-spacing: .05em; }
   .drawer-close {
     width: 40px; height: 40px;
     display: grid; place-items: center;
@@ -586,7 +593,7 @@
   .drawer-group { padding: 14px 18px 4px; }
   .drawer-group-name {
     font-family: var(--f-mono);
-    font-size: .68rem;
+    font-size: .78rem;
     letter-spacing: .09em;
     color: var(--dim-2);
     padding-bottom: 8px;
@@ -601,7 +608,7 @@
     transition: background-color .16s, border-color .16s;
   }
   .drawer-link:hover { background: var(--panel); border-left-color: var(--rule-2); }
-  .drawer-link[aria-current="page"] { border-left-color: var(--signal); background: rgba(154, 238, 48,.07); }
+  .drawer-link[aria-current="page"] { border-left-color: var(--signal); background: rgba(var(--signal-rgb), .07); }
   .drawer-link[aria-current="page"] .dl-name { color: var(--signal); }
   .dl-name { display: block; font-size: .97rem; font-weight: 500; }
   .dl-note { display: block; font-size: .8rem; color: var(--dim-2); margin-top: 3px; line-height: 1.4; }
@@ -618,9 +625,9 @@
     text-decoration: none;
     color: var(--signal);
     border: 1px solid var(--signal-deep);
-    background: rgba(154, 238, 48,.09);
+    background: rgba(var(--signal-rgb), .09);
   }
-  .drawer-cta:hover { background: rgba(154, 238, 48,.16); }
+  .drawer-cta:hover { background: rgba(var(--signal-rgb), .16); }
 
   /* ---------- layout ---------- */
   .wrap {
@@ -639,25 +646,25 @@
   h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
 
   h1 {
-    font-size: clamp(2.2rem, 5vw, 3.6rem);
-    font-weight: 600;
-    line-height: 1.08;
-    letter-spacing: -.03em;
+    font-size: clamp(2.4rem, 6vw, 4.1rem);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -.035em;
   }
   h2 {
-    font-size: clamp(1.7rem, 3.6vw, 2.5rem);
-    font-weight: 600;
-    line-height: 1.14;
-    letter-spacing: -.025em;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -.03em;
   }
-  h3 { font-size: 1.15rem; font-weight: 600; line-height: 1.3; letter-spacing: -.01em; }
+  h3 { font-size: 1.2rem; font-weight: 600; line-height: 1.3; letter-spacing: -.015em; }
 
   p { margin: 0; max-width: var(--measure); }
   .lede {
-    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
     color: var(--dim);
-    line-height: 1.66;
-    font-weight: 300;
+    line-height: 1.5;
+    font-weight: 400;
   }
 
   /* Section head: a number and a rule. The number is real — sections are an
@@ -673,7 +680,7 @@
     color: var(--signal);
     margin-bottom: 18px;
   }
-  .sec-head p { margin-top: 18px; color: var(--dim); font-size: 1.02rem; font-weight: 300; line-height: 1.62; }
+  .sec-head p { margin-top: 18px; color: var(--dim); font-size: 1.02rem; font-weight: 400; line-height: 1.62; }
 
   a { color: var(--data); }
   a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, canvas:focus-visible {
@@ -701,12 +708,40 @@
     border-bottom: 1px solid var(--rule);
   }
   .panel-title { font-family: var(--f-display); font-weight: 600; font-size: 1rem; letter-spacing: .01em; }
-  .panel-note { font-family: var(--f-mono); font-size: .72rem; color: var(--dim-2); line-height: 1.5; }
+  .panel-note { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); line-height: 1.5; }
 
   /* ---------- hero ---------- */
   .hero { padding-top: 34px; padding-bottom: 56px; }
   .hero h1 { max-width: 21ch; }
   .hero .lede { margin-top: 16px; }
+  .hero-kicker {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--signal);
+    margin-bottom: 14px;
+  }
+  .hero-acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .hero-act {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--md-target);
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--paper);
+    background: var(--panel-2);
+    border: 1px solid var(--rule-2);
+    transition: background-color var(--md-short) var(--md-ease), transform var(--md-short) var(--md-ease);
+  }
+  .hero-act:hover { background: var(--panel); border-color: var(--signal-deep); }
+  .hero-act:active { transform: scale(.98); }
+  .hero-act.primary { color: #04150E; background: var(--signal); border-color: var(--signal); }
+  .hero-act.primary:hover { background: var(--data); border-color: var(--data); }
+  .hero-act.quiet { background: transparent; border-color: transparent; color: var(--signal); padding-left: 10px; padding-right: 10px; }
+  .hero-act.quiet:hover { background: rgba(var(--signal-rgb), .08); }
   .hero-meta {
     margin-top: 18px;
     display: flex;
@@ -741,7 +776,7 @@
   .seg:last-child { border-right: 0; }
   .seg span {
     font-family: var(--f-mono);
-    font-size: .68rem;
+    font-size: .78rem;
     color: rgba(255, 255, 255,.86);
     font-weight: 600;
     white-space: nowrap;
@@ -760,7 +795,7 @@
     gap: 7px 14px;
     margin-top: 14px;
   }
-  .budget-legend div { display: flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: .72rem; color: var(--dim); }
+  .budget-legend div { display: flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: .78rem; color: var(--dim); }
   .budget-legend i { width: 10px; height: 10px; flex: none; }
   .budget-legend i.s-net { background: #16191C; }
   .budget-legend i.s-vad { background: #375217; }
@@ -783,7 +818,7 @@
     width: 9px; height: 9px;
     background: var(--signal);
     border-radius: 50%;
-    box-shadow: 0 0 10px 2px rgba(154, 238, 48,.46);
+    box-shadow: 0 0 6px 1px rgba(var(--signal-rgb), .28);
     animation: travel var(--dur, 3s) linear infinite;
   }
   @keyframes travel {
@@ -845,7 +880,7 @@
     transition: border-color .16s, color .16s, background-color .16s;
   }
   .tg:hover { border-color: var(--rule-2); color: var(--paper); }
-  .tg[aria-pressed="true"] { border-color: var(--signal-deep); background: rgba(154, 238, 48,.07); color: var(--paper); }
+  .tg[aria-pressed="true"] { border-color: var(--signal-deep); background: rgba(var(--signal-rgb), .07); color: var(--paper); }
   .tg .led {
     flex: none;
     width: 9px; height: 9px;
@@ -854,15 +889,15 @@
     background: var(--rule-2);
     transition: background-color .2s, box-shadow .2s;
   }
-  .tg[aria-pressed="true"] .led { background: var(--signal); box-shadow: 0 0 8px 1px rgba(154, 238, 48,.5); }
+  .tg[aria-pressed="true"] .led { background: var(--signal); box-shadow: 0 0 5px rgba(var(--signal-rgb), .3); }
   .tg .tg-name { display: block; font-size: .9rem; font-weight: 500; line-height: 1.3; }
-  .tg .tg-delta { display: block; font-family: var(--f-mono); font-size: .74rem; color: var(--dim-2); margin-top: 3px; }
+  .tg .tg-delta { display: block; font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); margin-top: 3px; }
   .tg[aria-pressed="true"] .tg-delta { color: var(--signal); }
 
   .lab-controls { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
   .btn-ghost {
     font-family: var(--f-mono);
-    font-size: .76rem;
+    font-size: .78rem;
     color: var(--dim);
     background: transparent;
     border: 1px solid var(--rule);
@@ -946,12 +981,12 @@
     transition: border-color .2s, background-color .2s;
   }
   .sysnode:hover { border-color: var(--signal); }
-  .sysnode[aria-pressed="true"] { border-color: var(--signal); background: rgba(154, 238, 48,.1); }
+  .sysnode[aria-pressed="true"] { border-color: var(--signal); background: rgba(var(--signal-rgb), .1); }
   .sysnode-name { display: block; font-family: var(--f-display); font-weight: 600; font-size: 1rem; line-height: 1.2; }
-  .sysnode-sub { display: block; font-family: var(--f-mono); font-size: .7rem; color: var(--dim-2); margin-top: 3px; }
+  .sysnode-sub { display: block; font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); margin-top: 3px; }
   .sysnode-n {
     font-family: var(--f-mono);
-    font-size: .72rem;
+    font-size: .78rem;
     color: var(--dim-2);
     border: 1px solid var(--rule);
     padding: 3px 7px;
@@ -970,7 +1005,7 @@
     padding: 10px 14px;
     transition: border-color .2s, color .2s, background-color .2s;
   }
-  .syscap.on { border-color: var(--data); color: var(--data); background: rgba(200, 255, 122,.08); }
+  .syscap.on { border-color: var(--data); color: var(--data); background: rgba(var(--data-rgb), .08); }
 
   .sysmap-foot {
     display: flex;
@@ -981,7 +1016,7 @@
     padding: 13px 20px;
     border-top: 1px solid var(--rule);
     font-family: var(--f-mono);
-    font-size: .75rem;
+    font-size: .78rem;
     color: var(--dim-2);
   }
   .sysmap-foot .sel { color: var(--signal); }
@@ -992,7 +1027,7 @@
     padding: 7px 12px;
     white-space: nowrap;
   }
-  .sys-open:hover { background: rgba(200, 255, 122,.1); }
+  .sys-open:hover { background: rgba(var(--data-rgb), .1); }
   .sys-open[hidden] { display: none; }
 
   /* stacked, wire-free layout on narrow screens */
@@ -1015,7 +1050,7 @@
   .trace-n { font-family: var(--f-mono); font-size: .8rem; color: var(--signal); padding-top: 3px; }
   .trace-stage { font-family: var(--f-display); font-weight: 600; font-size: 1.02rem; }
   .trace-role { color: var(--dim); font-size: .9rem; margin-top: 3px; }
-  .trace-when { font-family: var(--f-mono); font-size: .76rem; color: var(--dim-2); margin-top: 4px; }
+  .trace-when { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); margin-top: 4px; }
 
   /* ---------- capability matrix (not a sequence: no numbers) ---------- */
   .matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px 34px; }
@@ -1040,7 +1075,7 @@
   .work-item:hover .work-org { color: var(--signal); }
   .work-org { font-family: var(--f-display); font-weight: 600; font-size: 1.25rem; transition: color .18s; }
   .work-line { color: var(--dim); font-size: .95rem; margin-top: 6px; max-width: 62ch; }
-  .work-when { font-family: var(--f-mono); font-size: .76rem; color: var(--dim-2); text-align: right; white-space: nowrap; }
+  .work-when { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); text-align: right; white-space: nowrap; }
 
   /* ---------- case study ---------- */
   .cs-head { padding: 46px 0 34px; border-bottom: 1px solid var(--rule); }
@@ -1055,7 +1090,7 @@
     margin-top: 30px;
   }
   .spec div { background: var(--ground); padding: 14px 16px; }
-  .spec dt { font-family: var(--f-mono); font-size: .72rem; color: var(--dim-2); }
+  .spec dt { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .spec dd { margin: 6px 0 0; font-size: .9rem; line-height: 1.45; }
 
   .qa { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 28px; }
@@ -1091,7 +1126,7 @@
   .init-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
   .tag {
     font-family: var(--f-mono);
-    font-size: .68rem;
+    font-size: .78rem;
     color: var(--dim-2);
     border: 1px solid var(--rule);
     padding: 3px 7px;
@@ -1104,7 +1139,7 @@
   .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .chain .link {
     font-family: var(--f-mono);
-    font-size: .76rem;
+    font-size: .78rem;
     color: var(--data);
     border: 1px solid var(--data-deep);
     padding: 6px 10px;
@@ -1118,11 +1153,11 @@
   /* ---------- journey ---------- */
   .jstage { border-top: 1px solid var(--rule); padding: 30px 0; display: grid; grid-template-columns: 210px 1fr; gap: 26px; }
   .jstage h3 { font-size: 1.12rem; }
-  .jwhen { font-family: var(--f-mono); font-size: .76rem; color: var(--dim-2); margin-top: 6px; }
+  .jwhen { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); margin-top: 6px; }
   .jentry { background: var(--panel); border: 1px solid var(--rule); padding: 20px; margin-bottom: 12px; }
   .jentry-top { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: baseline; }
   .jentry-org { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; }
-  .jentry-meta { font-family: var(--f-mono); font-size: .74rem; color: var(--dim-2); }
+  .jentry-meta { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .jentry-role { color: var(--signal); font-size: .88rem; margin-top: 3px; }
   .jentry ul { margin: 12px 0 0; padding-left: 18px; }
   .jentry li { color: var(--dim); font-size: .91rem; margin-bottom: 7px; line-height: 1.55; }
@@ -1134,13 +1169,13 @@
   .exp h3 { font-size: 1.15rem; }
   .status {
     font-family: var(--f-mono);
-    font-size: .7rem;
+    font-size: .78rem;
     padding: 4px 9px;
     border: 1px solid var(--rule-2);
     color: var(--dim);
   }
   .exp dl { margin: 16px 0 0; display: grid; gap: 12px; }
-  .exp dt { font-family: var(--f-mono); font-size: .72rem; color: var(--signal); }
+  .exp dt { font-family: var(--f-mono); font-size: .78rem; color: var(--signal); }
   .exp dd { margin: 5px 0 0; color: var(--dim); font-size: .93rem; line-height: 1.58; }
 
   /* ---------- process (a real sequence) ---------- */
@@ -1155,14 +1190,14 @@
   .stack { display: grid; gap: 18px; }
   .entry-t { font-weight: 600; font-size: .97rem; }
   .entry-s { color: var(--dim); font-size: .9rem; margin-top: 3px; }
-  .entry-m { font-family: var(--f-mono); font-size: .74rem; color: var(--dim-2); margin-top: 4px; }
+  .entry-m { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); margin-top: 4px; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-  .chip { font-family: var(--f-mono); font-size: .72rem; color: var(--dim); border: 1px solid var(--rule); padding: 5px 9px; }
+  .chip { font-family: var(--f-mono); font-size: .78rem; color: var(--dim); border: 1px solid var(--rule); padding: 5px 9px; }
 
   .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
   .contact-cell { background: var(--ground); padding: 24px 22px; text-decoration: none; color: inherit; display: block; transition: background-color .18s; }
   .contact-cell:hover { background: var(--panel); }
-  .contact-cell .ck { font-family: var(--f-mono); font-size: .74rem; color: var(--dim-2); }
+  .contact-cell .ck { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .contact-cell .cv { font-size: 1rem; margin-top: 8px; word-break: break-word; }
   .contact-cell:hover .cv { color: var(--signal); }
 
@@ -1171,7 +1206,7 @@
   .rel a { background: var(--ground); padding: 22px; text-decoration: none; color: inherit; transition: background-color .18s; }
   .rel a:hover { background: var(--panel); }
   .rel a:hover .rel-t { color: var(--signal); }
-  .rel-k { font-family: var(--f-mono); font-size: .73rem; color: var(--dim-2); }
+  .rel-k { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .rel-t { font-family: var(--f-display); font-weight: 600; font-size: 1.02rem; margin-top: 8px; transition: color .18s; }
   .rel-d { color: var(--dim); font-size: .88rem; margin-top: 7px; }
 
@@ -1320,7 +1355,7 @@
   .foot-role { color: var(--dim); font-size: .93rem; margin-top: 7px; max-width: 40ch; }
 
   .foot-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 22px; }
-  .foot-fact dt { font-family: var(--f-mono); font-size: .71rem; color: var(--dim-2); letter-spacing: .04em; }
+  .foot-fact dt { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); letter-spacing: .04em; }
   .foot-fact dd { margin: 7px 0 0; font-size: .9rem; line-height: 1.45; }
 
   .foot-reach { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
@@ -1336,9 +1371,9 @@
     font-size: .9rem;
     transition: border-color .16s, color .16s, background-color .16s;
   }
-  .reach:hover { border-color: var(--signal-deep); color: var(--signal); background: rgba(154, 238, 48,.07); }
+  .reach:hover { border-color: var(--signal-deep); color: var(--signal); background: rgba(var(--signal-rgb), .07); }
   .reach svg { width: 16px; height: 16px; flex: none; }
-  .reach .rlabel { font-family: var(--f-mono); font-size: .73rem; color: var(--dim-2); }
+  .reach .rlabel { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .reach:hover .rlabel { color: var(--signal); }
 
   .foot-bottom {
@@ -1351,7 +1386,7 @@
     padding-top: 20px;
     border-top: 1px solid var(--rule);
     font-family: var(--f-mono);
-    font-size: .73rem;
+    font-size: .78rem;
     color: var(--dim-2);
   }
   .foot-nav { display: flex; flex-wrap: wrap; gap: 16px; }
@@ -1443,7 +1478,7 @@
 
   .live-name { font-family: var(--f-display); font-size: 1.1rem; font-weight: 600; }
   .live-kind { margin-top: 3px; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--dim-2); }
-  .live-blurb { margin-top: 16px; color: var(--dim); font-size: .92rem; font-weight: 300; line-height: 1.6; }
+  .live-blurb { margin-top: 16px; color: var(--dim); font-size: .92rem; font-weight: 400; line-height: 1.6; }
   .live-go { margin-top: auto; padding-top: 18px; font-size: .88rem; color: var(--dim-2); }
   .live-card:hover .live-go { color: var(--signal); }
   .live-go::after { content: " ↗"; }
@@ -1457,13 +1492,13 @@
     margin-top: 22px;
     padding: 10px 16px;
     border: 1px solid var(--signal-deep);
-    background: rgba(154, 238, 48,.09);
+    background: rgba(var(--signal-rgb), .09);
     color: var(--signal);
     text-decoration: none;
     font-size: .92rem;
     transition: background-color .2s, border-color .2s;
   }
-  .visit:hover { background: rgba(154, 238, 48,.16); border-color: var(--signal); }
+  .visit:hover { background: rgba(var(--signal-rgb), .16); border-color: var(--signal); }
   .visit::after { content: "↗"; opacity: .7; }
 
   /* ---------- results cards ---------- */
@@ -1504,7 +1539,7 @@
   .rcard-snap li {
     color: var(--dim);
     font-size: .88rem;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.55;
     margin-bottom: 9px;
   }
@@ -1553,13 +1588,13 @@
   .rec-body { padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1; }
   .rec-kind {
     display: inline-block;
-    font-size: .72rem;
+    font-size: .78rem;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--signal);
   }
   .rec h3 { margin-top: 10px; font-size: 1.12rem; font-weight: 600; }
-  .rec p { margin-top: 9px; color: var(--dim); font-size: .9rem; font-weight: 300; line-height: 1.6; }
+  .rec p { margin-top: 9px; color: var(--dim); font-size: .9rem; font-weight: 400; line-height: 1.6; }
   .rec-foot {
     margin-top: auto;
     padding-top: 16px;
@@ -1575,7 +1610,7 @@
   .rec-stops { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
   .rec-stop {
     font-family: var(--f-mono);
-    font-size: .7rem;
+    font-size: .78rem;
     color: var(--dim);
     border: 1px solid var(--rule);
     padding: 4px 8px;
@@ -1630,7 +1665,7 @@
     transition: color .2s, border-color .2s, background-color .2s;
   }
   .gal-cat:hover { color: var(--paper); border-color: var(--rule-2); }
-  .gal-cat[aria-selected="true"] { color: var(--signal); border-color: var(--signal-deep); background: rgba(154, 238, 48,.09); }
+  .gal-cat[aria-selected="true"] { color: var(--signal); border-color: var(--signal-deep); background: rgba(var(--signal-rgb), .09); }
 
   .gal-body { flex: 1; overflow-y: auto; padding: 22px; -webkit-overflow-scrolling: touch; }
   .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
@@ -1639,7 +1674,7 @@
   .gal-cap { margin-top: 10px; font-size: .88rem; color: var(--dim); }
   .gal-empty {
     margin-top: 6px;
-    font-size: .76rem;
+    font-size: .78rem;
     color: var(--dim-2);
   }
   .gal-note {
@@ -1668,9 +1703,9 @@
     transition: border-color .25s;
   }
   .prd-item:hover { border-color: var(--signal); }
-  .prd-kind { font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--signal); }
+  .prd-kind { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--signal); }
   .prd-name { font-size: 1.02rem; font-weight: 600; }
-  .prd-meta { font-family: var(--f-mono); font-size: .74rem; color: var(--dim-2); }
+  .prd-meta { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .prd-item.pending { border-style: dashed; }
   .prd-item.pending .prd-kind { color: var(--dim-2); }
 
@@ -1690,21 +1725,21 @@
   .door:hover { border-color: var(--signal); transform: translateY(-4px); }
   .door-n {
     font-family: var(--f-mono);
-    font-size: .74rem;
+    font-size: .78rem;
     color: var(--signal);
     letter-spacing: .04em;
   }
   .door h3 { margin-top: 14px; font-size: 1.5rem; font-weight: 600; }
-  .door p { margin-top: 10px; color: var(--dim); font-size: .94rem; font-weight: 300; }
+  .door p { margin-top: 10px; color: var(--dim); font-size: .94rem; font-weight: 400; }
   .door-go { margin-top: 20px; display: block; font-size: .86rem; color: var(--dim-2); }
   .door:hover .door-go { color: var(--signal); }
 
   /* ---------- story ---------- */
-  .story-lede { font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 300; line-height: 1.42; letter-spacing: -.015em; color: var(--paper); max-width: 22ch; }
+  .story-lede { font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 400; line-height: 1.42; letter-spacing: -.015em; color: var(--paper); max-width: 22ch; }
   .story-block { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
   .story-block.flip > .plate { order: 2; }
   .story-block h3 { font-size: clamp(1.3rem, 2.4vw, 1.75rem); font-weight: 600; }
-  .story-block p { margin-top: 16px; color: var(--dim); font-weight: 300; line-height: 1.7; }
+  .story-block p { margin-top: 16px; color: var(--dim); font-weight: 400; line-height: 1.7; }
 
   /* placeholder for copy the owner has not written yet */
   .awaiting {
@@ -1724,8 +1759,8 @@
   .beyond-card .plate { border: 0; border-bottom: 1px solid var(--rule); }
   .beyond-body { padding: 22px; }
   .beyond-body h3 { font-size: 1.15rem; }
-  .beyond-body p { margin-top: 10px; color: var(--dim); font-size: .93rem; font-weight: 300; line-height: 1.62; }
-  .beyond-when { display: block; margin-top: 12px; font-family: var(--f-mono); font-size: .74rem; color: var(--dim-2); }
+  .beyond-body p { margin-top: 10px; color: var(--dim); font-size: .93rem; font-weight: 400; line-height: 1.62; }
+  .beyond-when { display: block; margin-top: 12px; font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
 
   /* ---------- experience spine ---------- */
   .xp { display: grid; gap: 0; }
@@ -1741,9 +1776,9 @@
   .xp-when { font-family: var(--f-mono); font-size: .8rem; color: var(--dim-2); padding-top: 6px; }
   .xp-org { font-size: clamp(1.4rem, 2.6vw, 1.9rem); font-weight: 600; letter-spacing: -.02em; }
   .xp-role { margin-top: 6px; color: var(--signal); font-size: .96rem; }
-  .xp-sum { margin-top: 14px; color: var(--dim); font-weight: 300; line-height: 1.66; }
+  .xp-sum { margin-top: 14px; color: var(--dim); font-weight: 400; line-height: 1.66; }
   .xp-points { margin: 16px 0 0; padding-left: 18px; }
-  .xp-points li { color: var(--dim); font-size: .95rem; font-weight: 300; margin-bottom: 8px; line-height: 1.6; }
+  .xp-points li { color: var(--dim); font-size: .95rem; font-weight: 400; margin-bottom: 8px; line-height: 1.6; }
   .xp-points li::marker { color: var(--rule-2); }
   .xp-metrics { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; }
   .xp-metric { font-size: .9rem; color: var(--dim); }
@@ -1877,7 +1912,7 @@
     width: 2px;
     height: 0;
     background: linear-gradient(180deg, var(--signal), var(--data));
-    box-shadow: 0 0 10px rgba(154, 238, 48,.30);
+    box-shadow: 0 0 6px rgba(var(--signal-rgb), .2);
   }
   .trace-row { position: relative; }
   .trace-row::before {
@@ -1893,7 +1928,7 @@
   .trace-row.lit::before {
     border-color: var(--signal);
     background: var(--signal);
-    box-shadow: 0 0 10px 1px rgba(154, 238, 48,.42);
+    box-shadow: 0 0 6px rgba(var(--signal-rgb), .26);
   }
 
   /* Connector wires draw themselves in the first time they appear.
@@ -1972,7 +2007,7 @@
   .cv-block { margin-bottom: 34px; }
   .cv-h {
     font-family: var(--f-mono);
-    font-size: .72rem;
+    font-size: .78rem;
     letter-spacing: .09em;
     color: var(--signal);
     text-transform: uppercase;
@@ -1984,7 +2019,7 @@
   .cv-job-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
   .cv-org { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; }
   .cv-role { color: var(--dim); font-size: .92rem; }
-  .cv-when { font-family: var(--f-mono); font-size: .74rem; color: var(--dim-2); }
+  .cv-when { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .cv-points { margin: 10px 0 0; padding-left: 18px; }
   .cv-points li { color: var(--dim); font-size: .92rem; margin-bottom: 6px; line-height: 1.55; }
   .cv-points li::marker { color: var(--rule-2); }
@@ -2031,14 +2066,21 @@
      control shares one shape scale, one elevation ramp and one easing curve.
      That consistency is most of what "clean" means in Material. */
   .rcard, .door, .rec, .live-card, .prd-item, .cap,
-  .chat, .gal, .panel, .exp, .work-item, .xp, .jentry, .ro, .init, .tg {
+  .chat, .gal, .panel, .exp, .work-item, .xp, .jentry, .ro, .init, .tg,
+  .hs-card {
     border-radius: var(--md-r-m);
   }
+  /* Apple's controls are capsules: every button and field is a pill. */
   .ask-field, .ask-send, .chat-input, .chat-send, .chat-btn,
-  .cta-top, .btn-ghost, .gal-cat, .ask-chip, .reach, .visit, .drawer-cta {
-    border-radius: var(--md-r-s);
+  .cta-top, .btn-ghost, .gal-cat, .ask-chip, .reach, .visit, .drawer-cta,
+  .hero-act {
+    border-radius: 999px;
   }
-  .mark-chip, .msg-code, .sysnode { border-radius: var(--md-r-xs); }
+  .sysmap-shell, .budget, .spec { border-radius: var(--md-r-l); }
+  .sysnode, .syscap, .contact-grid { border-radius: var(--md-r-s); }
+  .contact-grid { overflow: hidden; }
+  .sysnode-n, .mark-chip, .msg-code { border-radius: var(--md-r-xs); }
+  .chip, .sys-open { border-radius: 999px; }
   .msg-text { border-radius: var(--md-r-m); }
   .msg-you .msg-text { border-bottom-right-radius: var(--md-r-xs); }
   .msg-bot .msg-text { border-bottom-left-radius: var(--md-r-xs); }
@@ -2167,7 +2209,7 @@
   .ask + .hero { border-top: 0; padding-top: clamp(30px, 5vh, 52px); }
   .ask-label {
     font-family: var(--f-mono);
-    font-size: .72rem;
+    font-size: .78rem;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--dim-2);
@@ -2239,7 +2281,7 @@
     transition: color .2s, border-color .2s;
   }
   .ask-chip:hover { color: var(--signal); border-color: var(--signal-deep); }
-  .ask-resume { color: var(--signal); border-color: var(--signal-deep); background: rgba(154, 238, 48,.09); }
+  .ask-resume { color: var(--signal); border-color: var(--signal-deep); background: rgba(var(--signal-rgb), .09); }
 
   /* chat popup */
   .chat-scrim {
@@ -2291,7 +2333,7 @@
   .msg-bot { align-self: flex-start; }
   .msg-who {
     font-family: var(--f-mono);
-    font-size: .68rem;
+    font-size: .78rem;
     letter-spacing: .09em;
     text-transform: uppercase;
     color: var(--dim-2);
@@ -2310,7 +2352,7 @@
   .msg-bot .msg-text { background: var(--panel); }
   .msg-text strong { color: var(--paper); font-weight: 600; }
   .msg-code {
-    font-family: var(--f-mono);
+    font-family: var(--f-code);
     font-size: .88em;
     padding: 1px 5px;
     background: var(--panel-2);
@@ -2323,7 +2365,7 @@
   .msg-src { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 7px; }
   .msg-src a {
     font-family: var(--f-mono);
-    font-size: .71rem;
+    font-size: .78rem;
     color: var(--dim-2);
     padding: 4px 9px;
     border: 1px solid var(--rule);
@@ -2333,7 +2375,7 @@
   .msg-src a:hover { color: var(--signal); border-color: var(--signal-deep); }
   .msg-doc {
     font-family: var(--f-mono);
-    font-size: .71rem;
+    font-size: .78rem;
     color: var(--dim-2);
     padding: 4px 9px;
     border: 1px dashed var(--rule);
@@ -2366,7 +2408,7 @@
   .chat-typing-dots { display: flex; gap: 5px; align-items: center; }
   .chat-typing-label {
     font-family: var(--f-mono);
-    font-size: .72rem;
+    font-size: .78rem;
     letter-spacing: .06em;
     color: var(--dim-2);
   }
@@ -2406,7 +2448,7 @@
   .chat-send:disabled { opacity: .45; cursor: default; }
   .chat-note {
     margin-top: 10px;
-    font-size: .74rem;
+    font-size: .78rem;
     color: var(--dim-2);
     line-height: 1.5;
   }
@@ -2461,8 +2503,8 @@
   /* ---------- print (the résumé page) ---------- */
   @media print {
     .topbar, .rail, .stage, .drawer, .drawer-scrim, .site-footer,
-    .backdrop, #spacer, .print-hide { display: none !important; }
-    body { background: #fff; color: #111; padding: 0; }
+    .backdrop, #spacer, .print-hide, .vload { display: none !important; }
+    body { background: #fff; color: #111; padding: 0; font-size: 16px; }
     .cv { color: #111; }
     .cv a { color: #111; text-decoration: none; }
     .cv-head, .cv-block { break-inside: avoid; }
@@ -2473,7 +2515,135 @@
     * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
     .packet { display: none; }
   }
+
+  /* ---------- voice-wave loader ----------
+     The first thing a visitor sees, once per browser session: bars moving
+     like a voice speaking — a nod to the Voice AI work — that settle into a
+     flat line as the name arrives, then fade into the desk intro. Hidden
+     unless its own script switches it on, so a script failure costs the
+     loader and never the page. */
+  .vload { display: none; }
+  .vload.on {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 26px;
+    padding: 0 16px;
+    background: #000;
+    transition: opacity .42s var(--md-ease);
+  }
+  .vload.out { opacity: 0; pointer-events: none; }
+  .vload-wave { display: flex; align-items: center; gap: 6px; height: 56px; }
+  .vload-wave i {
+    display: block;
+    width: 5px;
+    height: 56px;
+    border-radius: 3px;
+    background: var(--signal);
+    transform: scaleY(.06);
+    will-change: transform;
+  }
+  .vload-name {
+    margin: 0;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: var(--paper);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .45s var(--md-ease), transform .45s var(--md-ease);
+  }
+  .vload-name span { display: block; margin-top: 4px; font-weight: 400; color: var(--dim); }
+  .vload.named .vload-name { opacity: 1; transform: none; }
 </style>
+
+<div class="vload" id="vload" aria-hidden="true">
+  <div class="vload-wave" id="vloadWave"></div>
+  <p class="vload-name">Avinash Garudapalli<span>AI Product Manager</span></p>
+</div>
+<script>
+  /* =========================================================
+     VOICE-WAVE LOADER — runs before the main script, and alone
+     =========================================================
+     Self-contained on purpose: it must not depend on anything the main
+     script defines, and the main script only reads window.__vload to hold
+     the monitor's typing until the loader has cleared. */
+  (function () {
+    var node = document.getElementById("vload");
+    var gate = window.__vload = { done: false, cbs: [] };
+
+    function finish() {
+      if (gate.done) return;
+      gate.done = true;
+      if (node && node.parentNode) node.parentNode.removeChild(node);
+      var cbs = gate.cbs;
+      gate.cbs = [];
+      for (var i = 0; i < cbs.length; i++) {
+        try { cbs[i](); } catch (e) { /* one late callback must not stop the rest */ }
+      }
+    }
+
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Once per session: a recruiter opening three tabs sees it once, not three times.
+    var seen = false;
+    try {
+      seen = window.sessionStorage.getItem("vload-seen") === "1";
+      window.sessionStorage.setItem("vload-seen", "1");
+    } catch (e) { /* storage blocked: play it, it is short */ }
+    if (!node || reduce || seen) { finish(); return; }
+
+    node.classList.add("on");
+    var wave = document.getElementById("vloadWave"), bars = [], N = 17;
+    for (var i = 0; i < N; i++) {
+      var b = document.createElement("i");
+      wave.appendChild(b);
+      bars.push(b);
+    }
+
+    function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+    function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    function seg(t, a, b) { return clamp((t - a) / (b - a)); }
+
+    var leaving = false;
+    function leave() {
+      if (leaving) return;
+      leaving = true;
+      node.classList.add("out");
+      setTimeout(finish, 440);
+    }
+
+    var t0 = null;
+    function frame(now) {
+      if (gate.done || leaving) return;
+      if (t0 === null) t0 = now;
+      var t = now - t0;
+      var rise = ease(seg(t, 0, 350)), settle = ease(seg(t, 1250, 1750));
+      for (var i = 0; i < N; i++) {
+        // taller in the middle, like a voice's energy; two sines out of step
+        // so no two bars move together
+        var mid = 1 - Math.abs(i - (N - 1) / 2) / ((N + 1) / 2);
+        var live = mid * (.3 + .7 * Math.abs(Math.sin(t / 165 + i * .9) * Math.sin(t / 290 + i * .37)));
+        var k = .06 + (live * rise) * (1 - settle);
+        bars[i].style.transform = "scaleY(" + k.toFixed(3) + ")";
+      }
+      if (t > 1450) node.classList.add("named");
+      if (t > 2150) { leave(); return; }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    // Any intent to move on skips it: a tap, a key, a scroll.
+    ["pointerdown", "keydown", "wheel", "touchstart"].forEach(function (ev) {
+      window.addEventListener(ev, leave, { once: true, passive: true });
+    });
+    // Belt and braces: never hold the page longer than this, whatever happens.
+    setTimeout(finish, 3500);
+  })();
+</script>
 
 <div class="backdrop" aria-hidden="true"></div>
 <div class="rail" id="rail" aria-hidden="true"></div>
@@ -2486,22 +2656,22 @@
 
       <defs>
         <radialGradient id="gGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#C8FF7A" stop-opacity=".34"/>
+          <stop offset="0%" stop-color="#A9E3C8" stop-opacity=".34"/>
           <stop offset="60%" stop-color="#49691F" stop-opacity=".10"/>
-          <stop offset="100%" stop-color="#C8FF7A" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#A9E3C8" stop-opacity="0"/>
         </radialGradient>
         <linearGradient id="gSpill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#C8FF7A" stop-opacity=".16"/>
-          <stop offset="100%" stop-color="#C8FF7A" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#A9E3C8" stop-opacity=".16"/>
+          <stop offset="100%" stop-color="#A9E3C8" stop-opacity="0"/>
         </linearGradient>
         <linearGradient id="gLamp" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#9AEE30" stop-opacity=".30"/>
-          <stop offset="100%" stop-color="#9AEE30" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#7FCFAB" stop-opacity=".30"/>
+          <stop offset="100%" stop-color="#7FCFAB" stop-opacity="0"/>
         </linearGradient>
         <linearGradient id="gRgb" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#C8FF7A" stop-opacity=".55"/>
+          <stop offset="0%" stop-color="#A9E3C8" stop-opacity=".55"/>
           <stop offset="50%" stop-color="#B08CFF" stop-opacity=".45"/>
-          <stop offset="100%" stop-color="#9AEE30" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#7FCFAB" stop-opacity=".55"/>
         </linearGradient>
         <linearGradient id="gDesk" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#1E1F1C"/>
@@ -2567,16 +2737,16 @@
         <!-- window chrome -->
         <rect x="344" y="126" width="512" height="28" fill="#131512"/>
         <circle cx="362" cy="140" r="4" fill="#FF6B4A"/>
-        <circle cx="378" cy="140" r="4" fill="#9AEE30"/>
-        <circle cx="394" cy="140" r="4" fill="#7FD44A"/>
-        <text x="416" y="144" font-family="'IBM Plex Mono', monospace" font-size="10.5" fill="#3C3E41">avinash — session 01</text>
+        <circle cx="378" cy="140" r="4" fill="#7FCFAB"/>
+        <circle cx="394" cy="140" r="4" fill="#7FCFAB"/>
+        <text x="416" y="144" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="10.5" fill="#3C3E41">avinash — session 01</text>
 
         <!-- screen content -->
-        <text x="378" y="200" font-family="'IBM Plex Mono', monospace" font-size="13" fill="#7FD44A">&gt; whoami</text>
-        <text id="scName" x="376" y="266" font-family="'Chakra Petch', sans-serif" font-weight="700" font-size="62" fill="#FFFFFF" letter-spacing="-1"></text>
-        <text id="scTag" x="379" y="308" font-family="'IBM Plex Sans', sans-serif" font-weight="400" font-size="21" fill="#9AEE30"></text>
-        <rect id="scCaret" x="379" y="290" width="10" height="22" fill="#9AEE30"/>
-        <text x="379" y="360" font-family="'IBM Plex Mono', monospace" font-size="11.5" fill="#3C3E41">voice AI · product · ux · business</text>
+        <text x="378" y="200" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#7FCFAB">&gt; whoami</text>
+        <text id="scName" x="376" y="266" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="62" fill="#FFFFFF" letter-spacing="-1"></text>
+        <text id="scTag" x="379" y="308" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="21" fill="#7FCFAB"></text>
+        <rect id="scCaret" x="379" y="290" width="10" height="22" fill="#7FCFAB"/>
+        <text x="379" y="360" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="11.5" fill="#3C3E41">voice AI · product · ux · business</text>
 
         <!-- scanlines -->
         <rect x="344" y="126" width="512" height="272" fill="url(#gSpill)" opacity=".25"/>
@@ -2595,7 +2765,7 @@
       <g id="layDesk">
       <!-- desk -->
       <rect x="70" y="458" width="1060" height="30" rx="3" fill="url(#gDesk)"/>
-      <rect x="70" y="458" width="1060" height="2" fill="#C8FF7A" opacity=".22"/>
+      <rect x="70" y="458" width="1060" height="2" fill="#A9E3C8" opacity=".22"/>
       <rect x="70" y="488" width="1060" height="15" fill="#111210"/>
       <rect x="130" y="506" width="940" height="9" rx="4" fill="url(#gRgb)" class="rgb-strip" filter="url(#fBlurSm)"/>
 
@@ -2788,7 +2958,7 @@
       context: "Voice and GenAI enterprise solutions",
       when: "Jan 2025 — Jun 2025",
       where: "Pune",
-      title: "Taking an enterprise Voice AI platform from zero to one",
+      title: "Enterprise Voice AI, from zero to one \u2014 then twice as fast",
       line: "Owned the 0-to-1 Voice AI launch — architecture through to the analytics customers run their contact centres on.",
       overview: "Chat360 builds conversational AI infrastructure for enterprise customer engagement. I owned the Voice AI platform end to end: the real-time pipeline, the flow builder enterprises use to design their own conversations, how AI usage gets billed, and the analytics that tell a customer whether any of it is working.",
       myRole: "Owned Voice AI, Bot Builder, GenAI billing, omnichannel expansion, enterprise RBAC and product analytics.",
@@ -3321,25 +3491,9 @@
   /* The three stories the results section tells, each opening its case study. */
   var RESULT_CARDS = [
     {
-      slug: "nosh-house",
-      site: "noshhouse",
-      label: "Nosh House impact",
-      head: "A family cafe to a break-even business",
-      figures: [
-        { v: "+50%", k: "MRR growth" },
-        { v: "9 mo", k: "To operational break-even" }
-      ],
-      snapshot: [
-        "Took over a family cafe and owned the whole P&L, not just a product surface.",
-        "Rebuilt the customer journey end to end: QR ordering, cart, payments, Petpooja at the back.",
-        "Reelo automating WhatsApp campaigns, paired with loyalty, to make retention compound.",
-        "Delivery SOPs rewritten to raise revenue per order rather than only trim cost."
-      ]
-    },
-    {
       slug: "chat360",
-      label: "Chat360 key highlights",
-      head: "An enterprise Voice AI platform, zero to one",
+      label: "Associate PM \u00b7 Chat360",
+      head: "Enterprise Voice AI, zero to one, at half the latency",
       figures: [
         { v: "-50%", k: "Voice latency" },
         { v: "5", k: "Channels shipped" }
@@ -3353,8 +3507,8 @@
     },
     {
       slug: "cordelia-cruises",
-      label: "Cordelia Cruises impact",
-      head: "A first mobile app, a content backbone, AI on support",
+      label: "Product Analyst \u00b7 Cordelia Cruises",
+      head: "A cruise line\u2019s first app, and AI on the support line",
       figures: [
         { v: "-20%", k: "Support queries" },
         { v: "-15%", k: "Operational cost" }
@@ -3364,6 +3518,22 @@
         "Built a centralized CMS so content is published once and distributed everywhere.",
         "Voice AI across customer touchpoints removed a fifth of inbound support volume.",
         "AI-powered auto QA cut review turnaround by 20% without giving up quality."
+      ]
+    },
+    {
+      slug: "nosh-house",
+      site: "noshhouse",
+      label: "Founder \u00b7 Nosh House Cafe",
+      head: "A family cafe, taken to break-even in nine months",
+      figures: [
+        { v: "+50%", k: "MRR growth" },
+        { v: "9 mo", k: "To operational break-even" }
+      ],
+      snapshot: [
+        "Took over a family cafe and owned the whole P&L, not just a product surface.",
+        "Rebuilt the customer journey end to end: QR ordering, cart, payments, Petpooja at the back.",
+        "Reelo automating WhatsApp campaigns, paired with loyalty, to make retention compound.",
+        "Delivery SOPs rewritten to raise revenue per order rather than only trim cost."
       ]
     }
   ];
@@ -4210,9 +4380,9 @@
     }).join("");
 
     var doors = [
-      { n: "01", t: "Story", d: "How I think, why I travel alone, and what that has to do with product.", h: "#/story", go: "Read the story" },
-      { n: "02", t: "Experience", d: "Six roles in order, from running a college fest to owning a P&L.", h: "#/experience", go: "See the work" },
-      { n: "03", t: "Beyond", d: "The Himalayas, the abacus, and the things nobody paid me to do.", h: "#/beyond", go: "Look around" }
+      { n: "01", t: "Story", d: "How I think, why I travel alone, and what either has to do with building product.", h: "#/story", go: "Read the story" },
+      { n: "02", t: "Experience", d: "Six roles in order: from sponsorship head at a college fest to owning a P&L.", h: "#/experience", go: "See every role" },
+      { n: "03", t: "Beyond", d: "The Himalayas, the abacus, and everything nobody paid me to do.", h: "#/beyond", go: "Look around" }
     ].map(function (x, i) {
       return '<a class="door rv" style="--i:' + i + '" href="' + x.h + '">' +
         '<span class="door-n">' + x.n + '</span>' +
@@ -4220,56 +4390,72 @@
         '<span class="door-go">' + esc(x.go) + '</span></a>';
     }).join("");
 
+    // Recruiter order: who and what first, then the case studies, then the
+    // proof, and the personal side last. Nothing here is new content — the
+    // hero actions only point at pages that already exist.
     return '' +
       askBar() +
 
       '<section class="hero" data-scene>' +
-        '<h1 class="rv">AI product manager. Currently shipping, travelling and building in the open.</h1>' +
-        '<p class="lede rv" style="--i:1">What I have been doing lately \u2014 this list keeps moving.</p>' +
-        '<div class="recent rv" style="--i:2">' + recent + '</div>' +
+        '<p class="hero-kicker rv">Open to AI and product roles</p>' +
+        '<h1 class="rv">I take AI products from zero to one.</h1>' +
+        '<p class="lede rv" style="--i:1">Associate Product Manager behind Chat360’s enterprise Voice AI launch, ' +
+          'and the founder who owns every line of Nosh House Cafe’s P&amp;L. ' +
+          'Currently shipping, travelling and building in the open.</p>' +
+        '<div class="hero-acts rv" style="--i:2">' +
+          '<a class="hero-act primary" href="#/resume">See the résumé</a>' +
+          '<a class="hero-act" href="#/contact">Let’s talk</a>' +
+          '<a class="hero-act quiet" href="#/experience">All experience</a>' +
+        '</div>' +
       '</section>' +
 
       '<section data-scene>' +
-        secHead("Live", "Things you can actually open",
-          "Not screenshots \u2014 working products you can use right now.") +
-        liveCards() +
+        secHead("Case studies", "Three businesses. The numbers that moved.",
+          "Enterprise Voice AI, a cruise line’s first app, and a family cafe taken to break-even. " +
+          "Hover a card for the detail, or open the full story.") +
+        '<div class="results">' + results + '</div>' +
       '</section>' +
 
-      // The reference's lime tile field, built from the real IMPACT figures and
-      // the real SKILLS_TECH list. Every label and number here already existed
-      // in the site's data; nothing is written for the layout.
+      // The tile field, built from the real IMPACT figures and the real
+      // SKILLS_TECH list. Every label and number here already existed in the
+      // site's data; nothing is written for the layout.
       '<section data-scene class="band">' +
         '<div class="bento">' + bentoCells() + '</div>' +
       '</section>' +
 
       '<section data-scene>' +
-        secHead("Results", "What the work actually moved",
-          "Three businesses, three different problems. Hover any card for the detail, " +
-          "or open the full case study.") +
-        '<div class="results">' + results + '</div>' +
+        secHead("Live", "Don’t take my word for it. Open them.",
+          "Working products, not screenshots. Every one of them is live right now.") +
+        liveCards() +
       '</section>' +
 
       '<section data-scene>' +
-        secHead("Where to go", "Three ways in",
-          "Whatever you came to find out, it has one obvious home.") +
-        '<div class="doors">' + doors + '</div>' +
-      '</section>' +
-
-      '<section data-scene>' +
-        secHead("Capability", "The through-line across every project",
-          "Click a project to trace what it exercised. Double-click to open its case study \u2014 " +
+        secHead("Capability", "One thread runs through every project",
+          "Click a project to trace the skills it put to work. Double-click to open its case study — " +
           "or use the button underneath.") +
         '<div class="rv rv-scale">' + buildMap() + '</div>' +
       '</section>' +
 
       '<section data-scene>' +
-        secHead("Documents", "Product artefacts",
-          "PRDs and specs from recent work, for anyone who wants to see how I write things down.") +
+        secHead("Go deeper", "Pick your way in",
+          "Whatever you came to find out, it has one obvious home.") +
+        '<div class="doors">' + doors + '</div>' +
+      '</section>' +
+
+      '<section data-scene>' +
+        secHead("Documents", "See how I write it down",
+          "PRDs and specs from recent work, for anyone who wants the thinking behind the shipping.") +
         prdShelf() +
       '</section>' +
 
       '<section data-scene>' +
-        secHead("Contact", "Open to AI and product roles") +
+        secHead("Lately", "What I’ve been up to",
+          "What I have been doing lately — this list keeps moving.") +
+        '<div class="recent">' + recent + '</div>' +
+      '</section>' +
+
+      '<section data-scene>' +
+        secHead("Contact", "Open to AI and product roles. Let’s talk.") +
         '<div class="rv">' + contactGrid() + '</div>' +
       '</section>';
   }
@@ -4384,7 +4570,7 @@
       '</section>' +
 
       '<section>' +
-        secHead("outcome", "What it moved") +
+        secHead("outcome", "What it moved, in numbers") +
         '<div data-par="0.06"><div class="readouts">' + metrics + '</div></div>' +
       '</section>' +
 
@@ -4397,7 +4583,7 @@
       '</section>' +
 
       '<section>' +
-        secHead("next", "Where to go from here") +
+        secHead("next", "Keep reading") +
         '<div data-par="0.04"><div class="rel rv">' + rel + '</div></div>' +
         '<a class="back" href="#/experience">← all experience</a>' +
       '</section>';
@@ -4569,19 +4755,19 @@
           'stroke-width="' + (i % 4 === 0 ? 1.4 : 1) + '" opacity="' + (0.85 - t * 0.35) + '"/>';
       }
       art = rings +
-        '<circle cx="204" cy="146" r="4" fill="#9AEE30"/>' +
-        '<circle cx="204" cy="146" r="11" fill="none" stroke="#9AEE30" stroke-opacity=".45"/>';
+        '<circle cx="204" cy="146" r="4" fill="#7FCFAB"/>' +
+        '<circle cx="204" cy="146" r="11" fill="none" stroke="#7FCFAB" stroke-opacity=".45"/>';
     }
 
     if (kind === "route") {
       // a travelled path with stops along it
       var pts = [[34, 236], [96, 186], [150, 205], [214, 132], [276, 158], [330, 92], [372, 112]];
       var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0] + " " + p[1]; }).join(" ");
-      art = '<path d="' + d + '" fill="none" stroke="#9AEE30" stroke-width="1.8" ' +
+      art = '<path d="' + d + '" fill="none" stroke="#7FCFAB" stroke-width="1.8" ' +
         'stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>' +
         pts.map(function (p, i) {
           return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (i === pts.length - 1 ? 6 : 3.5) + '" ' +
-            'fill="' + (i === pts.length - 1 ? "#9AEE30" : "#0F100E") + '" stroke="#9AEE30" stroke-width="1.6"/>';
+            'fill="' + (i === pts.length - 1 ? "#7FCFAB" : "#0F100E") + '" stroke="#7FCFAB" stroke-width="1.6"/>';
         }).join("") +
         '<path d="M0 262 H400" stroke="#1C1D1B" stroke-width="1"/>';
     }
@@ -4596,7 +4782,7 @@
           var op = Math.max(0.08, 0.92 - dist * 0.72);
           var rad = Math.max(1.1, 3.6 - dist * 2.1);
           dots += '<circle cx="' + x + '" cy="' + y + '" r="' + rad.toFixed(2) + '" ' +
-            'fill="' + (dist < 0.36 ? "#9AEE30" : "#C8FF7A") + '" opacity="' + op.toFixed(2) + '"/>';
+            'fill="' + (dist < 0.36 ? "#7FCFAB" : "#A9E3C8") + '" opacity="' + op.toFixed(2) + '"/>';
         }
       }
       art = dots;
@@ -4614,7 +4800,7 @@
         }
         layers += '<path d="' + path + ' L400 300 Z" fill="' + s[1] + '" opacity="' + s[2] + '"/>';
       });
-      art = layers + '<circle cx="312" cy="72" r="17" fill="#9AEE30" opacity=".82"/>';
+      art = layers + '<circle cx="312" cy="72" r="17" fill="#7FCFAB" opacity=".82"/>';
     }
 
     return '<figure class="plate ' + (cls || "") + '">' +
@@ -4785,7 +4971,7 @@
 
     return '' +
       '<section data-scene>' +
-        secHead("Experience", "Six roles, in the order they happened") +
+        secHead("Experience", "Six roles. One direction.") +
         '<p class="lede rv">Leadership, then business development, then design, then product, ' +
         'then AI, then owning the whole thing. Each one is why the next was possible.</p>' +
       '</section>' +
@@ -4853,7 +5039,7 @@
     }).join("");
 
     return '<section class="cv">' +
-      secHead("résumé", "The one-page version") +
+      secHead("résumé", "Everything, on one page") +
 
       '<div class="cv-head rv">' +
         '<div class="cv-name">' + esc(PROFILE.name) + '</div>' +
@@ -4902,7 +5088,7 @@
   }
 
   function viewContact() {
-    // The closing call to action takes the lime field, matching where the
+    // The closing call to action takes the mint field, matching where the
     // reference puts its own: the last thing on the page, impossible to
     // scroll past without registering.
     return '<section class="band">' +
@@ -5558,7 +5744,7 @@
        pointer  particles inside a radius are pushed gently away, so the
                 cursor leaves a wake
 
-     The field also re-colours itself: over a lime band the lime motes would
+     The field also re-colours itself: over a mint band the mint motes would
      vanish, so the target colour is tweened toward near-black whenever a band
      covers the middle of the viewport.
 
@@ -5577,7 +5763,7 @@
     var parts = [], dpr = 1, w = 0, h = 0;
     var pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999, active: false };
     var lastScroll = window.scrollY, scrollPush = 0;
-    var tone = { v: 0 };   // 0 = lime on black, 1 = ink on lime
+    var tone = { v: 0 };   // 0 = mint on black, 1 = ink on mint
     var t = 0;             // flow-field clock
 
     function resize() {
@@ -5672,9 +5858,9 @@
         if (p.y < -12) p.y = h + 12; else if (p.y > h + 12) p.y = -12;
 
         var tv = tone.v;
-        var cr = Math.round(154 + (6 - 154) * tv);
-        var cg = Math.round(238 + (18 - 238) * tv);
-        var cb = Math.round(48 + (10 - 48) * tv);
+        var cr = Math.round(127 + (4 - 127) * tv);
+        var cg = Math.round(207 + (21 - 207) * tv);
+        var cb = Math.round(171 + (14 - 171) * tv);
         ctx.beginPath();
         ctx.fillStyle = "rgba(" + cr + "," + cg + "," + cb + "," + (p.a * (0.55 + 0.45 * p.d)).toFixed(3) + ")";
         ctx.arc(p.x, p.y, p.r, 0, 6.2832);
@@ -5706,8 +5892,8 @@
     dust = { resize: resize, tone: tone };
   }
 
-  /* Re-tint the field when a lime band takes the middle of the screen. Lime
-     motes on a lime ground are invisible, and a hard swap would pop, so the
+  /* Re-tint the field when a mint band takes the middle of the screen. Mint
+     motes on a mint ground are invisible, and a hard swap would pop, so the
      colour is tweened. Sampled on scroll rather than per frame: this is a
      hit-test against every band, which is not frame work. */
   function dustTone() {
@@ -6381,6 +6567,9 @@
   window.addEventListener("hashchange", render);
   renderFooter();
   render();
-  typeScreen();
+  // The monitor types the name as the intro opens; wait for the loader so
+  // that moment is not spent behind it.
+  if (window.__vload && !window.__vload.done) window.__vload.cbs.push(typeScreen);
+  else typeScreen();
 })();
 </script>

@@ -225,6 +225,12 @@ function audit(isTouch) {
       // audit measures settled state rather than a mid-transition frame
       await page.waitForTimeout(1200);
 
+      // The voice-wave loader removes itself within 3.5s at most. If it is
+      // still in the page here it is covering everything the audit measures.
+      if (await page.evaluate(() => !!document.getElementById("vload"))) {
+        fail(d.name, route, "voice-wave loader still covering the page");
+      }
+
       const r = await page.evaluate(audit, d.touch);
 
       if (r.overflow > 1) fail(d.name, route, `horizontal overflow ${r.overflow}px [${r.offenders.join(", ")}]`);
