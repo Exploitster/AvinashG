@@ -14,7 +14,7 @@ const path = require("path");
 const FILE = "file://" + path.resolve(__dirname, "../docs/index.html");
 
 const ROUTES = [
-  "#/", "#/story", "#/experience", "#/beyond",
+  "#/", "#/work", "#/story", "#/experience", "#/beyond",
   "#/work/chat360", "#/work/cordelia-cruises", "#/work/nosh-house",
   "#/work/yapita-health", "#/work/events-fusion",
   "#/lab", "#/thinking", "#/about", "#/resume", "#/contact",
