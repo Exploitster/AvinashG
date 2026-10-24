@@ -61,8 +61,10 @@ const DESCRIPTION =
   "Avinash Garudapalli — AI product manager. Voice AI, generative and " +
   "agentic products, and the business case underneath them.";
 
-// Canonical home of the site. Everything that reports a URL points here.
-const SITE_URL = "https://exploitster.github.io/AvinashG/";
+// All deployments name the preferred public domain; SITE_URL can override it.
+const SITE_URL = new URL(
+  process.env.SITE_URL || "https://avinashg.tech/"
+).href;
 
 const page = `<!doctype html>
 <html lang="en">
@@ -77,7 +79,7 @@ const page = `<!doctype html>
 <meta property="og:description" content="${DESCRIPTION}">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000000'/><circle cx='16' cy='16' r='7' fill='%237FCFAB'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000000'/><circle cx='16' cy='16' r='7' fill='%2379B397'/></svg>">
 <style>
   :root { color-scheme: dark; }
   html, body { margin: 0; }
@@ -94,6 +96,17 @@ const page = `<!doctype html>
 </head>
 <body>
 ${body}
+<noscript>
+<style>.stage, .vload, .topbar, #spacer, #view, .site-footer, .edge-rail, .intro-resume { display: none !important; } .offline-profile { max-width: 760px; margin: 60px auto; padding: 24px; color: #f4f4f4; font: 18px/1.6 system-ui, sans-serif; } .offline-profile a { color: #79B397; display: inline-block; margin: 10px 18px 10px 0; }</style>
+<main class="offline-profile">
+<h1>Avinash Garudapalli — AI Product Manager</h1>
+<p>Enterprise Voice AI product work and end-to-end business ownership at Nosh House Cafe.</p>
+<p>Enable JavaScript to explore the interactive case studies. You can also read the résumé or contact me directly.</p>
+<a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">View résumé PDF</a>
+<a href="mailto:avinashdevg09@gmail.com">Email Avinash</a>
+<a href="https://www.linkedin.com/in/avinashdevg/">LinkedIn</a>
+</main>
+</noscript>
 </body>
 </html>
 `;

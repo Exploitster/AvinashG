@@ -15,7 +15,7 @@
 <style>
   :root {
     /* Black ground with a single soft-mint accent. The earlier acid lime
-       (#7FCFAB) was fluorescent enough to tire the eye on black, so the accent
+       (#79B397) was fluorescent enough to tire the eye on black, so the accent
        moved to a lower-chroma mint and the neutrals lost their yellow-green
        bias to match it. Every text token still clears WCAG AA on --ground. */
     --ground: #000000;
@@ -27,13 +27,13 @@
     --paper: #F5F5F7;
     --dim: #A9B1AD;
     --dim-2: #8E9793;
-    --signal: #7FCFAB;
-    --signal-deep: #4E9A7A;
-    --data: #A9E3C8;
+    --signal: #79B397;
+    --signal-deep: #4E8A6B;
+    --data: #B3D7C4;
     --data-deep: #5F9E83;
-    --good: #7FCFAB;
+    --good: #79B397;
     /* the accent as an RGB triple, for tints: rgba(var(--signal-rgb), .1) */
-    --signal-rgb: 127, 207, 171;
+    --signal-rgb: 121, 179, 151;
     --data-rgb: 169, 227, 200;
 
     /* Apple's own system faces: San Francisco on Apple devices, the
@@ -307,12 +307,12 @@
        benefit of its children, and a custom property redefined on an element
        applies to that element's own declarations too — so var(--signal) here
        resolved to the inverted near-black and the band rendered dark. */
-    background: #7FCFAB;
+    background: #79B397;
 
-    --ground: #7FCFAB;
-    --ground-2: #77C6A2;
-    --panel: #88D4B1;
-    --panel-2: #93D9B9;
+    --ground: #79B397;
+    --ground-2: #82B79D;
+    --panel: #8FBEA6;
+    --panel-2: #9AC6B0;
     --rule: #5AA886;
     --rule-2: #4A9375;
     --paper: #04150E;
@@ -783,10 +783,10 @@
     padding: 0 4px;
   }
   .seg.s-net { background: #16191C; }
-  .seg.s-vad { background: #375217; }
-  .seg.s-stt { background: #456520; }
-  .seg.s-llm { background: #4C7317; }
-  .seg.s-tts { background: #54801A; }
+  .seg.s-vad { background: #315141; }
+  .seg.s-stt { background: #3B5E4C; }
+  .seg.s-llm { background: #456B57; }
+  .seg.s-tts { background: #4B765D; }
   .seg.s-out { background: #21231F; }
 
   .budget-legend {
@@ -798,10 +798,10 @@
   .budget-legend div { display: flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: .78rem; color: var(--dim); }
   .budget-legend i { width: 10px; height: 10px; flex: none; }
   .budget-legend i.s-net { background: #16191C; }
-  .budget-legend i.s-vad { background: #375217; }
-  .budget-legend i.s-stt { background: #456520; }
-  .budget-legend i.s-llm { background: #4C7317; }
-  .budget-legend i.s-tts { background: #54801A; }
+  .budget-legend i.s-vad { background: #315141; }
+  .budget-legend i.s-stt { background: #3B5E4C; }
+  .budget-legend i.s-llm { background: #456B57; }
+  .budget-legend i.s-tts { background: #4B765D; }
   .budget-legend i.s-out { background: #21231F; }
 
   .track {
@@ -1691,24 +1691,6 @@
     .gal { border: 0; }
   }
 
-  /* ---------- PRD shelf ---------- */
-  .prd { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-  .prd-item {
-    display: flex; flex-direction: column; gap: 8px;
-    padding: 22px;
-    background: var(--panel);
-    border: 1px solid var(--rule);
-    text-decoration: none;
-    color: inherit;
-    transition: border-color .25s;
-  }
-  .prd-item:hover { border-color: var(--signal); }
-  .prd-kind { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--signal); }
-  .prd-name { font-size: 1.02rem; font-weight: 600; }
-  .prd-meta { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
-  .prd-item.pending { border-style: dashed; }
-  .prd-item.pending .prd-kind { color: var(--dim-2); }
-
   /* ---------- wayfinding: three doors ---------- */
   .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
   .door {
@@ -1740,18 +1722,6 @@
   .story-block.flip > .plate { order: 2; }
   .story-block h3 { font-size: clamp(1.3rem, 2.4vw, 1.75rem); font-weight: 600; }
   .story-block p { margin-top: 16px; color: var(--dim); font-weight: 400; line-height: 1.7; }
-
-  /* placeholder for copy the owner has not written yet */
-  .awaiting {
-    margin-top: 18px;
-    padding: 20px;
-    border: 1px dashed var(--rule-2);
-    color: var(--dim-2);
-    font-size: .9rem;
-    line-height: 1.6;
-    background: rgba(255, 255, 255,.035);
-  }
-  .awaiting b { color: var(--dim); font-weight: 500; display: block; margin-bottom: 6px; }
 
   /* ---------- beyond ---------- */
   .beyond-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; }
@@ -2559,11 +2529,97 @@
   }
   .vload-name span { display: block; margin-top: 4px; font-weight: 400; color: var(--dim); }
   .vload.named .vload-name { opacity: 1; transform: none; }
+
+  /* Hiring journeys: sage surfaces, clear actions and optional detail. */
+  .skip-link { position: fixed; top: 8px; left: 8px; z-index: 1100; padding: 12px 18px; background: var(--signal); color: #04150E; transform: translateY(-180%); }
+  .skip-link:focus { transform: none; }
+  .vload-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .vload-actions button, .vload-actions a { padding: 12px 18px; min-height: 44px; border: 1px solid var(--rule-2); border-radius: 999px; font: inherit; color: var(--signal); background: var(--panel); cursor: pointer; }
+  .intro-resume { pointer-events: auto; position: absolute; top: 120px; left: 50%; transform: translateX(-50%); z-index: 8; padding: 10px 18px; color: var(--signal); background: var(--ground-2); border: 1px solid var(--rule-2); border-radius: 999px; min-height: 44px; white-space: nowrap; }
+  .hero { padding-top: calc(var(--topbar-h) + 32px); }
+  .hero + .ask { border-top: 0; padding: 0 0 44px; }
+  .ask-hint { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ask-chip { min-height: 44px; white-space: normal; text-align: left; }
+  .results { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .results .rcard-snap { max-height: none; opacity: 1; transform: none; margin-top: 18px; padding-top: 18px; border-top-color: var(--rule); visibility: visible; }
+  .work-more { display: none; margin-top: 22px; }
+  .case-overview { padding-top: 24px; padding-bottom: 32px; }
+  .case-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--rule-2); border-radius: 18px; overflow: hidden; background: var(--panel); }
+  .case-summary > div { padding: 24px; border-bottom: 1px solid var(--rule); }
+  .case-summary dt { color: var(--signal); font-size: .8rem; font-weight: 600; margin-bottom: 12px; }
+  .case-summary dd { margin: 0; font-size: 1rem; line-height: 1.65; }
+  .breadcrumbs { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 36px; font-size: .86rem; color: var(--dim); }
+  .breadcrumbs a { color: var(--signal); min-height: 44px; display: inline-flex; align-items: center; }
+  .breadcrumbs span { display: inline-flex; align-items: center; }
+  .optional-demo { padding: 24px; background: var(--panel); border: 1px solid var(--rule-2); border-radius: 18px; }
+  .optional-demo > summary { cursor: pointer; min-height: 44px; font-weight: 600; color: var(--signal); }
+  .optional-demo[open] > div { padding-top: 20px; }
+  .resume-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 34px; }
+  .sec-head .txt h1 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; max-width: 24ch; }
+  .drawer-projects > summary { padding: 18px; color: var(--signal); cursor: pointer; min-height: 48px; border-top: 1px solid var(--rule); }
+  .drawer-scrim { background: rgba(0, 0, 0, .68); }
+  .msg-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .msg-actions a, .msg-actions button { color: var(--signal); padding: 10px 12px; border: 1px solid var(--rule-2); background: var(--panel); font: inherit; font-size: .86rem; min-height: 44px; cursor: pointer; }
+  .work-index .rcard p { color: var(--dim); margin: 16px 0; }
+  #view h1:focus { outline: none; }
+  .band .hero-act.primary { color: var(--ground); background: var(--paper); border-color: var(--paper); }
+  .rcard-fig .v { font-size: clamp(1.5rem, 2.4vw, 2.1rem); white-space: nowrap; }
+  @media (max-width: 600px) {
+    #selectedResults:not(.expanded) .rcard:nth-child(n+2) { display: none; }
+    .work-more { display: inline-flex; }
+    .case-summary { grid-template-columns: 1fr; }
+    .case-summary > div { padding: 20px; }
+    .hero-act { white-space: normal; }
+    .intro-resume { top: 70px; }
+    .ask-form { gap: 8px; }
+    .ask-field { padding: 0 10px; }
+    .ask-chip { width: 100%; }
+    .resume-actions > a { width: 100%; justify-content: center; text-align: center; }
+  }
+  /* Mobile gutters belong to every page section, including full-width bands. */
+  @media (max-width: 780px) {
+    :root { --page-gutter: clamp(20px, 5.5vw, 28px); }
+    #view.wrap { max-width: none; padding: 0; }
+    #view > section { padding: 48px var(--page-gutter); }
+    #view > section.band { margin-inline: 0; padding-inline: var(--page-gutter); }
+    #view > .hero { padding-top: calc(var(--topbar-h) + 24px); padding-bottom: 32px; }
+    #view > .hero + .ask { padding-top: 12px; padding-bottom: 40px; }
+    #view > .case-overview { padding-block: 24px; }
+    #view > .cs-head { padding: 24px var(--page-gutter) 32px; }
+    #view > .breadcrumbs { padding: 24px var(--page-gutter) 0; }
+    #view > .band:has(.hs-viewport) { padding-block: 24px; }
+    .band .hs-track { padding-inline: 0; }
+    .foot-wrap { padding: 40px var(--page-gutter) 28px; }
+    .topbar { padding-inline: var(--page-gutter); }
+    .case-summary > div, .optional-demo { padding: 20px; }
+    .case-summary > div { min-width: 0; }
+    .case-summary dd { overflow-wrap: anywhere; }
+    .results, .recent, .learn, .rel, .contact-grid, .doors, .beyond-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    }
+  }
+  @media print {
+    @page { size: A4; margin: 12mm; }
+    .intro-resume, .skip-link, .edge-rail, .resume-actions, .sec-head { display: none !important; }
+    html, body, #view { background: #fff !important; color: #111 !important; }
+    #view { width: auto !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+    #view *, #view *::before, #view *::after { color: #111 !important; opacity: 1 !important; visibility: visible !important; transform: none !important; animation: none !important; transition: none !important; text-shadow: none !important; box-shadow: none !important; }
+    #view section, .cv, .cv-head, .cv-block { background: #fff !important; border: 0 !important; padding: 0 !important; margin: 0 0 4mm !important; }
+    .cv, .cv p, .cv li { font-size: 9pt !important; line-height: 1.35 !important; }
+    .cv-name { font-size: 16pt !important; }
+    .cv-job { break-inside: avoid; margin: 0 0 3mm !important; padding: 0 !important; }
+    .cv-block { break-inside: auto; }
+    .cv-h { break-after: avoid; font-size: 10pt !important; padding: 0 0 2mm !important; margin: 0 !important; }
+    .cv-points { margin: 1mm 0 0 !important; }
+    .cv-skills { margin: 1mm 0 !important; }
+  }
+
 </style>
 
-<div class="vload" id="vload" aria-hidden="true">
+<div class="vload" id="vload" aria-label="Opening animation">
   <div class="vload-wave" id="vloadWave"></div>
   <p class="vload-name">Avinash Garudapalli<span>AI Product Manager</span></p>
+  <div class="vload-actions"><button type="button" id="loaderSkip">Skip intro →</button><a href="#/resume">View résumé</a></div>
 </div>
 <script>
   /* =========================================================
@@ -2574,7 +2630,7 @@
      the monitor's typing until the loader has cleared. */
   (function () {
     var node = document.getElementById("vload");
-    var gate = window.__vload = { done: false, cbs: [] };
+    var gate = window.__vload = { done: false, cbs: [], skipRequested: false };
 
     function finish() {
       if (gate.done) return;
@@ -2585,6 +2641,27 @@
       for (var i = 0; i < cbs.length; i++) {
         try { cbs[i](); } catch (e) { /* one late callback must not stop the rest */ }
       }
+    }
+
+    // These controls must work even while the rest of the HTML is arriving.
+    function requestSkip(event) {
+      event.preventDefault();
+      gate.skipRequested = true;
+      finish();
+      if (gate.skipToContent) gate.skipToContent();
+    }
+    function openResume(event) {
+      event.preventDefault();
+      window.location.hash = "#/resume";
+      finish();
+    }
+    if (node) {
+      var skip = node.querySelector("#loaderSkip");
+      var resume = node.querySelector(".vload-actions a");
+      ["pointerdown", "click"].forEach(function (eventName) {
+        if (skip) skip.addEventListener(eventName, requestSkip);
+        if (resume) resume.addEventListener(eventName, openResume);
+      });
     }
 
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2656,22 +2733,22 @@
 
       <defs>
         <radialGradient id="gGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#A9E3C8" stop-opacity=".34"/>
+          <stop offset="0%" stop-color="#B3D7C4" stop-opacity=".34"/>
           <stop offset="60%" stop-color="#49691F" stop-opacity=".10"/>
-          <stop offset="100%" stop-color="#A9E3C8" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#B3D7C4" stop-opacity="0"/>
         </radialGradient>
         <linearGradient id="gSpill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#A9E3C8" stop-opacity=".16"/>
-          <stop offset="100%" stop-color="#A9E3C8" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#B3D7C4" stop-opacity=".16"/>
+          <stop offset="100%" stop-color="#B3D7C4" stop-opacity="0"/>
         </linearGradient>
         <linearGradient id="gLamp" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#7FCFAB" stop-opacity=".30"/>
-          <stop offset="100%" stop-color="#7FCFAB" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#79B397" stop-opacity=".30"/>
+          <stop offset="100%" stop-color="#79B397" stop-opacity="0"/>
         </linearGradient>
         <linearGradient id="gRgb" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#A9E3C8" stop-opacity=".55"/>
+          <stop offset="0%" stop-color="#B3D7C4" stop-opacity=".55"/>
           <stop offset="50%" stop-color="#B08CFF" stop-opacity=".45"/>
-          <stop offset="100%" stop-color="#7FCFAB" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#79B397" stop-opacity=".55"/>
         </linearGradient>
         <linearGradient id="gDesk" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#1E1F1C"/>
@@ -2737,16 +2814,15 @@
         <!-- window chrome -->
         <rect x="344" y="126" width="512" height="28" fill="#131512"/>
         <circle cx="362" cy="140" r="4" fill="#FF6B4A"/>
-        <circle cx="378" cy="140" r="4" fill="#7FCFAB"/>
-        <circle cx="394" cy="140" r="4" fill="#7FCFAB"/>
+        <circle cx="378" cy="140" r="4" fill="#79B397"/>
+        <circle cx="394" cy="140" r="4" fill="#79B397"/>
         <text x="416" y="144" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="10.5" fill="#3C3E41">avinash — session 01</text>
 
         <!-- screen content -->
-        <text x="378" y="200" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#7FCFAB">&gt; whoami</text>
+        <text x="378" y="200" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#79B397">&gt; whoami</text>
         <text id="scName" x="376" y="266" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="62" fill="#FFFFFF" letter-spacing="-1"></text>
-        <text id="scTag" x="379" y="308" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="21" fill="#7FCFAB"></text>
-        <rect id="scCaret" x="379" y="290" width="10" height="22" fill="#7FCFAB"/>
-        <text x="379" y="360" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="11.5" fill="#3C3E41">voice AI · product · ux · business</text>
+        <text id="scTag" x="379" y="308" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="18" fill="#79B397"></text>
+        <rect id="scCaret" x="379" y="290" width="10" height="22" fill="#79B397"/>
 
         <!-- scanlines -->
         <rect x="344" y="126" width="512" height="272" fill="url(#gSpill)" opacity=".25"/>
@@ -2765,7 +2841,7 @@
       <g id="layDesk">
       <!-- desk -->
       <rect x="70" y="458" width="1060" height="30" rx="3" fill="url(#gDesk)"/>
-      <rect x="70" y="458" width="1060" height="2" fill="#A9E3C8" opacity=".22"/>
+      <rect x="70" y="458" width="1060" height="2" fill="#B3D7C4" opacity=".22"/>
       <rect x="70" y="488" width="1060" height="15" fill="#111210"/>
       <rect x="130" y="506" width="940" height="9" rx="4" fill="url(#gRgb)" class="rgb-strip" filter="url(#fBlurSm)"/>
 
@@ -2811,7 +2887,7 @@
   </div>
 
   <button class="scroll-cue" id="scrollCue" type="button">
-    <span class="cue-label">Scroll to know me</span>
+    <span class="cue-label">View my work · skip intro</span>
     <span class="cue-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
            stroke-linecap="round" stroke-linejoin="round">
@@ -2819,8 +2895,10 @@
       </svg>
     </span>
   </button>
+  <a class="intro-resume" href="#/resume">View résumé →</a>
 </div>
 
+<a class="skip-link" href="#view" id="skipContent">Skip to main content</a>
 <header class="topbar" id="topbar">
   <a class="mark" href="#/"><span class="dot" aria-hidden="true"></span>Avinash<span class="mark-full">&nbsp;Garudapalli</span></a>
 
@@ -2877,7 +2955,7 @@
     <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-label="Conversation"></div>
     <div class="chat-foot">
       <form class="chat-form" id="chatForm">
-        <input class="chat-input" id="chatInput" type="text" autocomplete="off"
+        <input class="chat-input" id="chatInput" type="text" autocomplete="off" maxlength="600"
                placeholder="Ask a follow-up…" aria-label="Your question">
         <button class="chat-send" id="chatSend" type="submit">Send</button>
       </form>
@@ -2898,8 +2976,7 @@
     <div class="gal-cats" id="galCats" role="tablist" aria-label="Gallery categories"></div>
     <div class="gal-body">
       <div class="gal-grid" id="galGrid"></div>
-      <p class="gal-note">Each slot is sized and captioned, waiting on a real photograph.
-        Drop images in and the layout stays exactly as it is.</p>
+      <p class="gal-note">Notes from the trips and projects behind this portfolio.</p>
     </div>
   </div>
 </div>
@@ -2919,7 +2996,9 @@
     name: "Avinashdev Ravikumar Garudapalli",
     email: "avinashdevg09@gmail.com",
     phone: "+91 7303486776",
-    linkedin: "https://www.linkedin.com/in/avinashdev09/",
+    linkedin: "https://www.linkedin.com/in/avinashdevg/",
+    resume: "https://drive.google.com/uc?export=download&id=1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm",
+    resumeView: "https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing",
     summary: "Associate Product Manager with 2+ years building 0-to-1 AI and SaaS products, including Voice AI and Generative AI solutions. Track record of measurable outcomes through product strategy, automation and data-driven execution — plus end-to-end business ownership as a founder."
   };
 
@@ -3361,7 +3440,7 @@
   var EXPERIMENTS = [
     {
       title: "Tragenie \u2014 travel discovery",
-      status: "live",
+      status: "live demo",
       site: "tragenie",
       problem: "Travel research is scattered across Instagram, Reddit and Google Reviews, so planning a trip means manually reconciling sources that disagree.",
       approach: "Pulled signal from all three into a single personalization layer, combining location intelligence with a recommendation engine to attack the data-fragmentation problem directly.",
@@ -3369,7 +3448,7 @@
     },
     {
       title: "BlankStore \u2014 dropshipping storefront",
-      status: "live",
+      status: "operating business",
       site: "blankstore",
       problem: "Standing up a commerce brand end to end \u2014 storefront, catalogue, checkout and fulfilment \u2014 without a team.",
       approach: "Built and shipped the whole thing solo, then ran it: brand and catalogue decisions, checkout flow, and the fulfilment loop behind the orders.",
@@ -3599,57 +3678,42 @@
   }
 
   var NAV = [
-    { path: "#/story", label: "Story" },
+    { path: "#/work", label: "Work" },
     { path: "#/experience", label: "Experience" },
-    { path: "#/thinking", label: "Thinking" },
-    { path: "#/lab", label: "Lab" },
-    { path: "#/beyond", label: "Beyond" },
-    { path: "#/resume", label: "Résumé" }
+    { path: "#/about", label: "About" },
+    { path: "#/resume", label: "Résumé" },
+    { path: "#/contact", label: "Contact" }
   ];
 
-  // Every destination, grouped so there is exactly one obvious home for each
-  // kind of thing: who I am, what I did, how I think, everything else.
   var MENU = [
-    {
-      group: "Start",
-      items: [
-        { path: "#/", label: "Overview", note: "Positioning and results at a glance" },
-        { path: "#/story", label: "Story", note: "How I think, and where it came from" }
-      ]
-    },
-    {
-      group: "Experience",
-      items: [
-        { path: "#/experience", label: "All experience", note: "Every role, in order" },
-        { path: "#/work/chat360", label: "Chat360", note: "Enterprise Voice AI, 0-to-1" },
-        { path: "#/work/cordelia-cruises", label: "Cordelia Cruises", note: "Mobile app, CMS, Voice AI" },
-        { path: "#/work/nosh-house", label: "Nosh House Cafe", note: "Founder, full P&L" },
-        { path: "#/work/yapita-health", label: "Yapita Health", note: "AI healthcare chatbot" },
-        { path: "#/work/events-fusion", label: "Events Fusion", note: "B2B decks, sales ops" }
-      ]
-    },
-    {
-      group: "How I work",
-      items: [
-        { path: "#/thinking", label: "Product Thinking", note: "Discover through measure" },
-        { path: "#/lab", label: "Lab", note: "Self-directed AI experiments" }
-      ]
-    },
-    {
-      group: "Beyond the job",
-      items: [
-        { path: "#/beyond", label: "Beyond", note: "Travel, leadership, the things outside work" },
-        { path: "#/about", label: "Education", note: "Degrees and certifications" }
-      ]
-    },
-    {
-      group: "Get in touch",
-      items: [
-        { path: "#/resume", label: "Résumé", note: "The one-page version" },
-        { path: "#/contact", label: "Contact", note: "Email, phone, LinkedIn" }
-      ]
-    }
+    { group: "Start here", items: [
+      { path: "#/", label: "Home", note: "AI product work and business ownership" },
+      { path: "#/work", label: "Work", note: "Selected case studies and all projects" },
+      { path: "#/experience", label: "Experience", note: "Roles, dates and responsibilities" },
+      { path: "#/about", label: "About", note: "Story, education and interests" },
+      { path: "#/resume", label: "Résumé", note: "Read online or download the PDF" },
+      { path: "#/contact", label: "Contact", note: "Email, LinkedIn and phone" }
+    ] },
+    { group: "Project index", expandable: true, items: WORK.map(function (w) {
+      return { path: "#/work/" + w.slug, label: w.org, note: w.role };
+    }) },
+    { group: "Explore further", expandable: true, items: [
+      { path: "#/thinking", label: "Product Thinking", note: "How I move from discovery to measurement" },
+      { path: "#/lab", label: "Experiments", note: "Live demos, prototypes and concepts" },
+      { path: "#/story", label: "Personal story", note: "How I think and learn" },
+      { path: "#/beyond", label: "Beyond work", note: "Travel, sport and leadership" }
+    ] }
   ];
+
+  function orderedWork() {
+    var order = ["nosh-house", "events-fusion", "chat360", "cordelia-cruises", "yapita-health"];
+    return order.map(byWork);
+  }
+
+  function resumeDownload() {
+    return '<a class="hero-act primary" data-resume-download href="' + esc(PROFILE.resume) +
+      '" target="_blank" rel="noreferrer">Download résumé PDF ↗</a>';
+  }
 
   /* =========================================================
      HELPERS
@@ -4009,9 +4073,36 @@
 
   function chatLoad() {
     try {
-      var raw = sessionStorage.getItem("ag.chat");
-      if (raw) chatState.msgs = JSON.parse(raw) || [];
+      var stored = JSON.parse(sessionStorage.getItem("ag.chat") || "[]");
+      chatState.msgs = Array.isArray(stored) ? stored.filter(function (m) {
+        return m && (m.role === "user" || m.role === "model") && typeof m.text === "string";
+      }).slice(-30).map(function (m) {
+        return { role: m.role, text: m.text.slice(0, 10000), error: !!m.error,
+          sources: cleanSources(m.sources, ""), retry: typeof m.retry === "string" ? m.retry.slice(0, 600) : "" };
+      }) : [];
     } catch (e) { chatState.msgs = []; }
+  }
+
+  function cleanSources(sources, question) {
+    var seen = {};
+    var q = String(question || "").toLowerCase();
+    return (Array.isArray(sources) ? sources : []).filter(function (source) {
+      if (!source || typeof source.route !== "string" || typeof source.title !== "string") return false;
+      var route = source.route;
+      var valid = ["#/", "#/work", "#/experience", "#/about", "#/resume", "#/contact", "#/thinking", "#/lab", "#/story", "#/beyond"].indexOf(route) >= 0 ||
+        (route.indexOf("#/work/") === 0 && !!byWork(route.slice(7)));
+      if (!valid || seen[route]) return false;
+      seen[route] = true;
+      return true;
+    }).map(function (source) { return { route: source.route, title: source.title.slice(0, 120) }; }).sort(function (a, b) {
+      function rank(source) {
+        var work = source.route.indexOf("#/work/") === 0 ? byWork(source.route.slice(7)) : null;
+        if (work && (q.indexOf(work.org.toLowerCase()) >= 0 || q.indexOf(work.slug.replace(/-/g, " ")) >= 0)) return 0;
+        if (work) return 1;
+        return source.route === "#/contact" || source.route === "#/" ? 3 : 2;
+      }
+      return rank(a) - rank(b);
+    }).slice(0, 3);
   }
 
   function chatSave() {
@@ -4026,9 +4117,12 @@
       ? '<button class="ask-chip ask-resume" type="button" data-resume="1">' +
           'Continue where you left off (' + chatState.msgs.length + ')</button>'
       : "";
+    chips += ["What did you own at Chat360?", "Tell me about your business experience", "What roles are you looking for?"].map(function (q) {
+      return '<button class="ask-chip" type="button" data-ask="' + esc(q) + '">' + esc(q) + '</button>';
+    }).join("");
 
     return '' +
-      '<section class="ask" data-scene>' +
+      '<section class="ask" data-scene aria-label="Ask about Avinash">' +
         '<div class="rv">' +
           '<div class="ask-label">Ask this portfolio</div>' +
           '<form class="ask-form" id="askForm">' +
@@ -4036,7 +4130,7 @@
               '<svg class="ask-spark" viewBox="0 0 16 16" fill="none" stroke="currentColor" ' +
                 'stroke-width="1.4" aria-hidden="true">' +
                 '<path d="M8 1.6l1.6 4.2 4.2 1.6-4.2 1.6L8 13.2l-1.6-4.2L2.2 7.4l4.2-1.6z"/></svg>' +
-              '<input class="ask-input" id="askInput" type="text" autocomplete="off" ' +
+              '<input class="ask-input" id="askInput" type="text" autocomplete="off" maxlength="600" ' +
                 'placeholder="' + esc(ASK_SUGGESTIONS[0]) + '" ' +
                 'aria-label="Ask a question about Avinash">' +
             '</div>' +
@@ -4112,6 +4206,9 @@
             : typing
               ? esc(m.text.slice(0, m.reveal)) + '<i class="msg-caret"></i>'
               : mdLite(m.text)) + src +
+          (m.error ? '<div class="msg-actions">' +
+            (m.retry ? '<button type="button" data-chat-retry="' + esc(m.retry) + '"' + (chatState.busy ? ' disabled' : '') + '>Retry</button>' : '') +
+            '<a href="#/work">Browse work</a><a href="#/resume">View résumé</a><a href="#/contact">Contact</a></div>' : '') +
         '</div>' +
       '</div>';
     }).join("");
@@ -4153,6 +4250,7 @@
 
     var step = Math.max(2, Math.round(msg.text.length / 150));
     var timer = setInterval(function () {
+      if (chatState.msgs.indexOf(msg) < 0) { clearInterval(timer); return; }
       msg.reveal += step;
       if (msg.reveal >= msg.text.length) {
         clearInterval(timer);
@@ -4184,57 +4282,74 @@
     hint.insertBefore(b, hint.firstChild);
   }
 
-  function chatAsk(question) {
+  function cancelChat() {
+    chatState.requestId = (chatState.requestId || 0) + 1;
+    if (chatState.controller) chatState.controller.abort();
+    clearTimeout(chatState.timer);
+    chatState.busy = false;
+  }
+
+  function chatAsk(question, retry) {
     question = String(question || "").trim();
     if (!question || chatState.busy) return;
-
-    chatPush({ role: "user", text: question });
-
-    if (!RAG_ENDPOINT) {
-      chatPush({
-        role: "model",
-        error: true,
-        text: "The assistant is not connected yet. In the meantime, the answer is " +
-              "almost certainly somewhere on this site — or reach me directly from the contact section."
-      });
-      return;
+    var priorTurns = chatState.msgs.filter(function (message) { return !message.error; });
+    var lastTurn = priorTurns[priorTurns.length - 1];
+    var retryingCurrentQuestion = retry && lastTurn && lastTurn.role === "user" && lastTurn.text === question;
+    if (!retryingCurrentQuestion) chatPush({ role: "user", text: question });
+    function fail(text, canRetry) {
+      chatPush({ role: "model", error: true, text: text, retry: canRetry ? question : "" });
     }
-
+    if (question.length > 600) { fail("Please keep your question under 600 characters.", false); return; }
+    if (!RAG_ENDPOINT || typeof fetch !== "function") {
+      fail("The assistant is unavailable here. You can still read my work, view my résumé or contact me directly.", true); return;
+    }
+    if (navigator.onLine === false) {
+      fail("You appear to be offline. Reconnect and retry, or use the portfolio links below.", true); return;
+    }
     chatState.busy = true;
     chatRender();
-
-    // Only prior turns go up as history; the current question is sent separately.
-    var history = chatState.msgs.slice(0, -1).filter(function (m) { return !m.error; })
+    var requestId = (chatState.requestId || 0) + 1;
+    chatState.requestId = requestId;
+    var controller = typeof AbortController === "function" ? new AbortController() : null;
+    chatState.controller = controller;
+    var history = chatState.msgs.filter(function (m) { return !m.error; }).slice(0, -1)
       .slice(-6).map(function (m) { return { role: m.role, text: m.text }; });
-
-    fetch(RAG_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: question, history: history })
-    })
-      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
-      .then(function (res) {
-        chatState.busy = false;
-        if (!res.ok || !res.data || !res.data.answer) {
-          chatPush({
-            role: "model",
-            error: true,
-            text: (res.data && res.data.error) || "That did not go through. Try again in a moment."
-          });
-          return;
+    var options = { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: question, history: history }) };
+    if (controller) options.signal = controller.signal;
+    var timedOut = false;
+    var deadline = new Promise(function (resolve, reject) {
+      chatState.timer = setTimeout(function () {
+        timedOut = true;
+        if (controller) controller.abort();
+        reject(new Error("timeout"));
+      }, 25000);
+    });
+    var operation = fetch(RAG_ENDPOINT, options).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) {
+          var error = new Error("response"); error.status = response.status; throw error;
         }
-        var msg = { role: "model", text: res.data.answer, sources: res.data.sources || [] };
-        chatPush(msg);
-        chatReveal(msg);
-      })
-      .catch(function () {
-        chatState.busy = false;
-        chatPush({
-          role: "model",
-          error: true,
-          text: "I could not reach the assistant — check your connection and try again."
-        });
+        if (!data || typeof data.answer !== "string" || !data.answer.trim()) throw new Error("invalid response");
+        return data;
       });
+    });
+    Promise.race([operation, deadline]).then(function (data) {
+      if (requestId !== chatState.requestId) return;
+      clearTimeout(chatState.timer);
+      chatState.busy = false;
+      var msg = { role: "model", text: data.answer.trim().slice(0, 10000), sources: cleanSources(data.sources, question) };
+      chatPush(msg);
+      chatReveal(msg);
+    }).catch(function (error) {
+      if (requestId !== chatState.requestId) return;
+      clearTimeout(chatState.timer);
+      chatState.busy = false;
+      var text = error.status === 429 ? "The assistant has reached its question limit. Please wait a little and retry." :
+        timedOut || error.status === 504 ? "The assistant took too long to respond. Please retry, or browse the original work below." :
+        "The assistant could not answer just now. Please retry, or use the original portfolio pages below.";
+      fail(text, true);
+    });
   }
 
   /* Types each suggestion into the placeholder and clears it again, so the
@@ -4333,8 +4448,8 @@
     return out.join("");
   }
 
-  function viewHome() {
-    var results = RESULT_CARDS.map(function (c, i) {
+  function resultCards() {
+    return RESULT_CARDS.map(function (c, i) {
       var figs = c.figures.map(function (f) {
         return '<div class="rcard-fig"><div class="v num">' + esc(f.v) + '</div>' +
           '<div class="k">' + esc(f.k) + '</div></div>';
@@ -4350,6 +4465,10 @@
         (c.site && siteById(c.site) ? '  \u00b7  live site inside' : '') + '</span>' +
       '</a>';
     }).join("");
+  }
+
+  function viewHome() {
+    var results = resultCards();
 
     var recent = RECENT.map(function (r, i) {
       var stops = r.stops
@@ -4369,7 +4488,7 @@
           '<p>' + esc(r.blurb) + '</p>' +
           stops +
           '<div class="rec-foot"><span>' + esc(r.when) + '</span>' +
-          '<span class="rec-open">Open gallery (' + count + ')</span></div>' +
+          '<span class="rec-open">Open notes (' + count + ')</span></div>' +
         '</div>' +
       '</button>';
     }).join("");
@@ -4381,7 +4500,7 @@
 
     var doors = [
       { n: "01", t: "Story", d: "How I think, why I travel alone, and what either has to do with building product.", h: "#/story", go: "Read the story" },
-      { n: "02", t: "Experience", d: "Six roles in order: from sponsorship head at a college fest to owning a P&L.", h: "#/experience", go: "See every role" },
+      { n: "02", t: "Experience", d: "Roles and responsibilities, from sponsorship head at a college fest to owning a P&L.", h: "#/experience", go: "See every role" },
       { n: "03", t: "Beyond", d: "The Himalayas, the abacus, and everything nobody paid me to do.", h: "#/beyond", go: "Look around" }
     ].map(function (x, i) {
       return '<a class="door rv" style="--i:' + i + '" href="' + x.h + '">' +
@@ -4394,26 +4513,28 @@
     // proof, and the personal side last. Nothing here is new content — the
     // hero actions only point at pages that already exist.
     return '' +
-      askBar() +
-
       '<section class="hero" data-scene>' +
-        '<p class="hero-kicker rv">Open to AI and product roles</p>' +
+        '<p class="hero-kicker rv">// AI Product Manager · Open to product roles</p>' +
         '<h1 class="rv">I take AI products from zero to one.</h1>' +
         '<p class="lede rv" style="--i:1">Associate Product Manager behind Chat360’s enterprise Voice AI launch, ' +
           'and the founder who owns every line of Nosh House Cafe’s P&amp;L. ' +
           'Currently shipping, travelling and building in the open.</p>' +
         '<div class="hero-acts rv" style="--i:2">' +
-          '<a class="hero-act primary" href="#/resume">See the résumé</a>' +
+          '<a class="hero-act primary" href="#/work">View selected work</a>' +
+          '<a class="hero-act" href="#/resume">View résumé</a>' +
           '<a class="hero-act" href="#/contact">Let’s talk</a>' +
           '<a class="hero-act quiet" href="#/experience">All experience</a>' +
         '</div>' +
       '</section>' +
 
+      askBar() +
+
       '<section data-scene>' +
         secHead("Case studies", "Three businesses. The numbers that moved.",
           "Enterprise Voice AI, a cruise line’s first app, and a family cafe taken to break-even. " +
-          "Hover a card for the detail, or open the full story.") +
-        '<div class="results">' + results + '</div>' +
+          "Read the responsibility, result and full case study for each project.") +
+        '<div class="results" id="selectedResults">' + results + '</div>' +
+        '<button class="hero-act work-more" type="button" id="workMore" aria-expanded="false" aria-controls="selectedResults">View more case studies</button>' +
       '</section>' +
 
       // The tile field, built from the real IMPACT figures and the real
@@ -4431,7 +4552,7 @@
 
       '<section data-scene>' +
         secHead("Capability", "One thread runs through every project",
-          "Click a project to trace the skills it put to work. Double-click to open its case study — " +
+          "Optional: click a project to trace the skills it put to work. Double-click to open its case study — " +
           "or use the button underneath.") +
         '<div class="rv rv-scale">' + buildMap() + '</div>' +
       '</section>' +
@@ -4440,12 +4561,6 @@
         secHead("Go deeper", "Pick your way in",
           "Whatever you came to find out, it has one obvious home.") +
         '<div class="doors">' + doors + '</div>' +
-      '</section>' +
-
-      '<section data-scene>' +
-        secHead("Documents", "See how I write it down",
-          "PRDs and specs from recent work, for anyone who wants the thinking behind the shipping.") +
-        prdShelf() +
       '</section>' +
 
       '<section data-scene>' +
@@ -4460,27 +4575,34 @@
       '</section>';
   }
 
-  /* PRD shelf. Add real entries as { name, kind, meta, href } once documents
-     exist; anything without an href renders as a visibly pending slot. */
-  var PRDS = [
-    { name: "Voice AI platform PRD", kind: "Chat360", meta: "Add file" },
-    { name: "Bot Builder spec", kind: "Chat360", meta: "Add file" },
-    { name: "Travel Discovery brief", kind: "Lab", meta: "Add file" },
-    { name: "HR Workflow spec", kind: "Lab", meta: "Add file" }
-  ];
+  function viewWork() {
+    return '<section>' + secHead("Work", "Selected work. Real decisions and outcomes.",
+      "Enterprise Voice AI, digital customer experiences and end-to-end business ownership.") +
+      '<div class="results work-index">' + WORK.map(function (w) {
+        return '<a class="rcard rv" href="#/work/' + w.slug + '"><span class="rcard-label">' + esc(w.org + " · " + w.role) +
+          '</span><h3>' + esc(w.title) + '</h3><p>' + esc(w.line) + '</p><div class="rcard-figs">' + w.metrics.map(function (m) {
+            return '<div class="rcard-fig"><div class="v">' + esc(m.v) + '</div><div class="k">' + esc(m.k) + '</div></div>';
+          }).join("") + '</div><span class="rcard-go">Read case study →</span></a>';
+      }).join("") + '</div></section><section>' + secHead("Next", "Talk about the work") + contactGrid() + '</section>';
+  }
 
-  function prdShelf() {
-    return '<div class="prd">' + PRDS.map(function (d, i) {
-      var pending = !d.href;
-      var tag = pending ? "div" : "a";
-      return '<' + tag + ' class="prd-item rv' + (pending ? " pending" : "") + '"' +
-        (pending ? "" : ' href="' + d.href + '" target="_blank" rel="noreferrer"') +
-        ' style="--i:' + i + '">' +
-        '<span class="prd-kind">' + esc(d.kind) + '</span>' +
-        '<span class="prd-name">' + esc(d.name) + '</span>' +
-        '<span class="prd-meta">' + esc(d.meta) + '</span>' +
-      '</' + tag + '>';
-    }).join("") + '</div>';
+  var CASE_DECISIONS = {
+    "chat360": "Find and fix the real pipeline bottleneck before changing vendors.",
+    "cordelia-cruises": "Build a shared content backbone alongside the app, and automate routine support.",
+    "nosh-house": "Connect digital ordering, operations and retention while balancing cash flow.",
+    "yapita-health": "Use research, journey mapping and prototypes to validate the chatbot experience.",
+    "events-fusion": "Tailor each pitch to the industry's buying criteria and improve the follow-up process."
+  };
+
+  function caseSummary(w) {
+    var fields = [
+      ["01 / Problem", w.problem], ["02 / My responsibility", w.myRole || w.line],
+      ["03 / Key decision", CASE_DECISIONS[w.slug]],
+      ["04 / Outcome", w.metrics.map(function (m) { return m.v + " " + m.k; }).join(" · ")]
+    ];
+    return '<dl class="case-summary">' + fields.map(function (f) {
+      return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>';
+    }).join("") + '</dl>';
   }
 
   var CASE_SITE = { "nosh-house": "noshhouse" };
@@ -4498,7 +4620,7 @@
     var inits = w.inits.map(function (it, idx) {
       var tags = it.tags.map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join("");
       var body = it.detail.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join("");
-      return '<details class="init rv" style="--i:' + Math.min(idx, 6) + '">' +
+      return '<details class="init rv"' + (idx === 0 ? ' open' : '') + ' style="--i:' + Math.min(idx, 6) + '">' +
         '<summary><span class="init-caret" aria-hidden="true">▸</span>' +
         '<span><span class="init-name">' + esc(it.name) + '</span>' +
         '<span class="init-sum">' + esc(it.sum) + '</span>' +
@@ -4528,6 +4650,7 @@
     var learnings = w.learnings.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join("");
 
     return '' +
+      '<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#/work">Work</a><span aria-hidden="true">/</span><span>' + esc(w.org) + '</span></nav>' +
       '<div class="cs-head">' +
         '<div class="cs-org rv instant">' + esc(w.org) + ' / ' + esc(w.context) + '</div>' +
         '<h1 class="rv instant">' + esc(w.title) + '</h1>' +
@@ -4538,6 +4661,7 @@
           '<div><dt>team</dt><dd>' + esc(w.team) + '</dd></div>' +
         '</dl>' +
       '</div>' +
+      '<section class="case-overview" aria-label="Case study at a glance">' + caseSummary(w) + '</section>' +
 
       '<section>' +
         '<p class="lede rv">' + esc(w.overview) + '</p>' +
@@ -4556,14 +4680,6 @@
         '</div></div>' +
       '</section>' +
 
-      (w.slug === "chat360"
-        ? '<section data-scene>' +
-            secHead("Latency", "Tune the pipeline yourself",
-              "Switch on the four optimisations that shipped and watch the budget land on the real result.") +
-            '<div class="rv rv-scale">' + labMarkup() + '</div>' +
-          '</section>'
-        : "") +
-
       '<section>' +
         secHead("build", "What I built", "Open any one for the detail underneath.") +
         '<div data-par="0.04">' + inits + '</div>' +
@@ -4573,6 +4689,10 @@
         secHead("outcome", "What it moved, in numbers") +
         '<div data-par="0.06"><div class="readouts">' + metrics + '</div></div>' +
       '</section>' +
+      (w.slug === "chat360"
+        ? '<section><details class="optional-demo"><summary>Explore the Voice AI latency model</summary><div>' +
+          '<p class="panel-note">Optional interactive example. The stage split is illustrative; the 50% end-to-end reduction is the reported result.</p>' +
+          labMarkup() + '</div></details></section>' : "") +
 
       '<section>' +
         '<div data-par="0.05"><div class="learn">' +
@@ -4585,7 +4705,8 @@
       '<section>' +
         secHead("next", "Keep reading") +
         '<div data-par="0.04"><div class="rel rv">' + rel + '</div></div>' +
-        '<a class="back" href="#/experience">← all experience</a>' +
+        '<div class="hero-acts"><a class="hero-act primary" href="#/contact">Contact me about a product role</a>' +
+        '<a class="hero-act" href="#/work">All work</a></div>' +
       '</section>';
   }
 
@@ -4606,7 +4727,7 @@
     }).join("");
 
     return '<section>' +
-      secHead("lab", "Things I built because I wanted to know if they'd work", "Self-directed prototypes, not client work. Nothing here shipped to customers — that is the point of a lab.") +
+      secHead("lab", "Things I built because I wanted to know if they'd work", "Self-directed work, separate from client projects. Each item is labeled as a live demo, operating business, prototype or concept.") +
       '<div data-par="0.05">' + exps + '</div>' +
     '</section>';
   }
@@ -4670,6 +4791,7 @@
       '<section>' +
         secHead("outside", "Away from a screen") +
         '<ul class="learn rv" style="display:block;padding:0;list-style:none">' + beyond + '</ul>' +
+        '<div class="hero-acts"><a class="hero-act" href="#/story">Personal story →</a><a class="hero-act" href="#/beyond">Travel and interests →</a></div>' +
       '</section>';
   }
 
@@ -4704,7 +4826,7 @@
       return '<figure class="gal-item">' +
         plate(kinds[(galState.cat * 2 + i) % kinds.length], null) +
         '<figcaption class="gal-cap">' + esc(label) + '</figcaption>' +
-        '<div class="gal-empty">Photo slot \u2014 awaiting a real image</div>' +
+
         '</figure>';
     }).join("");
   }
@@ -4755,19 +4877,19 @@
           'stroke-width="' + (i % 4 === 0 ? 1.4 : 1) + '" opacity="' + (0.85 - t * 0.35) + '"/>';
       }
       art = rings +
-        '<circle cx="204" cy="146" r="4" fill="#7FCFAB"/>' +
-        '<circle cx="204" cy="146" r="11" fill="none" stroke="#7FCFAB" stroke-opacity=".45"/>';
+        '<circle cx="204" cy="146" r="4" fill="#79B397"/>' +
+        '<circle cx="204" cy="146" r="11" fill="none" stroke="#79B397" stroke-opacity=".45"/>';
     }
 
     if (kind === "route") {
       // a travelled path with stops along it
       var pts = [[34, 236], [96, 186], [150, 205], [214, 132], [276, 158], [330, 92], [372, 112]];
       var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0] + " " + p[1]; }).join(" ");
-      art = '<path d="' + d + '" fill="none" stroke="#7FCFAB" stroke-width="1.8" ' +
+      art = '<path d="' + d + '" fill="none" stroke="#79B397" stroke-width="1.8" ' +
         'stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>' +
         pts.map(function (p, i) {
           return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (i === pts.length - 1 ? 6 : 3.5) + '" ' +
-            'fill="' + (i === pts.length - 1 ? "#7FCFAB" : "#0F100E") + '" stroke="#7FCFAB" stroke-width="1.6"/>';
+            'fill="' + (i === pts.length - 1 ? "#79B397" : "#0F100E") + '" stroke="#79B397" stroke-width="1.6"/>';
         }).join("") +
         '<path d="M0 262 H400" stroke="#1C1D1B" stroke-width="1"/>';
     }
@@ -4782,7 +4904,7 @@
           var op = Math.max(0.08, 0.92 - dist * 0.72);
           var rad = Math.max(1.1, 3.6 - dist * 2.1);
           dots += '<circle cx="' + x + '" cy="' + y + '" r="' + rad.toFixed(2) + '" ' +
-            'fill="' + (dist < 0.36 ? "#7FCFAB" : "#A9E3C8") + '" opacity="' + op.toFixed(2) + '"/>';
+            'fill="' + (dist < 0.36 ? "#79B397" : "#B3D7C4") + '" opacity="' + op.toFixed(2) + '"/>';
         }
       }
       art = dots;
@@ -4800,7 +4922,7 @@
         }
         layers += '<path d="' + path + ' L400 300 Z" fill="' + s[1] + '" opacity="' + s[2] + '"/>';
       });
-      art = layers + '<circle cx="312" cy="72" r="17" fill="#7FCFAB" opacity=".82"/>';
+      art = layers + '<circle cx="312" cy="72" r="17" fill="#79B397" opacity=".82"/>';
     }
 
     return '<figure class="plate ' + (cls || "") + '">' +
@@ -4810,14 +4932,7 @@
       '</figure>';
   }
 
-  function awaiting(what, hint) {
-    return '<div class="awaiting"><b>' + esc(what) + '</b>' + esc(hint) + '</div>';
-  }
-
-  /* =========================================================
-     STORY — structure only; the words are Avinash's to write
-     ========================================================= */
-
+  /* Story */
   function viewStory() {
     return '' +
       '<section data-scene>' +
@@ -4832,9 +4947,6 @@
             '<h3>How I think</h3>' +
             '<p>Thinking about thinking — noticing the pattern I default to, and choosing a ' +
             'different one on purpose.</p>' +
-            awaiting("Your words go here",
-              "What does metacognition actually look like in your work? A decision you " +
-              "reconsidered, a bias you caught, a method you built for yourself.") +
           '</div>' +
           plate("field", null) +
         '</div>' +
@@ -4846,9 +4958,6 @@
           '<div class="rv">' +
             '<h3>Always learning</h3>' +
             '<p>A philomath collects questions faster than answers.</p>' +
-            awaiting("Your words go here",
-              "What are you learning right now, and why that? What rabbit hole did you " +
-              "fall down recently that had nothing to do with work?") +
           '</div>' +
         '</div>' +
       '</section>' +
@@ -4859,9 +4968,6 @@
           '<div class="rv">' +
             '<h3>Solo travel</h3>' +
             '<p>Travelling alone removes the option of deferring to someone else.</p>' +
-            awaiting("Your words go here",
-              "Where have you gone solo? What changed in how you think because of it? " +
-              "One specific moment beats a list of countries.") +
           '</div>' +
           plate("route", null) +
         '</div>' +
@@ -4939,7 +5045,7 @@
   }
 
   function viewExperience() {
-    var rows = WORK.map(function (w) {
+    var rows = orderedWork().map(function (w) {
       var points = w.inits.slice(0, 3).map(function (it) {
         return '<li>' + esc(it.sum) + '</li>';
       }).join("");
@@ -4960,7 +5066,7 @@
       '</div>';
     }).join("");
 
-    var early = JOURNEY[0].entries.map(function (e) {
+    var early = JOURNEY[0].entries.slice().reverse().map(function (e) {
       return '<div class="xp-row rv">' +
         '<div class="xp-when">' + esc(e.meta) + '</div>' +
         '<div><div class="xp-org">' + esc(e.org) + '</div>' +
@@ -4971,7 +5077,7 @@
 
     return '' +
       '<section data-scene>' +
-        secHead("Experience", "Six roles. One direction.") +
+        secHead("Experience", "From design to AI products and business ownership.") +
         '<p class="lede rv">Leadership, then business development, then design, then product, ' +
         'then AI, then owning the whole thing. Each one is why the next was possible.</p>' +
       '</section>' +
@@ -4981,7 +5087,7 @@
       // a replacement for it, so nothing is lost if the pin cannot run.
       '<section data-scene class="band">' +
         '<div class="hs-viewport" id="hsWork">' +
-          '<div class="hs-track">' + WORK.map(function (w, i) {
+          '<div class="hs-track">' + orderedWork().map(function (w, i) {
             return '<a class="hs-card" href="#/work/' + w.slug + '">' +
               '<div class="hs-shot notch">' + plateMark(w.org) + '</div>' +
               '<div class="hs-name"><span>' + esc(w.org) + '</span>' +
@@ -5013,7 +5119,7 @@
   }
 
   function viewResume() {
-    var jobs = WORK.map(function (w) {
+    var jobs = orderedWork().map(function (w) {
       var bullets = w.metrics.map(function (m) {
         return '<li>' + esc(m.k) + ': <strong>' + esc(m.v) + '</strong></li>';
       }).join("") + w.inits.slice(0, 3).map(function (it) {
@@ -5039,14 +5145,15 @@
     }).join("");
 
     return '<section class="cv">' +
-      secHead("résumé", "Everything, on one page") +
+      secHead("résumé", "Experience, in one place") +
+      '<div class="resume-actions">' + resumeDownload() + '<a class="hero-act" href="' + esc(PROFILE.resumeView) + '" target="_blank" rel="noreferrer">Open PDF in Google Drive ↗</a></div>' +
 
       '<div class="cv-head rv">' +
         '<div class="cv-name">' + esc(PROFILE.name) + '</div>' +
         '<div class="cv-contact">' +
           '<a href="mailto:' + PROFILE.email + '">' + esc(PROFILE.email) + '</a>' +
           '<a href="tel:' + PROFILE.phone.replace(/\s/g, "") + '">' + esc(PROFILE.phone) + '</a>' +
-          '<a href="' + PROFILE.linkedin + '" target="_blank" rel="noreferrer">linkedin.com/in/avinashdev09</a>' +
+          '<a href="' + PROFILE.linkedin + '" target="_blank" rel="noreferrer">linkedin.com/in/avinashdevg</a>' +
         '</div>' +
         '<p class="cv-summary">' + esc(PROFILE.summary) + '</p>' +
         '<button type="button" class="btn-ghost print-hide" id="printCv">Print or save as PDF</button>' +
@@ -5083,7 +5190,7 @@
       '<a class="contact-cell" href="tel:' + PROFILE.phone.replace(/\s/g, "") + '">' +
         '<div class="ck">phone</div><div class="cv">' + esc(PROFILE.phone) + '</div></a>' +
       '<a class="contact-cell" href="' + PROFILE.linkedin + '" target="_blank" rel="noreferrer">' +
-        '<div class="ck">linkedin</div><div class="cv">avinashdev09</div></a>' +
+        '<div class="ck">linkedin</div><div class="cv">avinashdevg</div></a>' +
     '</div>';
   }
 
@@ -5092,7 +5199,8 @@
     // reference puts its own: the last thing on the page, impossible to
     // scroll past without registering.
     return '<section class="band">' +
-      secHead("contact", "Let's talk", "Open to associate and senior product roles in AI, and to conversations about voice, agentic products, or building something 0-to-1.") +
+      secHead("contact", "Let's talk", "Open to AI and product management roles, and to conversations about voice, agentic products, or building something 0-to-1.") +
+      '<div class="hero-acts rv"><a class="hero-act primary" href="mailto:' + esc(PROFILE.email) + '?subject=Product%20role%20conversation">Email me about a product role</a></div>' +
       '<div data-par="0.05"><div class="rv">' + contactGrid() + '</div></div>' +
       '<p class="lede rv" style="margin-top:32px">If you are hiring, the fastest useful thing you can do is read ' +
       '<a href="#/work/chat360">the Chat360 case study</a> — it is the clearest picture of how I work with ' +
@@ -5103,7 +5211,7 @@
   function viewMissing() {
     return '<section>' +
       secHead("404", "Nothing at that address") +
-      '<p class="lede">That route does not exist. Press ⌘K, or ' +
+      '<p class="lede">That route does not exist. Choose Work, Résumé or Contact from the menu, or ' +
       '<a href="#/">go back to the overview</a>.</p>' +
     '</section>';
   }
@@ -5120,24 +5228,48 @@
       return w ? w.org.toLowerCase() : "not found";
     }
     var map = {
-      "#/story": "story", "#/experience": "experience", "#/lab": "lab",
-      "#/thinking": "thinking", "#/beyond": "beyond", "#/about": "education",
+      "#/story": "story", "#/experience": "experience", "#/lab": "Experiments",
+      "#/thinking": "Product Thinking", "#/beyond": "beyond", "#/about": "About",
       "#/resume": "résumé", "#/contact": "contact"
     };
     return map[route] || "not found";
   }
 
   var routeInTimer = null;
+  var activeEntry = null;
+  var scrollPositions = {};
+  var routeScrollPositions = {};
+  var activeRoute = null;
+  var mobileWorkExpanded = false;
+  try { history.scrollRestoration = "manual"; } catch (e) { /* local memory still works */ }
+  window.addEventListener("scroll", function () {
+    if (activeEntry) scrollPositions[activeEntry] = window.scrollY;
+    if (activeRoute) routeScrollPositions[activeRoute] = window.scrollY;
+  }, { passive: true });
 
   function render() {
     var route = window.location.hash || "#/";
     var view = el("view");
     var html;
     var isHome = route === "#/";
+    if (activeEntry) scrollPositions[activeEntry] = window.scrollY;
+    if (activeRoute) routeScrollPositions[activeRoute] = window.scrollY;
+    var entry = history.state && history.state.agPortfolioEntry;
+    var returning = !!entry && entry !== activeEntry;
+    // Re-entering the same fragment can clear browser state without a reload.
+    if (!entry && activeRoute && activeRoute !== route && ["#/", "#/work", "#/experience"].indexOf(route) >= 0 && routeScrollPositions[route] != null) returning = true;
+    if (!entry) {
+      entry = Date.now().toString(36) + Math.random().toString(36).slice(2);
+      try { history.replaceState(Object.assign({}, history.state || {}, { agPortfolioEntry: entry }), ""); } catch (e) { /* history may be restricted */ }
+    }
+    activeEntry = entry;
+    activeRoute = route;
+    var restoreY = returning ? (scrollPositions[entry] != null ? scrollPositions[entry] : routeScrollPositions[route] || 0) : 0;
 
     if (isHome) html = viewHome();
     else if (route === "#/story") html = viewStory();
-    else if (route === "#/experience" || route === "#/work" || route === "#/journey") html = viewExperience();
+    else if (route === "#/work") html = viewWork();
+    else if (route === "#/experience" || route === "#/journey") html = viewExperience();
     else if (route.indexOf("#/work/") === 0) html = viewCase(route.slice(7));
     else if (route === "#/beyond") html = viewBeyond();
     else if (route === "#/lab") html = viewLab();
@@ -5148,6 +5280,25 @@
     else html = viewMissing();
 
     view.innerHTML = html;
+    if (!view.querySelector("h1")) {
+      var firstHeading = view.querySelector("h2");
+      if (firstHeading) firstHeading.outerHTML = firstHeading.outerHTML.replace(/h2/g, "h1");
+    }
+    var pageHeading = view.querySelector("h1");
+    if (pageHeading) pageHeading.setAttribute("tabindex", "-1");
+    var label = pageHeading ? pageHeading.textContent : titleFor(route);
+    var titleCase = route.indexOf("#/work/") === 0 ? byWork(route.slice(7)) : null;
+    document.title = (isHome ? "AI Product Manager" : (titleCase ? titleCase.org + " — " : "") + label) + " — Avinash Garudapalli";
+    var workMore = el("workMore");
+    if (workMore) {
+      function updateWorkDisclosure() {
+        el("selectedResults").classList.toggle("expanded", mobileWorkExpanded);
+        workMore.setAttribute("aria-expanded", String(mobileWorkExpanded));
+        workMore.textContent = mobileWorkExpanded ? "Show fewer case studies" : "View more case studies";
+      }
+      updateWorkDisclosure();
+      workMore.addEventListener("click", function () { mobileWorkExpanded = !mobileWorkExpanded; updateWorkDisclosure(); refreshLayout(); });
+    }
 
     // Every section is a scroll scene, whichever view produced it.
     Array.prototype.forEach.call(view.querySelectorAll("section"), function (sec) {
@@ -5169,7 +5320,7 @@
     var links = document.querySelectorAll("#nav a, #navBody .drawer-link");
     for (var i = 0; i < links.length; i++) {
       var href = links[i].getAttribute("href");
-      var active = href === "#/" ? route === "#/" : (route === href || route.indexOf(href + "/") === 0);
+      var active = href === "#/" ? route === "#/" : (route === href || route.indexOf(href + "/") === 0 || (href === "#/about" && (route === "#/story" || route === "#/beyond")));
       if (active) links[i].setAttribute("aria-current", "page");
       else links[i].removeAttribute("aria-current");
     }
@@ -5185,6 +5336,15 @@
 
     motionRoute(isHome);
     countUp();
+    requestAnimationFrame(function () {
+      if (pageHeading && (!isHome || restoreY > 0)) pageHeading.focus({ preventScroll: true });
+      if (returning) {
+        window.scrollTo({ top: restoreY, behavior: "instant" });
+        if (lenis) lenis.scrollTo(restoreY, { immediate: true });
+        M.sy = restoreY;
+        wake();
+      }
+    });
 
     // Enter transition for content routes. The overview is excluded on
     // purpose: it owns the desk intro, and a second animation on the same
@@ -5232,7 +5392,7 @@
       '<a class="reach" href="tel:' + PROFILE.phone.replace(/\s/g, "") + '">' + ICONS.phone +
         '<span><span class="rlabel">call</span><br>' + esc(PROFILE.phone) + '</span></a>' +
       '<a class="reach" href="' + PROFILE.linkedin + '" target="_blank" rel="noreferrer">' + ICONS.linkedin +
-        '<span><span class="rlabel">linkedin</span><br>avinashdev09</span></a>';
+        '<span><span class="rlabel">linkedin</span><br>avinashdevg</span></a>';
   }
 
   function renderFooter() {
@@ -6286,7 +6446,7 @@
     if (!nameNode || !tagNode) return;
 
     var NAME = "Avinash";
-    var TAG = "a Metacognist & Philomath";
+    var TAG = "AI Product Manager · Metacognist & Philomath";
 
     // Deep-linked to an inner route: the scene is hidden, so measuring text would fail.
     if (staticIntro || !el("stage").classList.contains("live")) {
@@ -6384,6 +6544,14 @@
      MENU DRAWER — reaches every page at any screen size
      ========================================================= */
 
+  function refreshLayout() {
+    requestAnimationFrame(function () {
+      measure();
+      if (hasGsap()) window.ScrollTrigger.refresh();
+      wake();
+    });
+  }
+
   function renderMenu() {
     el("navBody").innerHTML = MENU.map(function (g) {
       var items = g.items.map(function (i) {
@@ -6392,7 +6560,9 @@
           '<span class="dl-note">' + esc(i.note) + '</span>' +
         '</a>';
       }).join("");
-      return '<div class="drawer-group"><div class="drawer-group-name">' + esc(g.group) + '</div></div>' + items;
+      return g.expandable
+        ? '<details class="drawer-projects"><summary>' + esc(g.group) + '</summary>' + items + '</details>'
+        : '<div class="drawer-group"><div class="drawer-group-name">' + esc(g.group) + '</div></div>' + items;
     }).join("");
   }
 
@@ -6444,11 +6614,17 @@
     if (e.target === el("chatScrim")) chatClose();
   });
   el("chatClear").addEventListener("click", function () {
+    cancelChat();
     chatState.msgs = [];
     chatSave();
     chatRender();
     askSyncResume();
     el("chatInput").focus();
+  });
+  el("chatLog").addEventListener("click", function (e) {
+    var retry = e.target.closest("[data-chat-retry]");
+    if (retry) { chatAsk(retry.getAttribute("data-chat-retry"), true); return; }
+    if (e.target.closest('a[href^="#/"]')) chatClose();
   });
   el("chatForm").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -6476,6 +6652,15 @@
 
   document.addEventListener("keydown", function (e) {
     var galOpenNow = !el("galScrim").hidden;
+    var overlay = !el("chatScrim").hidden ? el("chatScrim") : galOpenNow ? el("galScrim") : menuOpen ? el("navDrawer") : null;
+    if (e.key === "Tab" && overlay) {
+      var focusable = Array.prototype.filter.call(overlay.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), summary'), function (n) {
+        return n.getClientRects().length && getComputedStyle(n).visibility !== "hidden";
+      });
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (first && e.shiftKey && (document.activeElement === first || !overlay.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+      else if (last && !e.shiftKey && (document.activeElement === last || !overlay.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+    }
     if (e.key === "Escape") {
       if (!el("chatScrim").hidden) { e.preventDefault(); chatClose(); return; }
       if (galOpenNow) { e.preventDefault(); galClose(); return; }
@@ -6526,14 +6711,28 @@
     window.scrollTo({ top: Math.round(introSpan()), behavior: "auto" });
   }, true);
 
+  function skipIntroToContent() {
+    var top = staticIntro ? el("view").getBoundingClientRect().top + window.scrollY - el("topbar").offsetHeight : Math.round(introSpan());
+    if ((window.location.hash || "#/") !== "#/") top = 0;
+    window.scrollTo({ top: top, behavior: "instant" });
+    if (lenis) lenis.scrollTo(top, { immediate: true });
+    M.sy = top;
+    if (!staticIntro) { introTarget = 1; M.introP = 1; applyIntro(1); }
+    var heading = el("view").querySelector("h1");
+    if (heading) heading.focus({ preventScroll: true });
+    wake();
+  }
+  if (window.__vload) window.__vload.skipToContent = skipIntroToContent;
+  el("skipContent").addEventListener("click", function (e) { e.preventDefault(); skipIntroToContent(); });
+  el("view").addEventListener("toggle", function (e) {
+    if (e.target.tagName !== "DETAILS" || !e.target.open) return;
+    Array.prototype.forEach.call(e.target.querySelectorAll(".rv"), function (n) { n.classList.add("in"); });
+    refreshLayout();
+  }, true);
+
   // One tap clears the whole intro rather than dropping the visitor partway
   // through it, still holding a preview they cannot use yet.
-  el("scrollCue").addEventListener("click", function () {
-    window.scrollTo({
-      top: Math.round(introSpan()),
-      behavior: staticIntro ? "auto" : "smooth"
-    });
-  });
+  el("scrollCue").addEventListener("click", skipIntroToContent);
 
   // On a phone the full desk is too small to read, so frame the monitor instead.
   function fitScene() {
@@ -6567,6 +6766,9 @@
   window.addEventListener("hashchange", render);
   renderFooter();
   render();
+  if (window.__vload && window.__vload.skipRequested && (window.location.hash || "#/") === "#/") {
+    requestAnimationFrame(function () { measure(); skipIntroToContent(); });
+  }
   // The monitor types the name as the intro opens; wait for the loader so
   // that moment is not spent behind it.
   if (window.__vload && !window.__vload.done) window.__vload.cbs.push(typeScreen);
