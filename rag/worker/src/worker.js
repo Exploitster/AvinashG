@@ -253,9 +253,11 @@ function rateLimit(request) {
 }
 
 function currentPassage(text) {
-  // The owner supplied the new LinkedIn URL. Keep this exact contact correction
-  // current while a content-index rebuild is pending; never invent embeddings.
-  return String(text || "").replace(/linkedin\.com\/in\/avinashdev09\/?/gi, "linkedin.com/in/avinashdevg/");
+  // Apply the owner-supplied LinkedIn and email corrections while a content-index
+  // rebuild is pending; never invent embeddings.
+  return String(text || "")
+    .replace(/linkedin\.com\/in\/avinashdev09\/?/gi, "linkedin.com/in/avinashdevg/")
+    .replace(/\bavinashdevg09@gmail\.com\b/gi, "avinashdev.garudapalli2027@mastersunion.org");
 }
 
 function sourcePriority(source, question) {

@@ -195,6 +195,7 @@ function audit(isTouch) {
     });
 
     await page.goto(FILE, { waitUntil: "load" });
+    await page.locator("#vload").waitFor({ state: "hidden" });
     await page.waitForTimeout(2200);
 
     for (const route of ROUTES) {
@@ -429,6 +430,7 @@ function audit(isTouch) {
   const rm = await rmCtx.newPage();
   rm.on("pageerror", (e) => fail("reduced-motion", "-", "JS error: " + e.message));
   await rm.goto(FILE, { waitUntil: "load" });
+  await rm.locator("#vload").waitFor({ state: "hidden" });
   await rm.waitForTimeout(1600);
   const rmRes = await rm.evaluate(() => {
     const hidden = [...document.querySelectorAll(".rv")]
