@@ -1372,6 +1372,8 @@
     transition: border-color .16s, color .16s, background-color .16s;
   }
   .reach:hover { border-color: var(--signal-deep); color: var(--signal); background: rgba(var(--signal-rgb), .07); }
+  .reach { min-width: 0; max-width: 100%; }
+  .reach > span { min-width: 0; overflow-wrap: anywhere; }
   .reach svg { width: 16px; height: 16px; flex: none; }
   .reach .rlabel { font-family: var(--f-mono); font-size: .78rem; color: var(--dim-2); }
   .reach:hover .rlabel { color: var(--signal); }
@@ -2486,12 +2488,7 @@
     .packet { display: none; }
   }
 
-  /* ---------- voice-wave loader ----------
-     The first thing a visitor sees, once per browser session: bars moving
-     like a voice speaking — a nod to the Voice AI work — that settle into a
-     flat line as the name arrives, then fade into the desk intro. Hidden
-     unless its own script switches it on, so a script failure costs the
-     loader and never the page. */
+  /* A short voice-wave introduction on each full page load; always skippable. */
   .vload { display: none; }
   .vload.on {
     position: fixed;
@@ -2506,6 +2503,7 @@
     transition: opacity .42s var(--md-ease);
   }
   .vload.out { opacity: 0; pointer-events: none; }
+  .vload-fact { margin: 0; max-width: 40ch; min-height: 3.2em; text-align: center; text-wrap: balance; font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.6; color: var(--paper); }
   .vload-wave { display: flex; align-items: center; gap: 6px; height: 56px; }
   .vload-wave i {
     display: block;
@@ -2535,7 +2533,12 @@
   .skip-link:focus { transform: none; }
   .vload-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
   .vload-actions button, .vload-actions a { padding: 12px 18px; min-height: 44px; border: 1px solid var(--rule-2); border-radius: 999px; font: inherit; color: var(--signal); background: var(--panel); cursor: pointer; }
-  .intro-resume { pointer-events: auto; position: absolute; top: 120px; left: 50%; transform: translateX(-50%); z-index: 8; padding: 10px 18px; color: var(--signal); background: var(--ground-2); border: 1px solid var(--rule-2); border-radius: 999px; min-height: 44px; white-space: nowrap; }
+  .intro-actions { position: absolute; top: clamp(14px, 7vh, 62px); left: 50%; transform: translateX(-50%); display: flex; flex-wrap: nowrap; align-items: center; gap: 12px; max-width: calc(100% - 40px); width: max-content; z-index: 8; pointer-events: auto; }
+  .intro-actions .scroll-cue { position: static; left: auto; top: auto; transform: none; }
+  .intro-actions .scroll-cue:hover { transform: translateY(-1px); }
+  .intro-actions .scroll-cue:active { transform: translateY(1px); }
+  .intro-resume { pointer-events: auto; display: inline-flex; align-items: center; justify-content: center; padding: 10px 18px; color: var(--signal); background: var(--ground-2); border: 1px solid var(--rule-2); border-radius: 999px; min-height: 48px; white-space: nowrap; }
+
   .hero { padding-top: calc(var(--topbar-h) + 32px); }
   .hero + .ask { border-top: 0; padding: 0 0 44px; }
   .ask-hint { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -2570,7 +2573,11 @@
     .case-summary { grid-template-columns: 1fr; }
     .case-summary > div { padding: 20px; }
     .hero-act { white-space: normal; }
-    .intro-resume { top: 70px; }
+    .intro-actions { top: calc(10px + env(safe-area-inset-top, 0px)); gap: 8px; }
+    .intro-actions .scroll-cue { gap: 8px; padding: 8px 10px; font-size: .86rem; }
+    .intro-actions .cue-icon { width: 28px; height: 28px; }
+    .intro-actions .cue-my, .intro-actions .cue-extra, .intro-actions .resume-extra { display: none; }
+    .intro-resume { padding: 10px 12px; font-size: .86rem; }
     .ask-form { gap: 8px; }
     .ask-field { padding: 0 10px; }
     .ask-chip { width: 100%; }
@@ -2617,7 +2624,8 @@
 </style>
 
 <div class="vload" id="vload" aria-label="Opening animation">
-  <div class="vload-wave" id="vloadWave"></div>
+  <div class="vload-wave" id="vloadWave" aria-hidden="true"></div>
+  <p class="vload-fact" id="vloadFact" aria-live="polite" aria-atomic="true"></p>
   <p class="vload-name">Avinash Garudapalli<span>AI Product Manager</span></p>
   <div class="vload-actions"><button type="button" id="loaderSkip">Skip intro →</button><a href="#/resume">View résumé</a></div>
 </div>
@@ -2626,8 +2634,8 @@
      VOICE-WAVE LOADER — runs before the main script, and alone
      =========================================================
      Self-contained on purpose: it must not depend on anything the main
-     script defines, and the main script only reads window.__vload to hold
-     the monitor's typing until the loader has cleared. */
+     script defines. The main script marks itself ready through window.__vload
+     and holds the monitor's typing until the loader has cleared. */
   (function () {
     var node = document.getElementById("vload");
     var gate = window.__vload = { done: false, cbs: [], skipRequested: false };
@@ -2664,61 +2672,63 @@
       });
     }
 
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Once per session: a recruiter opening three tabs sees it once, not three times.
-    var seen = false;
-    try {
-      seen = window.sessionStorage.getItem("vload-seen") === "1";
-      window.sessionStorage.setItem("vload-seen", "1");
-    } catch (e) { /* storage blocked: play it, it is short */ }
-    if (!node || reduce || seen) { finish(); return; }
-
-    node.classList.add("on");
-    var wave = document.getElementById("vloadWave"), bars = [], N = 17;
-    for (var i = 0; i < N; i++) {
-      var b = document.createElement("i");
-      wave.appendChild(b);
-      bars.push(b);
+    if (!node) { finish(); return; }
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var facts = [
+      "I helped launch enterprise Voice AI and halve response latency.",
+      "I run Nosh House Cafe, owning its operations and growth.",
+      "I helped build Cordelia Cruises’ first mobile app from scratch.",
+      "I combine user research, product strategy, and hands-on business ownership.",
+      "I explore agentic AI through prototypes, automation, and product experiments.",
+      "I completed a four-day Himalayan trek, carrying my own gear."
+    ];
+    var factIndex = 0;
+    try { factIndex = Number(window.sessionStorage.getItem("vload-fact-index")) || 0; }
+    catch (e) { factIndex = Math.floor(Math.random() * facts.length); }
+    if (!isFinite(factIndex) || factIndex < 0) factIndex = 0;
+    factIndex = Math.floor(factIndex) % facts.length;
+    function showFact() {
+      elFact.textContent = facts[factIndex];
+      factIndex = (factIndex + 1) % facts.length;
+      try { window.sessionStorage.setItem("vload-fact-index", String(factIndex)); } catch (e) { /* rotation still works in memory */ }
     }
-
-    function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
-    function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-    function seg(t, a, b) { return clamp((t - a) / (b - a)); }
-
+    var elFact = document.getElementById("vloadFact");
+    showFact();
+    node.classList.add("on", "named");
+    var wave = document.getElementById("vloadWave"), bars = [], N = 25;
+    for (var i = 0; i < N; i++) {
+      var bar = document.createElement("i");
+      wave.appendChild(bar);
+      bars.push(bar);
+      if (reduced) bar.style.transform = "scaleY(" + (0.12 + 0.65 * (1 - Math.abs(i - 12) / 13)) + ")";
+    }
     var leaving = false;
     function leave() {
-      if (leaving) return;
+      if (gate.done || leaving) return;
       leaving = true;
       node.classList.add("out");
       setTimeout(finish, 440);
     }
-
-    var t0 = null;
     function frame(now) {
       if (gate.done || leaving) return;
-      if (t0 === null) t0 = now;
-      var t = now - t0;
-      var rise = ease(seg(t, 0, 350)), settle = ease(seg(t, 1250, 1750));
       for (var i = 0; i < N; i++) {
-        // taller in the middle, like a voice's energy; two sines out of step
-        // so no two bars move together
-        var mid = 1 - Math.abs(i - (N - 1) / 2) / ((N + 1) / 2);
-        var live = mid * (.3 + .7 * Math.abs(Math.sin(t / 165 + i * .9) * Math.sin(t / 290 + i * .37)));
-        var k = .06 + (live * rise) * (1 - settle);
-        bars[i].style.transform = "scaleY(" + k.toFixed(3) + ")";
+        var envelope = 1 - Math.abs(i - 12) / 13;
+        var pulse = Math.abs(Math.sin(now / 180 - i * 0.42) * Math.cos(now / 390 + i * 0.19));
+        bars[i].style.transform = "scaleY(" + (0.08 + envelope * (0.18 + 0.74 * pulse)).toFixed(3) + ")";
       }
-      if (t > 1450) node.classList.add("named");
-      if (t > 2150) { leave(); return; }
       requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
-
-    // Any intent to move on skips it: a tap, a key, a scroll.
-    ["pointerdown", "keydown", "wheel", "touchstart"].forEach(function (ev) {
-      window.addEventListener(ev, leave, { once: true, passive: true });
-    });
-    // Belt and braces: never hold the page longer than this, whatever happens.
-    setTimeout(finish, 3500);
+    if (!reduced) requestAnimationFrame(frame);
+    // Give each ten-word fact time to be read, even when the page is ready.
+    function readingWindow() {
+      if (gate.done || leaving) return;
+      if (gate.ready) { leave(); return; }
+      showFact();
+      setTimeout(readingWindow, 3200);
+    }
+    setTimeout(readingWindow, 3200);
+    // A broken or stalled page must never trap the visitor behind the loader.
+    setTimeout(finish, 12800);
   })();
 </script>
 
@@ -2886,8 +2896,9 @@
     </svg>
   </div>
 
-  <button class="scroll-cue" id="scrollCue" type="button">
-    <span class="cue-label">View my work · skip intro</span>
+  <div class="intro-actions">
+  <button class="scroll-cue" id="scrollCue" type="button" aria-label="View my work; skip intro">
+    <span class="cue-label">View <span class="cue-my">my </span>work<span class="cue-extra"> · skip intro</span></span>
     <span class="cue-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
            stroke-linecap="round" stroke-linejoin="round">
@@ -2895,7 +2906,8 @@
       </svg>
     </span>
   </button>
-  <a class="intro-resume" href="#/resume">View résumé →</a>
+  <a class="intro-resume" href="#/resume" aria-label="View résumé"><span class="resume-extra">View&nbsp;</span>résumé →</a>
+  </div>
 </div>
 
 <a class="skip-link" href="#view" id="skipContent">Skip to main content</a>
@@ -2994,7 +3006,7 @@
 
   var PROFILE = {
     name: "Avinashdev Ravikumar Garudapalli",
-    email: "avinashdevg09@gmail.com",
+    email: "avinashdev.garudapalli2027@mastersunion.org",
     phone: "+91 7303486776",
     linkedin: "https://www.linkedin.com/in/avinashdevg/",
     resume: "https://drive.google.com/uc?export=download&id=1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm",
@@ -6766,6 +6778,7 @@
   window.addEventListener("hashchange", render);
   renderFooter();
   render();
+  if (window.__vload) window.__vload.ready = true;
   if (window.__vload && window.__vload.skipRequested && (window.location.hash || "#/") === "#/") {
     requestAnimationFrame(function () { measure(); skipIntroToContent(); });
   }

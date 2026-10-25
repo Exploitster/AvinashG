@@ -216,3 +216,20 @@ test('visitor disconnect during generation aborts upstream work without retry', 
     assert.equal(calls, 2);
   });
 });
+
+
+test('the supplied email correction is applied to retrieved context and generated answers', async () => {
+  const { default: worker } = await loadWorker([{ source: '#/contact', title: 'Contact', text: 'Email avinashdevg09@gmail.com', embedding }]);
+  let calls = 0;
+  await withFetch(async (url, init) => {
+    if (++calls === 1) return okEmbedding();
+    const payload = JSON.parse(init.body);
+    assert(JSON.stringify(payload).includes('avinashdev.garudapalli2027@mastersunion.org'));
+    assert(!JSON.stringify(payload).includes('avinashdevg09@gmail.com'));
+    return Response.json({ candidates: [{ content: { parts: [{ text: 'Email avinashdevg09@gmail.com' }] } }] });
+  }, async () => {
+    const response = await worker.fetch(request({ message: 'How can I contact Avinash?' }), { GEMINI_API_KEY: 'test-key' });
+    assert.equal(response.status, 200);
+    assert.match((await response.json()).answer, /avinashdev\.garudapalli2027@mastersunion\.org/);
+  });
+});
