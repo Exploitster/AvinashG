@@ -378,31 +378,23 @@ function audit(isTouch) {
         jobs: document.querySelectorAll(".cv-job").length,
         contacts: document.querySelectorAll(".cv-contact a").length,
         print: !!document.getElementById("printCv"),
+        download: document.querySelector("[data-resume-download]")?.getAttribute("href"),
       };
     });
     if (cv.jobs !== 5) fail(d.name, "resume", `expected 5 roles, got ${cv.jobs}`);
     if (cv.contacts !== 3) fail(d.name, "resume", `expected 3 contact links, got ${cv.contacts}`);
-    if (!cv.print) fail(d.name, "resume", "print button missing");
+    if (cv.print) fail(d.name, "resume", "unexpected PDF print button");
+    if (cv.download !== "https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing") fail(d.name, "resume", "download does not open supplied Drive URL");
 
-    // BlankStore is a first-class entry, not just a link
+    // Recent updates remain readable without opening notes modules.
     const bs = await page.evaluate(async () => {
       location.hash = "#/";
       await new Promise((r) => setTimeout(r, 800));
-      const btn = document.querySelector('#view [data-gal="blankstore"]');
-      if (!btn) return { err: "no blankstore entry" };
-      btn.click();
-      await new Promise((r) => setTimeout(r, 500));
-      const open = !document.getElementById("galScrim").hidden;
-      const cats = document.querySelectorAll(".gal-cat").length;
-      document.getElementById("galClose").click();
-      await new Promise((r) => setTimeout(r, 300));
-      return { open, cats };
+      const cards = Array.from(document.querySelectorAll('#view article.rec'));
+      return { present: cards.some(card => card.textContent.includes('BlankStore')), launchers: document.querySelectorAll('#view [data-gal]').length };
     });
-    if (bs.err) fail(d.name, "blankstore", bs.err);
-    else {
-      if (!bs.open) fail(d.name, "blankstore", "gallery did not open");
-      if (bs.cats < 2) fail(d.name, "blankstore", `only ${bs.cats} gallery categories`);
-    }
+    if (!bs.present) fail(d.name, "blankstore", "static BlankStore card missing");
+    if (bs.launchers) fail(d.name, "blankstore", "unexpected notes launcher");
 
     // contact links must be actionable (mailto / tel / linkedin)
     const contact = await page.evaluate(async () => {

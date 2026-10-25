@@ -1,5 +1,7 @@
 # Portfolio RAG backend
 
+For the connected `quiet-frog-766b` Worker, use [the current Cloudflare build repair steps](CLOUDFLARE-DEPLOYMENT.md). The older manual setup below describes the original deployment options.
+
 Answers visitor questions using only: the live site's own rendered text, plus
 any PDFs/docs dropped in `rag/sources/`. Nothing is invented — if a question
 isn't covered by that content, the assistant says so and points to the

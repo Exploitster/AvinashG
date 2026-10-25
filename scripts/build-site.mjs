@@ -102,7 +102,7 @@ ${body}
 <h1>Avinash Garudapalli — AI Product Manager</h1>
 <p>Enterprise Voice AI product work and end-to-end business ownership at Nosh House Cafe.</p>
 <p>Enable JavaScript to explore the interactive case studies. You can also read the résumé or contact me directly.</p>
-<a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">View résumé PDF</a>
+<a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a>
 <a href="mailto:avinashdev.garudapalli2027@mastersunion.org">Email Avinash</a>
 <a href="https://www.linkedin.com/in/avinashdevg/">LinkedIn</a>
 </main>
