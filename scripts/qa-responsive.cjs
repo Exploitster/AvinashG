@@ -378,11 +378,13 @@ function audit(isTouch) {
         jobs: document.querySelectorAll(".cv-job").length,
         contacts: document.querySelectorAll(".cv-contact a").length,
         print: !!document.getElementById("printCv"),
+        download: document.querySelector("[data-resume-download]")?.getAttribute("href"),
       };
     });
     if (cv.jobs !== 5) fail(d.name, "resume", `expected 5 roles, got ${cv.jobs}`);
     if (cv.contacts !== 3) fail(d.name, "resume", `expected 3 contact links, got ${cv.contacts}`);
-    if (!cv.print) fail(d.name, "resume", "print button missing");
+    if (cv.print) fail(d.name, "resume", "unexpected PDF print button");
+    if (cv.download !== "https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing") fail(d.name, "resume", "download does not open supplied Drive URL");
 
     // BlankStore is a first-class entry, not just a link
     const bs = await page.evaluate(async () => {

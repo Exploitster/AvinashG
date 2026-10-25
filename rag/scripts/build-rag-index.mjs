@@ -35,12 +35,13 @@ if (!DRY_RUN && !API_KEY) {
 
 const ROUTES = [
   { path: "/", title: "Overview" },
+  { path: "/work", title: "Selected work" },
   { path: "/story", title: "Story" },
   { path: "/experience", title: "Experience" },
   { path: "/thinking", title: "Product Thinking" },
   { path: "/lab", title: "Lab" },
   { path: "/beyond", title: "Beyond the job" },
-  { path: "/about", title: "Education" },
+  { path: "/about", title: "About and education" },
   { path: "/resume", title: "Résumé" },
   { path: "/contact", title: "Contact" },
   { path: "/work/chat360", title: "Case study: Chat360" },
@@ -72,7 +73,7 @@ async function serveDocsStatic() {
 
 async function renderRoutes() {
   const { server, port } = await serveDocsStatic();
-  const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+  const browser = await chromium.launch(process.env.CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.CHROMIUM_EXECUTABLE_PATH } : {});
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const pages = [];
 
@@ -80,8 +81,8 @@ async function renderRoutes() {
     await page.goto(`http://localhost:${port}/#${r.path}`, { waitUntil: "load" });
     await page.waitForFunction(
       () => (document.getElementById("view")?.innerText || "").trim().length > 40,
-      { timeout: 5000 }
-    ).catch(() => {});
+      null, { timeout: 5000 }
+    );
     await page.waitForTimeout(250);
     const text = await page.evaluate(() => document.getElementById("view")?.innerText || "");
     pages.push({ source: "#" + r.path, title: r.title, text: normalize(text) });

@@ -6,6 +6,21 @@ const assert = require('node:assert/strict');
 const { createServer } = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const RESUME_URL = 'https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing';
+async function assertDriveClick(page, selector) {
+  let seen;
+  const requested = new Promise(resolve => { seen = resolve; });
+  await page.context().route('https://drive.google.com/**', async route => {
+    seen(route.request().url());
+    await route.fulfill({ contentType: 'text/html', body: '<h1>Drive destination intercepted for QA</h1>' });
+  });
+  await page.locator(selector).click({ timeout: 5000 });
+  let timer;
+  try {
+    const url = await Promise.race([requested, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Résumé click did not reach Google Drive')), 5000); })]);
+    assert.equal(url, RESUME_URL);
+  } finally { clearTimeout(timer); }
+}
 const docs = path.resolve(__dirname, '../docs');
 const server = createServer((req, res) => {
   if (new URL(req.url, 'http://localhost').pathname === '/slow.html') {
@@ -49,7 +64,15 @@ const server = createServer((req, res) => {
           }).map(node => node.className || node.tagName));
           assert.deepEqual(missingGutters, [], route + ': every mobile section has side padding');
         }
-        assert(!/Add file|Your words go here|awaiting a real image/.test(await page.locator('#view').innerText()));
+        assert(!/Add file|Your words go here|awaiting a real image|Open notes/.test(await page.locator('#view').innerText()));
+        const resumeLinks = await page.locator('a').evaluateAll(nodes => nodes.filter(n => /résumé|resume/i.test(n.textContent)).map(n => ({ href: n.href, label: n.textContent.trim(), download: n.hasAttribute('download') })));
+        assert(resumeLinks.length > 0, route + ': résumé access is available');
+        for (const link of resumeLinks) {
+          assert.equal(link.href, RESUME_URL, route + ': résumé opens the supplied Drive link');
+          assert.match(link.label, /Download résumé/i);
+          assert.equal(link.download, false, 'no local download attachment');
+        }
+        assert.equal(await page.locator('#printCv, [data-rec-open]').count(), 0, 'no print or notes launcher');
       }
       await page.goto(base + '#/work');
       await page.waitForTimeout(400);
@@ -63,7 +86,7 @@ const server = createServer((req, res) => {
       await page.waitForFunction(y => Math.abs(scrollY - y) < 10 && location.hash === '#/work', browsingY);
       await page.evaluate(() => { location.hash = '#/resume'; });
       await page.locator('[data-resume-download]').first().waitFor();
-      assert((await page.locator('[data-resume-download]').first().getAttribute('href')).includes('1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm'));
+      assert.equal(await page.locator('[data-resume-download]').first().getAttribute('href'), RESUME_URL);
       await page.emulateMedia({ media: 'print' });
       assert.equal(await page.locator('.cv-job').count(), 5);
       for (const item of await page.locator('.cv-job, .cv-block').all()) {
@@ -146,14 +169,12 @@ const server = createServer((req, res) => {
     const introPage = await intro.newPage();
     await introPage.goto(base);
     await introPage.locator('#vload').waitFor({ state: 'hidden' });
-    await introPage.locator('.intro-resume').click({ timeout: 1500 });
-    await introPage.waitForFunction(() => location.hash === '#/resume' && document.querySelector('[data-resume-download]'));
+    await assertDriveClick(introPage, '.intro-resume');
     await intro.close();
     const firstLoadResume = await browser.newContext({ viewport: { width: 393, height: 851 } });
     const firstLoadPage = await firstLoadResume.newPage();
     await firstLoadPage.goto(base);
-    await firstLoadPage.locator('.vload-actions a').click({ timeout: 1500 });
-    await firstLoadPage.waitForFunction(() => location.hash === '#/resume', null, { timeout: 1500 });
+    await assertDriveClick(firstLoadPage, '.vload-actions a');
     await firstLoadResume.close();
     for (const action of ['skip', 'resume']) {
       const slow = await browser.newContext({ viewport: { width: 393, height: 851 } });
@@ -165,8 +186,7 @@ const server = createServer((req, res) => {
         await slowPage.locator('#loaderSkip').click();
         await slowPage.waitForFunction(() => document.querySelector('#view h1') && scrollY > 200 && getComputedStyle(document.getElementById('stage')).opacity === '0');
       } else {
-        await slowPage.locator('.vload-actions a').click();
-        await slowPage.waitForFunction(() => location.hash === '#/resume' && document.querySelector('[data-resume-download]'));
+        await assertDriveClick(slowPage, '.vload-actions a');
       }
       await slow.close();
     }

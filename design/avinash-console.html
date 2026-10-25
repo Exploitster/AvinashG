@@ -1246,7 +1246,7 @@
      item shrinks to fit by default, so a wider width is computed and then
      immediately shrunk back to the viewport. */
   @media (max-aspect-ratio: 9 / 13) {
-    .stage-inner { width: 118vw; flex: none; }
+    .stage-inner { width: calc(100vw - 48px); flex: none; }
     /* The scene ends at the listener's headphones, a hard horizontal edge.
        Centred on a tall screen that edge sat mid-phone with black underneath,
        so the desk looked sliced off — reported as "cut from below".
@@ -2621,13 +2621,32 @@
     .cv-skills { margin: 1mm 0 !important; }
   }
 
+
+  .highlight-icon { display: inline-flex; width: 32px; height: 32px; flex: none; }
+  .highlight-icon svg { width: 100%; height: 100%; }
+  .bento { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .bento-cell { gap: 16px; justify-content: flex-start; }
+  .bento-label { text-align: left; letter-spacing: .08em; }
+  .bento-note { font-family: var(--f-body); font-size: .9rem; line-height: 1.6; }
+  .highlight-intro { margin: 12px 0 24px; }
+  .highlight-skills { margin-top: 44px; }
+  .skill-icons { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 28px; }
+  .skill-icons li { display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid currentColor; border-radius: 12px; }
+  .business-skills { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin-top: 18px; }
+  .business-skills li { padding: 8px 12px; background: var(--panel-2); border-radius: 8px; }
+  .recent-depiction { padding: 36px; background: var(--panel); color: var(--signal); }
+  .recent-depiction svg { width: 72px; height: 72px; }
+  article.rec { cursor: default; }
+  @media (max-width: 780px) { .bento, .skill-icons { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) { .bento, .skill-icons { grid-template-columns: 1fr; } .intro-actions { max-width: calc(100% - 32px); } }
+
 </style>
 
 <div class="vload" id="vload" aria-label="Opening animation">
   <div class="vload-wave" id="vloadWave" aria-hidden="true"></div>
   <p class="vload-fact" id="vloadFact" aria-live="polite" aria-atomic="true"></p>
   <p class="vload-name">Avinash Garudapalli<span>AI Product Manager</span></p>
-  <div class="vload-actions"><button type="button" id="loaderSkip">Skip intro →</button><a href="#/resume">View résumé</a></div>
+  <div class="vload-actions"><button type="button" id="loaderSkip">Skip intro →</button><a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a></div>
 </div>
 <script>
   /* =========================================================
@@ -2660,7 +2679,7 @@
     }
     function openResume(event) {
       event.preventDefault();
-      window.location.hash = "#/resume";
+      window.location.assign("https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing");
       finish();
     }
     if (node) {
@@ -2906,7 +2925,7 @@
       </svg>
     </span>
   </button>
-  <a class="intro-resume" href="#/resume" aria-label="View résumé"><span class="resume-extra">View&nbsp;</span>résumé →</a>
+  <a class="intro-resume" href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing" aria-label="Download résumé">Download résumé →</a>
   </div>
 </div>
 
@@ -3009,7 +3028,7 @@
     email: "avinashdev.garudapalli2027@mastersunion.org",
     phone: "+91 7303486776",
     linkedin: "https://www.linkedin.com/in/avinashdevg/",
-    resume: "https://drive.google.com/uc?export=download&id=1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm",
+    resume: "https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing",
     resumeView: "https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing",
     summary: "Associate Product Manager with 2+ years building 0-to-1 AI and SaaS products, including Voice AI and Generative AI solutions. Track record of measurable outcomes through product strategy, automation and data-driven execution — plus end-to-end business ownership as a founder."
   };
@@ -3693,7 +3712,7 @@
     { path: "#/work", label: "Work" },
     { path: "#/experience", label: "Experience" },
     { path: "#/about", label: "About" },
-    { path: "#/resume", label: "Résumé" },
+    { path: PROFILE.resume, label: "Download résumé" },
     { path: "#/contact", label: "Contact" }
   ];
 
@@ -3703,7 +3722,7 @@
       { path: "#/work", label: "Work", note: "Selected case studies and all projects" },
       { path: "#/experience", label: "Experience", note: "Roles, dates and responsibilities" },
       { path: "#/about", label: "About", note: "Story, education and interests" },
-      { path: "#/resume", label: "Résumé", note: "Read online or download the PDF" },
+      { path: PROFILE.resume, label: "Download résumé", note: "Open the résumé in Google Drive" },
       { path: "#/contact", label: "Contact", note: "Email, LinkedIn and phone" }
     ] },
     { group: "Project index", expandable: true, items: WORK.map(function (w) {
@@ -3724,7 +3743,7 @@
 
   function resumeDownload() {
     return '<a class="hero-act primary" data-resume-download href="' + esc(PROFILE.resume) +
-      '" target="_blank" rel="noreferrer">Download résumé PDF ↗</a>';
+      '" target="_blank" rel="noreferrer">Download résumé ↗</a>';
   }
 
   /* =========================================================
@@ -4205,7 +4224,7 @@
             var route = String(s.route || "");
             var style = ' style="--i:' + si + '"';
             return route.charAt(0) === "#"
-              ? '<a' + style + ' href="' + esc(route) + '">' + esc(s.title) + '</a>'
+              ? '<a' + style + ' href="' + esc(route === '#/resume' ? PROFILE.resume : route) + '">' + esc(route === '#/resume' ? 'Download résumé' : s.title) + '</a>'
               : '<span class="msg-doc"' + style + '>' + esc(s.title) + '</span>';
           }).join("") + '</div>'
         : "";
@@ -4220,7 +4239,7 @@
               : mdLite(m.text)) + src +
           (m.error ? '<div class="msg-actions">' +
             (m.retry ? '<button type="button" data-chat-retry="' + esc(m.retry) + '"' + (chatState.busy ? ' disabled' : '') + '>Retry</button>' : '') +
-            '<a href="#/work">Browse work</a><a href="#/resume">View résumé</a><a href="#/contact">Contact</a></div>' : '') +
+            '<a href="#/work">Browse work</a><a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a><a href="#/contact">Contact</a></div>' : '') +
         '</div>' +
       '</div>';
     }).join("");
@@ -4439,25 +4458,41 @@
   /* The bento field. Figures come from IMPACT, tool marks from SKILLS_TECH —
      both existing data. Empty cells are deliberate: the reference leaves gaps
      in the grid so the field reads as a composition rather than a table. */
+  function depictionIcon(kind) {
+    var paths = {
+      mountain: '<path d="M2 21L9 5l4 8 3-6 6 14zM6 12l3 2 3-2"/>',
+      award: '<circle cx="12" cy="8" r="6"/><path d="M8 13l-2 9 6-3 6 3-2-9"/>',
+      calculator: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M7 6h10M7 11h2m6 0h2M7 15h2m6 0h2M7 19h2m6 0h2"/>',
+      voice: '<path d="M3 10v4m4-8v12m5-16v20m5-16v12m4-8v4"/>',
+      growth: '<path d="M4 20V4m0 16h17M7 15l5-5 4 2 5-7m-5 0h5v5"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>',
+      support: '<path d="M4 13v-2a8 8 0 0116 0v2M4 12H2v6h4v-6zm16 0h2v6h-4v-6zM18 18v3h-6"/>',
+      cost: '<path d="M4 5h16v15H4zM4 9h16m-8 3v5m-2-3l2 3 2-3"/>',
+      channels: '<rect x="8" y="8" width="8" height="8" rx="2"/><path d="M12 2v6m0 8v6M2 12h6m8 0h6M4 4l4 4"/>',
+      design: '<path d="M4 20l4-1L20 7l-3-3L5 16zM14 7l3 3M4 4h6M4 4v6"/>',
+      board: '<rect x="2" y="3" width="20" height="18" rx="2"/><path d="M9 3v18m6-18v18M5 7h1m6 0h1m5 0h1M5 11h1m6 0h1"/>',
+      document: '<path d="M5 2h10l4 4v16H5zM15 2v5h4M8 11h8m-8 4h8m-8 4h5"/>',
+      code: '<path d="M8 5l-6 7 6 7m8-14l6 7-6 7m-3-16l-2 18"/>',
+      ai: '<rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4M9 10h1m4 0h1m-6 5h6"/>',
+      map: '<path d="M2 5l7-3 6 3 7-3v17l-7 3-6-3-7 3zm7-3v17m6-14v17"/>',
+      store: '<path d="M3 10v12h18V10M2 10l3-8h14l3 8M2 10h20M9 22v-8h6v8"/>',
+      workflow: '<rect x="8" y="2" width="8" height="5" rx="1"/><rect x="1" y="17" width="8" height="5" rx="1"/><rect x="15" y="17" width="8" height="5" rx="1"/><path d="M12 7v5M5 17v-5h14v5"/>'
+    };
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (paths[kind] || paths.workflow) + '</svg>';
+  }
+
+  function iconPanel(kind) { return '<div class="recent-depiction">' + depictionIcon(kind) + '</div>'; }
+
   function bentoCells() {
-    var out = [];
-    IMPACT.forEach(function (m, i) {
-      out.push(
-        '<div class="bento-cell rv' + (i === 0 || i === 3 ? " wide" : "") + '" style="--i:' + i + '">' +
-          '<div class="bento-label">' + esc(m.k) + '</div>' +
-          '<div><div class="bento-fig">' + esc(m.v) + '</div></div>' +
-        '</div>');
-      // a tool tile after every second figure, the way the reference alternates
-      var tool = SKILLS_TECH[i];
-      if (tool && i % 2 === 1) {
-        out.push(
-          '<div class="bento-cell rv" style="--i:' + i + '">' +
-            '<div class="bento-label">' + esc(tool) + '</div>' +
-            '<div class="bento-mark" aria-hidden="true"></div>' +
-          '</div>');
-      }
-    });
-    return out.join("");
+    var icons = ["voice", "growth", "clock", "support", "cost", "channels"];
+    var outcomes = IMPACT.map(function (m, i) {
+      return '<article class="bento-cell rv"><span class="highlight-icon">' + depictionIcon(icons[i]) + '</span><h3 class="bento-label">' + esc(m.k) + '</h3><div class="bento-fig">' + esc(m.v) + '</div><p class="bento-note">' + esc(m.d) + '</p></article>';
+    }).join("");
+    var techIcons = ["design", "board", "document", "growth", "code", "ai", "ai", "voice", "workflow", "code", "workflow", "ai"];
+    var skills = SKILLS_TECH.map(function (skill, i) {
+      return '<li><span class="highlight-icon">' + depictionIcon(techIcons[i]) + '</span><span>' + esc(skill) + '</span></li>';
+    }).join("");
+    return '<h2>Outcomes generated</h2><p class="highlight-intro">Results from my product work and business ownership.</p><div class="bento">' + outcomes + '</div><div class="highlight-skills"><h2>Skills used &amp; developed</h2><p class="highlight-intro">Tools and capabilities documented in my résumé.</p><ul class="skill-icons">' + skills + '</ul><h3>Business &amp; product skills</h3><ul class="business-skills">' + SKILLS_BIZ.map(function (skill) { return '<li>' + esc(skill) + '</li>'; }).join("") + '</ul></div>';
   }
 
   function resultCards() {
@@ -4492,17 +4527,17 @@
       var count = (r.gallery || []).reduce(function (a, g) { return a + g.items.length; }, 0);
 
       var st = r.site ? siteById(r.site) : null;
-      return '<button class="rec rv" type="button" style="--i:' + i + '" data-gal="' + r.id + '">' +
-        plate(r.plate, null) +
+      return '<article class="rec rv" style="--i:' + i + '">' +
+        '<div class="recent-depiction">' + depictionIcon(r.id === 'kasol' || r.id === 'travel-ai' ? 'map' : r.id === 'blankstore' ? 'store' : 'workflow') + '</div>' +
         '<div class="rec-body">' +
           '<span class="rec-kind">' + (st ? brandMark(st, 20) + " " : "") + esc(r.kind) + '</span>' +
           '<h3>' + esc(r.title) + '</h3>' +
           '<p>' + esc(r.blurb) + '</p>' +
           stops +
           '<div class="rec-foot"><span>' + esc(r.when) + '</span>' +
-          '<span class="rec-open">Open notes (' + count + ')</span></div>' +
+          '</div>' +
         '</div>' +
-      '</button>';
+      '</article>';
     }).join("");
 
     var caps = Object.keys(CAPS).map(function (k, i) {
@@ -4533,7 +4568,7 @@
           'Currently shipping, travelling and building in the open.</p>' +
         '<div class="hero-acts rv" style="--i:2">' +
           '<a class="hero-act primary" href="#/work">View selected work</a>' +
-          '<a class="hero-act" href="#/resume">View résumé</a>' +
+          '<a class="hero-act" href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a>' +
           '<a class="hero-act" href="#/contact">Let’s talk</a>' +
           '<a class="hero-act quiet" href="#/experience">All experience</a>' +
         '</div>' +
@@ -4553,7 +4588,7 @@
       // SKILLS_TECH list. Every label and number here already existed in the
       // site's data; nothing is written for the layout.
       '<section data-scene class="band">' +
-        '<div class="bento">' + bentoCells() + '</div>' +
+        bentoCells() +
       '</section>' +
 
       '<section data-scene>' +
@@ -4960,13 +4995,13 @@
             '<p>Thinking about thinking — noticing the pattern I default to, and choosing a ' +
             'different one on purpose.</p>' +
           '</div>' +
-          plate("field", null) +
+          iconPanel("workflow") +
         '</div>' +
       '</section>' +
 
       '<section data-scene>' +
         '<div class="story-block flip">' +
-          plate("contour", null) +
+          iconPanel("document") +
           '<div class="rv">' +
             '<h3>Always learning</h3>' +
             '<p>A philomath collects questions faster than answers.</p>' +
@@ -4981,7 +5016,7 @@
             '<h3>Solo travel</h3>' +
             '<p>Travelling alone removes the option of deferring to someone else.</p>' +
           '</div>' +
-          plate("route", null) +
+          iconPanel("map") +
         '</div>' +
         '<div style="margin-top:28px">' + plate("horizon", "The 14,000-ft Himalayan trek — four days, 20–25 kg carried", "plate-wide rv") + '</div>' +
       '</section>' +
@@ -5011,7 +5046,7 @@
       { k: "contour", t: "Tug of war and the 400m", p: "First place in one and third in the other, on the same day. Two very different kinds of effort.", w: "Same afternoon" }
     ].map(function (c, i) {
       return '<div class="beyond-card rv" style="--i:' + i + '">' +
-        plate(c.k, null) +
+        iconPanel(["mountain", "map", "calculator", "award"][i]) +
         '<div class="beyond-body"><h3>' + esc(c.t) + '</h3><p>' + esc(c.p) + '</p>' +
         '<span class="beyond-when">' + esc(c.w) + '</span></div></div>';
     }).join("");
@@ -5039,7 +5074,7 @@
             'acquisition through data-driven outreach during COVID-19, and built corporate ' +
             'partnerships from scratch.</p>' +
           '</div>' +
-          plate("field", null) +
+          iconPanel("workflow") +
         '</div>' +
       '</section>';
   }
@@ -5125,7 +5160,7 @@
           '<p>Post Graduate Programme in Technology and Business Management at Masters&rsquo; ' +
           'Union, building toward agentic AI product work.</p>' +
           '<a class="xp-link" href="#/lab">See what I am building on my own</a></div>' +
-          plate("field", null) +
+          iconPanel("workflow") +
         '</div>' +
       '</section>';
   }
@@ -5158,7 +5193,7 @@
 
     return '<section class="cv">' +
       secHead("résumé", "Experience, in one place") +
-      '<div class="resume-actions">' + resumeDownload() + '<a class="hero-act" href="' + esc(PROFILE.resumeView) + '" target="_blank" rel="noreferrer">Open PDF in Google Drive ↗</a></div>' +
+      '<div class="resume-actions">' + resumeDownload() + '</div>' +
 
       '<div class="cv-head rv">' +
         '<div class="cv-name">' + esc(PROFILE.name) + '</div>' +
@@ -5168,7 +5203,6 @@
           '<a href="' + PROFILE.linkedin + '" target="_blank" rel="noreferrer">linkedin.com/in/avinashdevg</a>' +
         '</div>' +
         '<p class="cv-summary">' + esc(PROFILE.summary) + '</p>' +
-        '<button type="button" class="btn-ghost print-hide" id="printCv">Print or save as PDF</button>' +
       '</div>' +
 
       '<div class="cv-block">' +
@@ -5581,11 +5615,12 @@
      in three frames — the animation existed but was never seen. Small deltas
      stay under the cap and so track the finger exactly; only a flick is paced.
      The page keeps scrolling underneath, so this is not scroll-hijacking. */
-  function introTick() {
+  function introTick(time, deltaTime) {
     if (M.introP == null) M.introP = introTarget;
     var gap = introTarget - M.introP;
-    var stepCap = 1 / 55;
-    var stepP = gap * 0.16;
+    var frameRatio = Math.min(3, Math.max(0.25, (deltaTime || 16.67) / 16.67));
+    var stepCap = frameRatio / 55;
+    var stepP = gap * (1 - Math.pow(0.84, frameRatio));
     if (stepP > stepCap) stepP = stepCap;
     if (stepP < -stepCap) stepP = -stepCap;
     M.introP += Math.abs(gap) < 0.004 ? gap : stepP;
@@ -5687,7 +5722,11 @@
      ScrollTrigger's scrub does the same job properly, so when GSAP is present
      this whole block is bypassed and applyIntro is driven from there instead.
      Kept as the fallback, not as dead code: the vendored script can be absent. */
+  var fallbackIntroTime = 0;
   function updateIntro(sy) {
+    var now = performance.now();
+    var deltaTime = fallbackIntroTime ? now - fallbackIntroTime : 16.67;
+    fallbackIntroTime = now;
     var stage = el("stage");
     if (!stage || staticIntro) return;
     if (!stage.classList.contains("live")) { releaseView(); return; }
@@ -5696,8 +5735,9 @@
     var targetP = clamp01(sy / introSpan());
     if (M.introP == null) M.introP = targetP;
     var gap = targetP - M.introP;
-    var stepCap = 1 / 55;
-    var stepP = gap * 0.16;
+    var frameRatio = Math.min(3, Math.max(0.25, (deltaTime || 16.67) / 16.67));
+    var stepCap = frameRatio / 55;
+    var stepP = gap * (1 - Math.pow(0.84, frameRatio));
     if (stepP > stepCap) stepP = stepCap;
     if (stepP < -stepCap) stepP = -stepCap;
     // Snap on a wider threshold than the loop stops on (0.0015), so the last
@@ -6400,6 +6440,7 @@
        through 1:1 and only paces large ones. Same flick coverage, a third of
        the lag — so the follow stays and only the clock changes, from a private
        rAF loop to GSAP's ticker. */
+    window.ScrollTrigger.config({ ignoreMobileResize: true });
     introST = window.ScrollTrigger.create({
       id: "intro",
       trigger: document.documentElement,
@@ -6757,12 +6798,14 @@
   }
 
   // Delegated so it survives every re-render.
-  el("view").addEventListener("click", function (ev) {
-    if (ev.target && ev.target.id === "printCv") window.print();
-  });
+
 
   var resizeTimer = null;
+  var sceneWidth = window.innerWidth;
   window.addEventListener("resize", function () {
+    // Mobile browser chrome changes height during a scroll; keep scene framing stable.
+    if (window.innerWidth === sceneWidth && window.innerWidth <= 780) return;
+    sceneWidth = window.innerWidth;
     fitScene();
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () { measure(); drawWires(); wake(); }, 140);
