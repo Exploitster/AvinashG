@@ -40,7 +40,7 @@
        platform UI face (Segoe, Roboto) elsewhere. No web font to fetch. */
     --f-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --f-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    /* mono is reserved for measured values — never for decorative labels */
+    /* mono is reserved for measured values - never for decorative labels */
     --f-mono: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     /* true monospace, kept only for code the assistant quotes */
     --f-code: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace;
@@ -182,7 +182,7 @@
 
      overflow: hidden on the viewport is load-bearing. The track is wider than
      the window by design, and without clipping here every pinned section
-     would report horizontal page overflow — which is a hard failure in the
+     would report horizontal page overflow - which is a hard failure in the
      device audit, and a real horizontal scrollbar for the visitor. */
   .hs-viewport {
     position: relative;
@@ -305,7 +305,7 @@
     padding-bottom: var(--sec-y);
     /* Literal, not var(--signal). The band redefines --signal below for the
        benefit of its children, and a custom property redefined on an element
-       applies to that element's own declarations too — so var(--signal) here
+       applies to that element's own declarations too - so var(--signal) here
        resolved to the inverted near-black and the band rendered dark. */
     background: #79B397;
 
@@ -348,7 +348,7 @@
      do, and on a phone it is the difference between smooth and not.
 
      Fixed, so it costs one layer for the whole document instead of repainting
-     as the page scrolls. pointer-events: none throughout — it must never
+     as the page scrolls. pointer-events: none throughout - it must never
      intercept a click meant for the content behind it. */
   #dust {
     position: fixed;
@@ -364,7 +364,7 @@
      lifting.
 
      Only .wrap. An earlier version listed #stage here too, and because an ID
-     outranks a class it replaced the stage's position: fixed with relative —
+     outranks a class it replaced the stage's position: fixed with relative -
      so the desk stopped being pinned to the viewport and scrolled away up the
      page instead of zooming in place. The intro looked like the page simply
      sliding down. The stage already sits at z-index 55 and needs nothing from
@@ -380,7 +380,7 @@
      Small tracked-out mono readouts across the top rail, and a vertical
      label pinned to the right margin. Purely instrumentation: it carries the
      technical register of the reference without claiming anything. Hidden
-     from assistive tech — a screen reader should reach the navigation, not a
+     from assistive tech - a screen reader should reach the navigation, not a
      recital of coordinates. */
   .hud {
     display: flex;
@@ -395,7 +395,7 @@
     color: var(--dim-2);
     white-space: nowrap;
     /* Never push the bar wider than the window. A flex item defaults to
-       min-width:auto, which refuses to shrink below its content — that is
+       min-width:auto, which refuses to shrink below its content - that is
        exactly how this pushed the nav and menu button off-screen and put
        161px of horizontal overflow on every laptop width from 1180 to 1355. */
     min-width: 0;
@@ -403,8 +403,8 @@
   }
   /* The readouts appear in stages, because the rail has to hold the mark, six
      nav items, a CTA and the menu button before any of this. Rather than
-     hiding the whole block on anything but a wide desktop — which left the
-     phone with none of the reference's character — the cells drop one at a
+     hiding the whole block on anything but a wide desktop - which left the
+     phone with none of the reference's character - the cells drop one at a
      time as room runs out, and the status light survives everywhere. */
   @media (max-width: 1399px) { .hud-geo { display: none; } }
   @media (max-width: 1140px) { .hud-place { display: none; } }
@@ -667,7 +667,7 @@
     font-weight: 400;
   }
 
-  /* Section head: a number and a rule. The number is real — sections are an
+  /* Section head: a number and a rule. The number is real - sections are an
      ordered narrative, so the sequence carries meaning. */
   .sec-head { margin-bottom: clamp(32px, 5vh, 56px); max-width: 46ch; }
   .sec-head .idx {
@@ -1228,7 +1228,7 @@
     transform-origin: 50% 40%;
     will-change: transform, opacity;
   }
-  /* Portrait screens. At 96vw the desk was 296px of an 851px phone — a third
+  /* Portrait screens. At 96vw the desk was 296px of an 851px phone - a third
      of the screen, floating in black.
 
      It cannot simply cover: the scene is 1180x926, a landscape composition,
@@ -1237,7 +1237,7 @@
      170vw, both cut "Avinash" to "vinash".
 
      118vw is the most that can be given without cutting into the screen
-     content — it lifts the desk to about 43% of the height and crops only the
+     content - it lifts the desk to about 43% of the height and crops only the
      scene's own margins. Genuinely filling a portrait phone would mean
      framing the monitor alone rather than the whole desk, which is a
      different composition, not a size.
@@ -1249,7 +1249,7 @@
     .stage-inner { width: calc(100vw - 48px); flex: none; }
     /* The scene ends at the listener's headphones, a hard horizontal edge.
        Centred on a tall screen that edge sat mid-phone with black underneath,
-       so the desk looked sliced off — reported as "cut from below".
+       so the desk looked sliced off - reported as "cut from below".
 
        Two alternatives were tried and rejected. Growing the scene past 118vw
        crops "Avinash" off the monitor, which already spans the full width at
@@ -1267,7 +1267,7 @@
 
   /* A single Material-style chip: label and icon on one line, the icon in its
      own tinted disc. The old version stacked a wide-tracked uppercase label
-     over a chevron faked from two rotated borders — which rendered lopsided
+     over a chevron faked from two rotated borders - which rendered lopsided
      and left the mark floating in dead space below the text. */
   .scroll-cue {
     /* sits above the monitor, where the eye already is, rather than at the
@@ -1719,6 +1719,11 @@
   .door:hover .door-go { color: var(--signal); }
 
   /* ---------- story ---------- */
+  .about-chapters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .about-chapter { padding: clamp(20px, 3vw, 32px); border: 1px solid var(--rule); border-radius: 16px; }
+  .about-chapter h3 { margin-top: 12px; font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.35; }
+  .about-chapter p { margin-top: 16px; color: var(--dim); line-height: 1.75; }
+  @media (max-width: 780px) { .about-chapters { grid-template-columns: 1fr; } }
   .story-lede { font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 400; line-height: 1.42; letter-spacing: -.015em; color: var(--paper); max-width: 22ch; }
   .story-block { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
   .story-block.flip > .plate { order: 2; }
@@ -1776,14 +1781,14 @@
 
      That indirection was the single biggest cost on a phone. Setting a
      custom property on a section invalidates style for every descendant that
-     could read it, not just the ones that do — measured at 848 style recalcs
+     could read it, not just the ones that do - measured at 848 style recalcs
      and 1806ms of RecalcStyle during one throttled scroll, against 392ms of
      actual script. Writing the transform to the five or so moving elements
      invalidates those elements and nothing else.
 
      The .idx letter-spacing animation is gone outright. Animating
-     letter-spacing reflows the line on every frame — it was most of the 329
-     layouts in that same scroll — and it bought a shift of six hundredths of
+     letter-spacing reflows the line on every frame - it was most of the 329
+     layouts in that same scroll - and it bought a shift of six hundredths of
      an em that nobody has ever noticed.
 
      will-change is gone too: these elements get a fresh transform every frame
@@ -1799,7 +1804,7 @@
 
   /* Reveals are opt-in: without JS every element stays at its resting,
      fully visible state, so the page is never stuck blank. The same holds
-     if GSAP fails to load — body.gsap is only set once it is confirmed
+     if GSAP fails to load - body.gsap is only set once it is confirmed
      present, so a missing vendor file degrades to this CSS rather than to
      a page of permanently invisible content.
      :not(.gsap) because both systems animate opacity and transform, and a
@@ -1819,8 +1824,8 @@
   /* Route changes were a hard cut: innerHTML swaps, scroll jumps to the top,
      and everything above the fold is marked .instant so it never reveals.
      The cut reads as a page reload rather than a move within one site.
-     This animates the sections themselves — never #view, whose inline
-     transform the intro writes every frame — as Material's fade-through:
+     This animates the sections themselves - never #view, whose inline
+     transform the intro writes every frame - as Material's fade-through:
      out is implicit (the old markup is already gone), in is a short rise.
      Capped stagger so a long route still finishes well inside 400ms. */
   body.anim #view.route-in > section {
@@ -1839,7 +1844,7 @@
      offset. Below ~1160px the content box reaches close enough to the
      viewport edge that a 34px shift pushes past it and creates a scrollbar.
      This said 1100 until a width sweep caught 4px of real horizontal scroll
-     at exactly that width — the boundary was set to where the problem starts
+     at exactly that width - the boundary was set to where the problem starts
      rather than safely clear of it. */
   body.anim:not(.gsap) .rv-l, body.anim:not(.gsap) .rv-r { transform: translate3d(0, 30px, 0); }
   @media (min-width: 1160px) {
@@ -1904,7 +1909,7 @@
   }
 
   /* Connector wires draw themselves in the first time they appear.
-     Gated :not(.gsap) for the dash animation only — when GSAP is present it
+     Gated :not(.gsap) for the dash animation only - when GSAP is present it
      owns stroke-dashoffset. The stroke, opacity and stroke-width transitions
      stay in CSS unconditionally: those are hover and pick states, not scroll
      motion, and moving them to JS would be a downgrade. */
@@ -2104,7 +2109,7 @@
   }
   .prev-scale {
     width: 1080px;
-    /* 504 / 1080 — the real column, shrunk to fit the screen exactly */
+    /* 504 / 1080 - the real column, shrunk to fit the screen exactly */
     transform: scale(.4667);
     transform-origin: 0 0;
     padding: 0 20px;
@@ -2173,7 +2178,7 @@
   }
 
   /* ---------- ask bar + chat ---------- */
-  /* First thing under a sticky 64px topbar, so it has to clear it outright —
+  /* First thing under a sticky 64px topbar, so it has to clear it outright -
      at the scroll position the intro lands on, less clearance puts the field
      under the bar. */
   .ask { padding: calc(var(--topbar-h) + clamp(16px, 3vh, 36px)) 0 0; }
@@ -2217,7 +2222,7 @@
     font-size: .98rem;
     /* The send button beside it has always been 58px; the input itself was
        only as tall as its text, so the primary interaction on the page was a
-       27px tap target — under the audit's 40px floor and well under
+       27px tap target - under the audit's 40px floor and well under
        Material's 48dp. It escaped notice for a long time because the intro's
        preview clone matched .ask-input first and the audit de-duplicates by
        selector, so it was the clone's dimensions being reported. */
@@ -2436,7 +2441,7 @@
     .chat { border: 0; }
     .msg { max-width: 94%; }
 
-    /* stage segment labels stop fitting — a legend below carries them instead */
+    /* stage segment labels stop fitting - a legend below carries them instead */
     .seg span { display: none; }
     .budget { height: 40px; }
     .budget-legend { display: grid; }
@@ -2650,7 +2655,7 @@
 </div>
 <script>
   /* =========================================================
-     VOICE-WAVE LOADER — runs before the main script, and alone
+     VOICE-WAVE LOADER - runs before the main script, and alone
      =========================================================
      Self-contained on purpose: it must not depend on anything the main
      script defines. The main script marks itself ready through window.__vload
@@ -2758,7 +2763,7 @@
   <div class="stage-inner" id="stageInner">
     <svg class="scene" viewBox="0 0 1200 700" role="img" aria-labelledby="sceneTitle sceneDesc">
       <title id="sceneTitle">Avinash, a metacognist and philomath</title>
-      <desc id="sceneDesc">A desk at night seen from behind: a person sits at a PC setup, and the monitor reads “Avinash — a Metacognist &amp; Philomath”.</desc>
+      <desc id="sceneDesc">A desk at night seen from behind: a person sits at a PC setup, and the monitor reads “Avinash - a Metacognist &amp; Philomath”.</desc>
 
       <defs>
         <radialGradient id="gGlow" cx="50%" cy="50%" r="50%">
@@ -2845,7 +2850,7 @@
         <circle cx="362" cy="140" r="4" fill="#FF6B4A"/>
         <circle cx="378" cy="140" r="4" fill="#79B397"/>
         <circle cx="394" cy="140" r="4" fill="#79B397"/>
-        <text x="416" y="144" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="10.5" fill="#3C3E41">avinash — session 01</text>
+        <text x="416" y="144" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="10.5" fill="#3C3E41">avinash - session 01</text>
 
         <!-- screen content -->
         <text x="378" y="200" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#79B397">&gt; whoami</text>
@@ -2976,7 +2981,7 @@
     <div class="chat-top">
       <div>
         <div class="chat-title" id="chatTitle">Ask about my work</div>
-        <div class="chat-sub">Answers come from this site — nothing invented.</div>
+        <div class="chat-sub">Answers come from this site. Nothing invented.</div>
       </div>
       <div class="chat-tools">
         <button class="chat-btn" id="chatClear" type="button">Clear</button>
@@ -3020,7 +3025,7 @@
   "use strict";
 
   /* =========================================================
-     CONTENT — sourced from the resume and the supplied sitemap.
+     CONTENT - sourced from the resume and the supplied sitemap.
      ========================================================= */
 
   var PROFILE = {
@@ -3030,7 +3035,7 @@
     linkedin: "https://www.linkedin.com/in/avinashdevg/",
     resume: "https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing",
     resumeView: "https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing",
-    summary: "Associate Product Manager with 2+ years building 0-to-1 AI and SaaS products, including Voice AI and Generative AI solutions. Track record of measurable outcomes through product strategy, automation and data-driven execution — plus end-to-end business ownership as a founder."
+    summary: "Associate Product Manager with 2+ years building 0-to-1 AI and SaaS products, including Voice AI and Generative AI solutions. Track record of measurable outcomes through product strategy, automation and data-driven execution, plus end-to-end business ownership as a founder."
   };
 
   var IMPACT = [
@@ -3043,12 +3048,12 @@
   ];
 
   var TRACE = [
-    { stage: "Leadership", role: "Sponsorship Head, College Fest", when: "Jan 2018 — Mar 2018" },
-    { stage: "Business development", role: "Business Development Manager, AIESEC", when: "Mar 2020 — Aug 2020" },
-    { stage: "UX and design", role: "UI/UX Designer, Yapita Health", when: "Jun 2023 — Aug 2023" },
-    { stage: "Product management", role: "Product Analyst, Cordelia Cruises", when: "Nov 2023 — Jan 2025" },
-    { stage: "AI product management", role: "Associate Product Manager, Chat360", when: "Jan 2025 — Jun 2025" },
-    { stage: "Business ownership", role: "Founder, Nosh House Cafe", when: "May 2025 — present" }
+    { stage: "Leadership", role: "Sponsorship Head, College Fest", when: "Jan 2018 - Mar 2018" },
+    { stage: "Business development", role: "Business Development Manager, AIESEC", when: "Mar 2020 - Aug 2020" },
+    { stage: "UX and design", role: "UI/UX Designer, Yapita Health", when: "Jun 2023 - Aug 2023" },
+    { stage: "Product management", role: "Product Analyst, Cordelia Cruises", when: "Nov 2023 - Jan 2025" },
+    { stage: "AI product management", role: "Associate Product Manager, Chat360", when: "Jan 2025 - Jun 2025" },
+    { stage: "Business ownership", role: "Founder, Nosh House Cafe", when: "May 2025 - present" }
   ];
 
   var CAPS = {
@@ -3066,14 +3071,14 @@
       org: "Chat360",
       role: "Associate Product Manager",
       context: "Voice and GenAI enterprise solutions",
-      when: "Jan 2025 — Jun 2025",
+      when: "Jan 2025 - Jun 2025",
       where: "Pune",
-      title: "Enterprise Voice AI, from zero to one \u2014 then twice as fast",
-      line: "Owned the 0-to-1 Voice AI launch — architecture through to the analytics customers run their contact centres on.",
+      title: "Enterprise Voice AI, from zero to one - then twice as fast",
+      line: "Owned the 0-to-1 Voice AI launch, from architecture through to the analytics customers run their contact centres on.",
       overview: "Chat360 builds conversational AI infrastructure for enterprise customer engagement. I owned the Voice AI platform end to end: the real-time pipeline, the flow builder enterprises use to design their own conversations, how AI usage gets billed, and the analytics that tell a customer whether any of it is working.",
       myRole: "Owned Voice AI, Bot Builder, GenAI billing, omnichannel expansion, enterprise RBAC and product analytics.",
       team: "8–10 member cross-functional team across engineering, design and QA.",
-      problem: "Enterprises running high-volume calling needed a Voice AI layer that sits on top of their existing telephony and dialer stack without breaking latency, tone or turn-taking — the things that make a phone call feel human instead of robotic.",
+      problem: "Enterprises running high-volume calling needed a Voice AI layer that sits on top of their existing telephony and dialer stack without breaking latency, tone or turn-taking, the things that make a phone call feel human instead of robotic.",
       why: "Voice is the highest-trust, highest-friction channel in enterprise support and sales. Laggy responses, talking over the customer or robotic speech cost conversions directly, so the platform's credibility rested on this launch.",
       users: "Enterprise contact-centre teams, their agents, and the customers on the other end of the call.",
       metrics: [
@@ -3089,7 +3094,7 @@
           tags: ["Real-time", "Architecture", "Vendor selection"],
           detail: [
             "The architecture spans telephony, dialers, STT, LLM, TTS, VAD and noise suppression. Every stage adds delay, so it had to be reasoned about as a latency budget rather than a single model call.",
-            "Dialer integrations covered Ozonetel, Tubelight, SIP and NEOX Dialer — each with different call control and webhook behaviour that flows had to account for.",
+            "Dialer integrations covered Ozonetel, Tubelight, SIP and NEOX Dialer, each with different call control and webhook behaviour that flows had to account for.",
             "Voice experience decisions centred on latency, turn-taking, handling interruptions gracefully, and letting customers preview a synthesized voice before committing to it.",
             "Model management spanned GPT-4o and Azure GPT-4.1 Mini, trading response quality against cost and latency per use case.",
             "Vendor ecosystem included Murf AI and Narration BOX for speech synthesis, with Uniphore and Kore.ai as adjacent conversational AI capability."
@@ -3132,7 +3137,7 @@
           tags: ["Strategy", "Adoption"],
           detail: [
             "Each channel needed its own delivery and fallback logic while sharing the same underlying flows and analytics.",
-            "This is what unlocked broader enterprise adoption — customers could meet their users wherever conversion actually happened."
+            "This is what unlocked broader enterprise adoption: customers could meet their users wherever conversion actually happened."
           ]
         },
         {
@@ -3170,7 +3175,7 @@
         }
       ],
       challenges: [
-        "Coordinating 8–10 people across a platform with many moving technical parts — dialers, models, billing, access control — all landing at once.",
+        "Coordinating 8–10 people across a platform with many moving technical parts (dialers, models, billing, access control) all landing at once.",
         "Diagnosing latency that could have originated in any one of five pipeline stages, where the obvious suspect was usually wrong."
       ],
       learnings: [
@@ -3184,7 +3189,7 @@
       org: "Cordelia Cruises",
       role: "Product Analyst",
       context: "AI initiatives and platform revamps",
-      when: "Nov 2023 — Jan 2025",
+      when: "Nov 2023 - Jan 2025",
       where: "Mumbai",
       title: "A first mobile app, a content backbone, and AI on the support line",
       line: "0-to-1 mobile app, a centralized CMS, and Voice AI plus automated QA across customer touchpoints.",
@@ -3208,7 +3213,7 @@
           detail: [
             "Discovery mapped the end-to-end journey from booking through the onboard experience.",
             "Translated those insights into user flows and product requirements alongside engineering and design.",
-            "Shipped as a genuine 0-to-1 launch — nothing like it existed before."
+            "Shipped as a genuine 0-to-1 launch; nothing like it existed before."
           ]
         },
         {
@@ -3255,15 +3260,15 @@
       org: "Nosh House Cafe",
       role: "Founder",
       context: "Family business",
-      when: "May 2025 — present",
+      when: "May 2025 - present",
       where: "Mumbai",
       title: "Owning the whole P&L, not just the product layer",
       line: "Took a family cafe to 50% MRR growth and operational break-even in nine months.",
-      overview: "Running the cafe as founder meant owning every layer — acquisition, digital ordering, operations and retention — not just the product. It is the clearest evidence of end-to-end business ownership in my background.",
+      overview: "Running the cafe as founder meant owning every layer: acquisition, digital ordering, operations and retention. It is the clearest evidence of end-to-end business ownership in my background.",
       myRole: "Founder. Strategy, growth, operations and the digital product, end to end.",
       team: "On-ground operations staff plus external platforms (Reelo, Petpooja) rather than a product team.",
       problem: "The business had to become self-sustaining: acquire customers efficiently, convert them through a fast ordering flow, and retain them without leaning on discounts.",
-      why: "As founder every metric — order value, margin, service speed, capital efficiency — is a personal outcome rather than a dashboard someone else owns. It is the highest-accountability work I have done.",
+      why: "As founder every metric (order value, margin, service speed, capital efficiency) is a personal outcome rather than a dashboard someone else owns. It is the highest-accountability work I have done.",
       users: "Walk-in and delivery customers, and repeat customers reached through loyalty and WhatsApp campaigns.",
       metrics: [
         { v: "50%", k: "MRR growth" },
@@ -3275,7 +3280,7 @@
           name: "Getting to break-even",
           sum: "Operational break-even within nine months of taking over.",
           tags: ["Business impact"],
-          detail: ["Customer acquisition cost, average order value, margin, service speed and capital efficiency all had to move together — improving one at the expense of another would not have got there."]
+          detail: ["Customer acquisition cost, average order value, margin, service speed and capital efficiency all had to move together; improving one at the expense of another would not have got there."]
         },
         {
           name: "Digital ordering",
@@ -3307,7 +3312,7 @@
       ],
       challenges: [
         "Balancing short-term cash flow against investments like Reelo and Petpooja that only pay back over months.",
-        "Improving service speed and margin at the same time — two things that normally trade off."
+        "Improving service speed and margin at the same time, two things that normally trade off."
       ],
       learnings: [
         "Owning a P&L changes how you prioritize. Every roadmap call gets weighed against cash flow, not just user value.",
@@ -3320,11 +3325,11 @@
       org: "Yapita Health",
       role: "UI/UX Designer",
       context: "Internship",
-      when: "Jun 2023 — Aug 2023",
+      when: "Jun 2023 - Aug 2023",
       where: "Gurugram",
       title: "An AI healthcare chatbot, from concept to working product",
       line: "Where the UX foundation came from: research, journeys and prototypes on a healthcare AI product.",
-      overview: "My UX foundation — taking an AI healthcare chatbot from a rough concept through research, journey mapping and prototypes to something real and tested.",
+      overview: "My UX foundation: taking an AI healthcare chatbot from a rough concept through research, journey mapping and prototypes to something real and tested.",
       myRole: "Research, journey mapping, wireframes and prototypes.",
       team: "Internship inside Yapita Health's product team.",
       problem: "Patients needed an approachable way to use an AI healthcare chatbot, and early concepts had never been validated with real users.",
@@ -3363,7 +3368,7 @@
       org: "Events Fusion",
       role: "UI/UX Designer",
       context: "Project",
-      when: "Sep 2025 — Mar 2026",
+      when: "Sep 2025 - Mar 2026",
       where: "Remote",
       title: "Pitch decks that survive an executive room",
       line: "Executive-ready B2B decks and the sales operations around them.",
@@ -3401,13 +3406,13 @@
   var JOURNEY = [
     {
       title: "Leadership and business",
-      when: "2018 — 2020",
+      when: "2018 - 2020",
       entries: [
-        { org: "College Fest", role: "Sponsorship Head", meta: "Jan 2018 — Mar 2018 / Pune", points: [
+        { org: "College Fest", role: "Sponsorship Head", meta: "Jan 2018 - Mar 2018 / Pune", points: [
           "Secured 7–8 sponsors and onboarded 20 stalls for the university's first engineering fest",
           "Stakeholder management and end-to-end event execution"
         ]},
-        { org: "AIESEC", role: "Business Development Manager", meta: "Mar 2020 — Aug 2020 / Pune", points: [
+        { org: "AIESEC", role: "Business Development Manager", meta: "Mar 2020 - Aug 2020 / Pune", points: [
           "Ranked #2 in Pune driving digital customer acquisition through data-driven outreach during COVID-19",
           "Built corporate partnerships, gathering requirements and running cross-functional execution"
         ]}
@@ -3418,7 +3423,7 @@
       when: "2023",
       link: "#/work/yapita-health",
       entries: [
-        { org: "Yapita Health", role: "UI/UX Designer", meta: "Jun 2023 — Aug 2023 / Gurugram", points: [
+        { org: "Yapita Health", role: "UI/UX Designer", meta: "Jun 2023 - Aug 2023 / Gurugram", points: [
           "Designed an AI healthcare chatbot from concept to working product",
           "Built user journeys, wireframes and prototypes to improve onboarding"
         ]}
@@ -3426,10 +3431,10 @@
     },
     {
       title: "Product foundation",
-      when: "2023 — 2025",
+      when: "2023 - 2025",
       link: "#/work/cordelia-cruises",
       entries: [
-        { org: "Cordelia Cruises", role: "Product Analyst", meta: "Nov 2023 — Jan 2025 / Mumbai", points: [
+        { org: "Cordelia Cruises", role: "Product Analyst", meta: "Nov 2023 - Jan 2025 / Mumbai", points: [
           "Led 0-to-1 development of a customer-facing mobile application",
           "Built a centralized CMS and delivered Voice AI plus automated QA"
         ]}
@@ -3440,7 +3445,7 @@
       when: "2025",
       link: "#/work/chat360",
       entries: [
-        { org: "Chat360", role: "Associate Product Manager", meta: "Jan 2025 — Jun 2025 / Pune", points: [
+        { org: "Chat360", role: "Associate Product Manager", meta: "Jan 2025 - Jun 2025 / Pune", points: [
           "Led the 0-to-1 launch of an enterprise Voice AI platform with an 8–10 member team",
           "Cut voice latency 50% and scaled omnichannel support to five channels"
         ]}
@@ -3448,10 +3453,10 @@
     },
     {
       title: "Business ownership",
-      when: "2025 — present",
+      when: "2025 - present",
       link: "#/work/nosh-house",
       entries: [
-        { org: "Nosh House Cafe", role: "Founder", meta: "May 2025 — present / Mumbai", points: [
+        { org: "Nosh House Cafe", role: "Founder", meta: "May 2025 - present / Mumbai", points: [
           "Operational break-even in nine months, MRR up 50%",
           "Automated WhatsApp marketing through Reelo and rebuilt delivery operations"
         ]}
@@ -3459,9 +3464,9 @@
     },
     {
       title: "Where this is going",
-      when: "2026 — present",
+      when: "2026 - present",
       entries: [
-        { org: "Masters' Union", role: "Post Graduate Programme, Technology and Business Management", meta: "2026 — present / Gurugram", points: [
+        { org: "Masters' Union", role: "Post Graduate Programme, Technology and Business Management", meta: "2026 - present / Gurugram", points: [
           "Building toward agentic AI product management"
         ]}
       ]
@@ -3470,7 +3475,7 @@
 
   var EXPERIMENTS = [
     {
-      title: "Tragenie \u2014 travel discovery",
+      title: "Tragenie - travel discovery",
       status: "live demo",
       site: "tragenie",
       problem: "Travel research is scattered across Instagram, Reddit and Google Reviews, so planning a trip means manually reconciling sources that disagree.",
@@ -3478,10 +3483,10 @@
       parts: ["Instagram", "Reddit", "Google Reviews", "Location intelligence", "Recommendation engine"]
     },
     {
-      title: "BlankStore \u2014 dropshipping storefront",
+      title: "BlankStore - dropshipping storefront",
       status: "operating business",
       site: "blankstore",
-      problem: "Standing up a commerce brand end to end \u2014 storefront, catalogue, checkout and fulfilment \u2014 without a team.",
+      problem: "Standing up a commerce brand end to end, including storefront, catalogue, checkout and fulfilment, without a team.",
       approach: "Built and shipped the whole thing solo, then ran it: brand and catalogue decisions, checkout flow, and the fulfilment loop behind the orders.",
       parts: ["Brand", "Catalogue", "Checkout", "Fulfilment", "Dropshipping"]
     },
@@ -3512,9 +3517,9 @@
   ];
 
   var EDUCATION = [
-    { t: "Masters' Union", s: "Post Graduate Programme in Technology and Business Management", m: "2026 — present / Gurugram" },
-    { t: "MIT Art, Design and Technology University", s: "B.Tech, Computer Science", m: "2017 — 2022 / Pune" },
-    { t: "Sri Chaitanya", s: "Telangana State Board, Class 12", m: "2015 — 2017 / Hyderabad" }
+    { t: "Masters' Union", s: "Post Graduate Programme in Technology and Business Management", m: "2026 - present / Gurugram" },
+    { t: "MIT Art, Design and Technology University", s: "B.Tech, Computer Science", m: "2017 - 2022 / Pune" },
+    { t: "Sri Chaitanya", s: "Telangana State Board, Class 12", m: "2015 - 2017 / Hyderabad" }
   ];
 
   var CERTS = [
@@ -3538,7 +3543,7 @@
      ========================================================= */
 
 
-  /* Recent work — a living feed. Add to the top of this list over time. */
+  /* Recent work - a living feed. Add to the top of this list over time. */
   var RECENT = [
     {
       id: "kasol",
@@ -3558,7 +3563,7 @@
       id: "travel-ai",
       kind: "Live product",
       site: "tragenie",
-      title: "Tragenie — travel discovery",
+      title: "Tragenie - travel discovery",
       blurb: "Pulling trustworthy travel signal out of Instagram, Reddit and Google Reviews.",
       when: "In progress",
       plate: "field",
@@ -3573,7 +3578,7 @@
       id: "blankstore",
       kind: "Live product",
       site: "blankstore",
-      title: "BlankStore — dropshipping brand",
+      title: "BlankStore - dropshipping brand",
       blurb: "Built a storefront end to end: brand, catalogue, checkout and fulfilment.",
       when: "Live",
       plate: "field",
@@ -3649,7 +3654,7 @@
   ];
 
 
-  /* Live products — things a visitor can actually open and use.
+  /* Live products - things a visitor can actually open and use.
      Logos are loaded from each site's own favicon at view time, because this
      build environment cannot reach them; a wordmark shows if that fails. */
   var SITES = [
@@ -3674,7 +3679,7 @@
       name: "BlankStore",
       url: "https://blankstore.lovable.app",
       kind: "Dropshipping brand",
-      blurb: "A dropshipping storefront built end to end — brand, catalogue, checkout and fulfilment.",
+      blurb: "A dropshipping storefront built end to end: brand, catalogue, checkout and fulfilment.",
       related: null
     }
   ];
@@ -3769,7 +3774,7 @@
   }
 
   /* =========================================================
-     LATENCY LAB — the interactive centrepiece
+     LATENCY LAB - the interactive centrepiece
      ========================================================= */
 
   // Illustrative stage split. Only the 50% end-to-end reduction is a shipped result.
@@ -3824,7 +3829,7 @@
     return '<div class="panel lab" id="lab">' +
       '<div class="panel-bar">' +
         '<div class="panel-title">Latency lab</div>' +
-        '<div class="panel-note">Illustrative model. The stage split is a demonstration — the 50% end-to-end reduction is the shipped result.</div>' +
+        '<div class="panel-note">Illustrative model. The stage split is a demonstration; the 50% end-to-end reduction is the shipped result.</div>' +
       '</div>' +
       '<div class="budget" id="budget" role="img" aria-label="Voice pipeline latency budget by stage">' + segs + '</div>' +
       '<div class="track"><div class="packet" id="packet"></div></div>' +
@@ -3917,7 +3922,7 @@
   }
 
   /* =========================================================
-     SYSTEM MAP — canvas knowledge graph
+     SYSTEM MAP - canvas knowledge graph
      ========================================================= */
 
   // Two tidy columns: what I built on the left, what it exercised on the right.
@@ -4067,7 +4072,7 @@
      ========================================================= */
 
   /* =========================================================
-     ASK — retrieval-backed chat over this site's own content
+     ASK - retrieval-backed chat over this site's own content
      The endpoint is a Cloudflare Worker (see rag/ in the repo); it holds the
      model key and does retrieval, so nothing sensitive ships to the browser.
      ========================================================= */
@@ -4082,7 +4087,7 @@
       if (q) sessionStorage.setItem("ag.api", q);
       var saved = sessionStorage.getItem("ag.api");
       if (saved) RAG_ENDPOINT = saved;
-    } catch (e) { /* storage blocked — fall back to the baked-in endpoint */ }
+    } catch (e) { /* storage blocked - fall back to the baked-in endpoint */ }
   })();
 
   /* Cycled through the input's placeholder rather than shown as chips: the
@@ -4142,7 +4147,7 @@
   }
 
   function askBar() {
-    // A conversation carried over from earlier in this tab is worth surfacing —
+    // A conversation carried over from earlier in this tab is worth surfacing -
     // otherwise its only trace is a popup the visitor has no reason to reopen.
     var chips = chatState.msgs.length
       ? '<button class="ask-chip ask-resume" type="button" data-resume="1">' +
@@ -4187,7 +4192,7 @@
   }
 
   /* The model answers in light markdown. Escape first, then promote only bold
-     and bullets — so the output is formatted without ever trusting the string. */
+     and bullets - so the output is formatted without ever trusting the string. */
   function mdLite(text) {
     var safe = esc(text);
     var lines = safe.split("\n");
@@ -4263,7 +4268,7 @@
   }
 
   /* Reveals a fresh answer progressively. Only ever runs on a just-arrived
-     message — restored history renders complete, so reopening the popup never
+     message - restored history renders complete, so reopening the popup never
      replays old answers. */
   function chatReveal(msg) {
     var reduced = window.matchMedia &&
@@ -4455,7 +4460,7 @@
     });
   }
 
-  /* The bento field. Figures come from IMPACT, tool marks from SKILLS_TECH —
+  /* The bento field. Figures come from IMPACT, tool marks from SKILLS_TECH -
      both existing data. Empty cells are deliberate: the reference leaves gaps
      in the grid so the field reads as a composition rather than a table. */
   function depictionIcon(kind) {
@@ -4557,7 +4562,7 @@
     }).join("");
 
     // Recruiter order: who and what first, then the case studies, then the
-    // proof, and the personal side last. Nothing here is new content — the
+    // proof, and the personal side last. Nothing here is new content - the
     // hero actions only point at pages that already exist.
     return '' +
       '<section class="hero" data-scene>' +
@@ -4599,7 +4604,7 @@
 
       '<section data-scene>' +
         secHead("Capability", "One thread runs through every project",
-          "Optional: click a project to trace the skills it put to work. Double-click to open its case study — " +
+          "Optional: click a project to trace the skills it put to work. Double-click to open its case study. " +
           "or use the button underneath.") +
         '<div class="rv rv-scale">' + buildMap() + '</div>' +
       '</section>' +
@@ -4612,7 +4617,7 @@
 
       '<section data-scene>' +
         secHead("Lately", "What I’ve been up to",
-          "What I have been doing lately — this list keeps moving.") +
+          "What I have been doing lately. This list keeps moving.") +
         '<div class="recent">' + recent + '</div>' +
       '</section>' +
 
@@ -4791,7 +4796,7 @@
       '<div data-par="0.05"><div class="steps">' + steps + '</div></div>' +
       '<p class="lede rv" style="margin-top:30px">You can see it most clearly in ' +
         '<a href="#/work/chat360">the Chat360 Voice AI launch</a> and ' +
-        '<a href="#/work/cordelia-cruises">the Cordelia mobile app</a> — both 0-to-1 builds that had to move ' +
+        '<a href="#/work/cordelia-cruises">the Cordelia mobile app</a>, both 0-to-1 builds that had to move ' +
         'through discovery, prioritization and launch against real time and team constraints.</p>' +
     '</section>';
   }
@@ -4809,42 +4814,51 @@
         '<div class="entry-m">' + esc(c.m) + '</div></div>';
     }).join("");
 
-    var beyond = BEYOND.map(function (b) { return '<li>' + esc(b) + '</li>'; }).join("");
+    var chapters = [
+      { phase: "Leadership and business development", title: "Learning to see what matters to someone else", text: "Sponsorship work at College Fest and business development at AIESEC put me in conversations with people who had different priorities. Gathering requirements, building partnerships and coordinating execution gave me an early reason to look beyond my own view. I carry that into product work: before I propose something, I want to understand what the other person is trying to achieve." },
+      { phase: "Design and Yapita Health", title: "Moving from my assumptions to the customer's journey", text: "My UX courses and the healthcare chatbot work at Yapita Health brought structure to that curiosity. User journeys, wireframes and prototypes gave me ways to examine an experience before committing to it. I began connecting what I was learning in courses with the decisions in front of me: where might someone hesitate, what do they need to understand, and what could make the next step easier?" },
+      { phase: "Cordelia Cruises and Chat360", title: "Seeing the customer and the team together", text: "Building a customer-facing app, internal systems and Voice AI widened the set of questions I ask. A customer experiences the result, while engineering, design, support and operations each see a different part of making it work. Having worked across these roles helps me understand those perspectives together. I want a decision to make sense for the person using the product and the people responsible for delivering it." },
+      { phase: "Nosh House Cafe", title: "Taking responsibility for the whole experience", text: "Running Nosh House brought acquisition, ordering, service, retention and costs into the same picture. It made the connection between a good customer experience and a sustainable business much more immediate. I think about the consequences after a decision is made: can the team deliver it consistently, will customers come back, and does the business have the resources to keep doing it?" },
+      { phase: "Events Fusion", title: "Making an idea understandable to different people", text: "Working on enterprise decks and stakeholder communication added another perspective. The same idea needs to be understandable to people with different buying criteria. I see a connection here with UX: the order of information and the clarity of the message affect whether someone can make a decision. It keeps me asking whose question I am actually answering." },
+      { phase: "Learning that continues", title: "Connecting the next lesson to a real decision", text: "My computer science background, design certifications, BITS Pilani course in Generative and Agentic AI, and studies at Masters’ Union give me different ways to examine a problem. I want to put those ideas to work alongside what I learn from customers and teams. For me, learning becomes useful when it changes a question I ask, an assumption I test, or a choice I make." }
+    ];
+    var chaptersHtml = chapters.map(function (chapter, i) {
+      return '<article class="about-chapter rv"><div class="entry-m">' + esc(chapter.phase) + '</div>' +
+        '<h3>' + esc(chapter.title) + '</h3><p>' + esc(chapter.text) + '</p></article>';
+    }).join("");
 
-    return '' +
-      '<section>' +
-        secHead("about", "Design school and a P&L taught me the same lesson") +
-        '<p class="lede rv">I learned humanity-centered design formally, through the Interaction Design Foundation ' +
-        'and Don Norman\'s course on designing for the 21st century. Then I learned it again by taking over a ' +
-        'family business and discovering that a good experience and a viable business are the same problem ' +
-        'looked at from two directions. That is the perspective I bring to AI products: the model is never the point — ' +
-        'what someone can now do that they could not before is the point.</p>' +
+    return '<section>' +
+      secHead("about", "Different experiences. A wider way of thinking.") +
+      '<p class="lede rv">I am Avinash. My curiosity takes me across design, technology, business and human behaviour. ' +
+      'Each role has added another lens to how I understand people and make decisions. What connects those experiences ' +
+      'is a desire to understand the customer, listen to the team and keep questioning my own assumptions.</p>' +
       '</section>' +
-
-      '<section>' +
-        '<div data-par="0.05"><div class="cols">' +
-          '<div><h3 class="rv" style="margin-bottom:18px">Education</h3><div class="stack">' + edu + '</div></div>' +
-          '<div><h3 class="rv" style="margin-bottom:18px">Certifications</h3><div class="stack">' + certs + '</div></div>' +
-        '</div></div>' +
-      '</section>' +
-
-      '<section>' +
-        '<div data-par="0.04"><div class="cols">' +
-          '<div class="rv"><h3>Business</h3><div class="chips">' + SKILLS_BIZ.map(function (s) { return '<span class="chip">' + esc(s) + '</span>'; }).join("") + '</div></div>' +
-          '<div class="rv" style="--i:1"><h3>Technical</h3><div class="chips">' + SKILLS_TECH.map(function (s) { return '<span class="chip">' + esc(s) + '</span>'; }).join("") + '</div></div>' +
-        '</div></div>' +
-      '</section>' +
-
-      '<section>' +
-        secHead("outside", "Away from a screen") +
-        '<ul class="learn rv" style="display:block;padding:0;list-style:none">' + beyond + '</ul>' +
-        '<div class="hero-acts"><a class="hero-act" href="#/story">Personal story →</a><a class="hero-act" href="#/beyond">Travel and interests →</a></div>' +
+      '<section>' + secHead("my development", "What each experience changed in how I think") +
+      '<div class="about-chapters">' + chaptersHtml + '</div></section>' +
+      '<section>' + secHead("my mindset", "Curiosity, with a habit of reflection") +
+      '<div class="cols">' +
+        '<article class="about-chapter rv"><h3>Philomath: following questions across subjects</h3>' +
+        '<p>I enjoy learning about more than one field. Design makes me curious about behaviour; technology makes me ask what is possible; business makes me examine what can last. Moving between them helps me notice connections and consider more than one way forward.</p></article>' +
+        '<article class="about-chapter rv"><h3>Metacognist: examining my own thinking</h3>' +
+        '<p>I try to notice the assumptions behind my first answer. Am I favouring a familiar solution? Have I listened to the person affected? What would change my mind? That reflection helps me choose more deliberately and avoid spending effort on the wrong problem.</p></article>' +
+      '</div></section>' +
+      '<section>' + secHead("outside work", "Making room for unfamiliar experiences") +
+      '<p class="lede rv">Solo travel gives me another setting for making my own choices. My four-day Himalayan trek to 14,000 feet is part of that story. Alongside travel, interests such as abacus and sport reflect the same curiosity that draws me to different subjects at work. I want to keep learning from experiences beyond a job title.</p>' +
+      '<a class="xp-link" href="#/beyond">Explore my interests →</a></section>' +
+      '<section>' + secHead("learning", "The foundations I keep building on") +
+      '<div class="cols">' +
+        '<div><h3 class="rv" style="margin-bottom:18px">Education</h3><div class="stack">' + edu + '</div></div>' +
+        '<div><h3 class="rv" style="margin-bottom:18px">Certifications</h3><div class="stack">' + certs + '</div></div>' +
+      '</div></section>' +
+      '<section>' + secHead("today", "The perspective I bring") +
+      '<p class="lede rv">I bring the curiosity to explore widely, the empathy to consider different people, and the willingness to revisit my own reasoning. In product work, I use that combination to connect customer needs, team realities and business outcomes, then learn from what happens next.</p>' +
+      '<div class="hero-acts"><a class="hero-act primary" href="#/work">See that thinking in my work</a><a class="hero-act" href="#/contact">Start a conversation</a></div>' +
       '</section>';
   }
 
 
   /* =========================================================
-     GALLERY — categorised, keyboard navigable
+     GALLERY - categorised, keyboard navigable
      ========================================================= */
 
   var galState = { rec: null, cat: 0, lastFocus: null };
@@ -4906,7 +4920,7 @@
   }
 
   /* =========================================================
-     ABSTRACT PLATES — drawn stand-ins for photographs
+     ABSTRACT PLATES - drawn stand-ins for photographs
      ========================================================= */
 
   function plate(kind, caption, cls) {
@@ -4942,7 +4956,7 @@
     }
 
     if (kind === "field") {
-      // a scatter that resolves into a gradient — signal out of noise
+      // a scatter that resolves into a gradient - signal out of noise
       var dots = "";
       for (var r = 0; r < 9; r++) {
         for (var c = 0; c < 15; c++) {
@@ -4983,7 +4997,7 @@
   function viewStory() {
     return '' +
       '<section data-scene>' +
-        secHead("01 — Story", "The way I think came before the job title") +
+        secHead("01 - Story", "The way I think came before the job title") +
         '<p class="story-lede rv">Metacognist and philomath: I study how I think, and I keep ' +
         'learning in public until the thinking gets better.</p>' +
       '</section>' +
@@ -4992,7 +5006,7 @@
         '<div class="story-block">' +
           '<div class="rv">' +
             '<h3>How I think</h3>' +
-            '<p>Thinking about thinking — noticing the pattern I default to, and choosing a ' +
+            '<p>Thinking about thinking: noticing the pattern I default to, and choosing a ' +
             'different one on purpose.</p>' +
           '</div>' +
           iconPanel("workflow") +
@@ -5010,7 +5024,7 @@
       '</section>' +
 
       '<section data-scene>' +
-        secHead("02 — Travel", "Going alone, on purpose") +
+        secHead("02 - Travel", "Going alone, on purpose") +
         '<div class="story-block">' +
           '<div class="rv">' +
             '<h3>Solo travel</h3>' +
@@ -5018,11 +5032,11 @@
           '</div>' +
           iconPanel("map") +
         '</div>' +
-        '<div style="margin-top:28px">' + plate("horizon", "The 14,000-ft Himalayan trek — four days, 20–25 kg carried", "plate-wide rv") + '</div>' +
+        '<div style="margin-top:28px">' + plate("horizon", "The 14,000-ft Himalayan trek - four days, 20–25 kg carried", "plate-wide rv") + '</div>' +
       '</section>' +
 
       '<section data-scene>' +
-        secHead("03 — Next", "Where this leads") +
+        secHead("03 - Next", "Where this leads") +
         '<div class="rel rv">' +
           '<a href="#/experience"><div class="rel-k">Experience</div>' +
           '<div class="rel-t">What I have actually built</div>' +
@@ -5035,14 +5049,14 @@
   }
 
   /* =========================================================
-     BEYOND — the things outside the job
+     BEYOND - the things outside the job
      ========================================================= */
 
   function viewBeyond() {
     var cards = [
       { k: "horizon", t: "The Himalayas", p: "A four-day trek at 14,000 ft carrying 20–25 kg. Resilience is easier to claim than to carry uphill.", w: "4 days · 14,000 ft" },
       { k: "route", t: "Solo travel", p: "Going places alone, deciding alone, and being wrong alone until the decisions get better.", w: "Ongoing" },
-      { k: "field", t: "UCMAS Abacus", p: "Certified at Level 4 with an International Grade 10 Distinction — mental arithmetic trained young.", w: "Level 4 · Grade 10 Distinction" },
+      { k: "field", t: "UCMAS Abacus", p: "Certified at Level 4 with an International Grade 10 Distinction in mental arithmetic trained young.", w: "Level 4 · Grade 10 Distinction" },
       { k: "contour", t: "Tug of war and the 400m", p: "First place in one and third in the other, on the same day. Two very different kinds of effort.", w: "Same afternoon" }
     ].map(function (c, i) {
       return '<div class="beyond-card rv" style="--i:' + i + '">' +
@@ -5068,7 +5082,7 @@
           '<div class="rv">' +
             '<h3>Sponsorship Head, College Fest</h3>' +
             '<p>Secured 7–8 sponsors and onboarded 20 stalls for a university&rsquo;s first ' +
-            'engineering fest — stakeholder management and end-to-end execution, with no ' +
+            'engineering fest: stakeholder management and end-to-end execution, with no ' +
             'budget and no mandate.</p>' +
             '<p style="margin-top:14px">At AIESEC I ranked #2 in Pune driving digital customer ' +
             'acquisition through data-driven outreach during COVID-19, and built corporate ' +
@@ -5080,11 +5094,11 @@
   }
 
   /* =========================================================
-     EXPERIENCE — one home for the whole career
+     EXPERIENCE - one home for the whole career
      ========================================================= */
 
-  /* The card face. There are no product screenshots to show — inventing one
-     would be inventing portfolio content — so the face carries the initial in
+  /* The card face. There are no product screenshots to show - inventing one
+     would be inventing portfolio content - so the face carries the initial in
      the reference's dithered register instead of a fabricated mockup. */
   function plateMark(org) {
     var ch = (org || "?").trim().charAt(0).toUpperCase();
@@ -5130,7 +5144,7 @@
       '</section>' +
 
       // The work, as a pinned horizontal route. Same six roles and the same
-      // links as the rows below — this is a second way into the material, not
+      // links as the rows below - this is a second way into the material, not
       // a replacement for it, so nothing is lost if the pin cannot run.
       '<section data-scene class="band">' +
         '<div class="hs-viewport" id="hsWork">' +
@@ -5138,7 +5152,7 @@
             return '<a class="hs-card" href="#/work/' + w.slug + '">' +
               '<div class="hs-shot notch">' + plateMark(w.org) + '</div>' +
               '<div class="hs-name"><span>' + esc(w.org) + '</span>' +
-              '<span class="hs-visit">' + esc(w.when.split("—")[0].trim()) + ' →</span></div>' +
+              '<span class="hs-visit">' + esc(w.when.split("-")[0].trim()) + ' →</span></div>' +
             '</a>';
           }).join("") + '</div>' +
         '</div>' +
@@ -5184,11 +5198,11 @@
     }).join("");
 
     var edu = EDUCATION.map(function (e) {
-      return '<li><strong>' + esc(e.t) + '</strong> — ' + esc(e.s) + ' <span class="cv-when">' + esc(e.m) + '</span></li>';
+      return '<li><strong>' + esc(e.t) + '</strong> - ' + esc(e.s) + ' <span class="cv-when">' + esc(e.m) + '</span></li>';
     }).join("");
 
     var certs = CERTS.map(function (c) {
-      return '<li><strong>' + esc(c.t) + '</strong> — ' + esc(c.s) + ' <span class="cv-when">' + esc(c.m) + '</span></li>';
+      return '<li><strong>' + esc(c.t) + '</strong> - ' + esc(c.s) + ' <span class="cv-when">' + esc(c.m) + '</span></li>';
     }).join("");
 
     return '<section class="cv">' +
@@ -5231,7 +5245,7 @@
   function contactGrid() {
     return '<div class="contact-grid">' +
       '<a class="contact-cell" href="mailto:' + PROFILE.email + '">' +
-        '<div class="ck">email — fastest way to reach me</div>' +
+        '<div class="ck">email: the fastest way to reach me</div>' +
         '<div class="cv">' + esc(PROFILE.email) + '</div></a>' +
       '<a class="contact-cell" href="tel:' + PROFILE.phone.replace(/\s/g, "") + '">' +
         '<div class="ck">phone</div><div class="cv">' + esc(PROFILE.phone) + '</div></a>' +
@@ -5249,7 +5263,7 @@
       '<div class="hero-acts rv"><a class="hero-act primary" href="mailto:' + esc(PROFILE.email) + '?subject=Product%20role%20conversation">Email me about a product role</a></div>' +
       '<div data-par="0.05"><div class="rv">' + contactGrid() + '</div></div>' +
       '<p class="lede rv" style="margin-top:32px">If you are hiring, the fastest useful thing you can do is read ' +
-      '<a href="#/work/chat360">the Chat360 case study</a> — it is the clearest picture of how I work with ' +
+      '<a href="#/work/chat360">the Chat360 case study</a>. It is the clearest picture of how I work with ' +
       'engineers on something genuinely hard.</p>' +
     '</section>';
   }
@@ -5334,7 +5348,7 @@
     if (pageHeading) pageHeading.setAttribute("tabindex", "-1");
     var label = pageHeading ? pageHeading.textContent : titleFor(route);
     var titleCase = route.indexOf("#/work/") === 0 ? byWork(route.slice(7)) : null;
-    document.title = (isHome ? "AI Product Manager" : (titleCase ? titleCase.org + " — " : "") + label) + " — Avinash Garudapalli";
+    document.title = (isHome ? "AI Product Manager" : (titleCase ? titleCase.org + " - " : "") + label) + " - Avinash Garudapalli";
     var workMore = el("workMore");
     if (workMore) {
       function updateWorkDisclosure() {
@@ -5404,7 +5418,7 @@
       void view.offsetWidth; // restart the animation on a repeat navigation
       view.classList.add("route-in");
       /* The class has to come off once the animation has run.
-         routeIn uses fill-mode both, which retains its final keyframe — and
+         routeIn uses fill-mode both, which retains its final keyframe - and
          `transform: none` retained is a computed matrix(1,0,0,1,0,0), not
          `none`. Any transform makes an element a containing block for
          position: fixed, which is how ScrollTrigger pins, so leaving this on
@@ -5419,7 +5433,7 @@
   }
 
   /* =========================================================
-     FOOTER — where the profile details live now
+     FOOTER - where the profile details live now
      ========================================================= */
 
   var ICONS = {
@@ -5450,7 +5464,7 @@
       '<div class="foot-top">' +
         '<div>' +
           '<div class="foot-name">' + esc(PROFILE.name) + '</div>' +
-          '<p class="foot-role">AI product manager working across voice, generative and agentic systems — and the business case underneath them.</p>' +
+          '<p class="foot-role">AI product manager working across voice, generative and agentic systems and the business case underneath them.</p>' +
         '</div>' +
         '<dl class="foot-facts">' +
           '<div class="foot-fact"><dt>based in</dt><dd>Mumbai, India</dd></div>' +
@@ -5467,7 +5481,7 @@
   }
 
   /* =========================================================
-     INTRO — scroll zooms through the monitor into the console
+     INTRO - scroll zooms through the monitor into the console
      ========================================================= */
 
   var staticIntro = reduceMotion;
@@ -5489,7 +5503,7 @@
   function smoothstep(t) { return t * t * (3 - 2 * t); }
 
   /* The intro used to read the monitor's rect every frame, right after writing
-     the stage's transform — a forced synchronous layout on each of the 60
+     the stage's transform - a forced synchronous layout on each of the 60
      frames the runway lasts, which is exactly the stutter it was producing.
      The geometry is fixed until the viewport changes, so it is measured once
      here and the zoomed position is derived arithmetically instead. */
@@ -5534,14 +5548,14 @@
       function add(sel, rate, vary) {
         Array.prototype.forEach.call(el.querySelectorAll(sel), function (n, i) {
           /* Siblings get slightly different rates so a row of cards does not
-             travel as one slab. The spread is deliberately small — the point
+             travel as one slab. The spread is deliberately small - the point
              is that the group has depth, not that the items disagree. */
           var r = vary ? rate * (1 + ((i % 3) - 1) * 0.28) : rate;
           movers.push({ el: n, rate: r, last: "" });
         });
       }
       /* Every element that can move without costing layout does. These are all
-         transform-only writes on a handful of cached nodes — the property is
+         transform-only writes on a handful of cached nodes - the property is
          composited, so the cost is the same whether five elements move or
          fifty, and none of them can trigger a reflow the way the old
          letter-spacing rule did. */
@@ -5596,7 +5610,7 @@
     );
   }
 
-  /* The page does not appear after the desk scene — it appears *inside* the
+  /* The page does not appear after the desk scene - it appears *inside* the
      monitor and grows out of it, so the next section is on screen (small, but
      legible) from the first few pixels of scroll. The old version zoomed the
      whole scene away and left an empty frame before content arrived, which
@@ -5612,7 +5626,7 @@
 
   /* The rate-capped follow, on GSAP's ticker. Bound rigidly to scroll, a hard
      flick advanced this by a third per frame and the whole sequence rendered
-     in three frames — the animation existed but was never seen. Small deltas
+     in three frames - the animation existed but was never seen. Small deltas
      stay under the cap and so track the finger exactly; only a flick is paced.
      The page keeps scrolling underneath, so this is not scroll-hijacking. */
   function introTick(time, deltaTime) {
@@ -5663,7 +5677,7 @@
   }
 
   /* Fills the monitor with a still of the page that is coming. It is a clone,
-     stripped of anything interactive, living inside the SVG — so it scales
+     stripped of anything interactive, living inside the SVG - so it scales
      with the monitor on its own and nothing has to be recomputed per frame. */
   function fillPreview() {
     var body = el("scrPreviewBody");
@@ -5695,7 +5709,7 @@
         n.removeAttribute("data-resume");
       });
       // A resume chip is conversation state, meaningless in a still of the
-      // page — and leaving the class on a hidden copy makes ".ask-resume"
+      // page - and leaving the class on a hidden copy makes ".ask-resume"
       // resolve to the picture rather than the real control.
       Array.prototype.forEach.call(copy.querySelectorAll(".ask-resume"), function (n) {
         n.parentNode.removeChild(n);
@@ -5705,7 +5719,7 @@
   }
 
   /* The intro no longer scales the page itself. Transforming and re-clipping
-     #view — which contains the whole document — forced the compositor to
+     #view - which contains the whole document - forced the compositor to
      re-rasterise an enormous layer every frame, and that is what flickered
      while scrolling. Only the desk SVG moves now, and the preview inside it
      is part of that SVG, so it is genuinely fixed to the screen it sits on. */
@@ -5713,7 +5727,7 @@
 
      Scroll sets a target; the intro plays toward it at its own pace. Bound
      rigidly to scroll position, a hard trackpad flick advanced this by a third
-     per frame and the whole sequence rendered in three frames — the animation
+     per frame and the whole sequence rendered in three frames - the animation
      existed but was never actually seen. Damped follow keeps deliberate
      scrolling 1:1 (small deltas stay under the cap) while a flick is paced, so
      the intro is experienced either way. The page keeps scrolling underneath,
@@ -5778,7 +5792,7 @@
        and the dissolve is seamless. On a portrait phone the monitor is a small
        part of a wide scene and cannot fill the screen, so for the whole
        dissolve the visitor saw two copies of the same headline at two sizes,
-       misaligned — recorded on a real phone, and exactly the flicker that was
+       misaligned - recorded on a real phone, and exactly the flicker that was
        reported. Clearing the monitor first means only one copy of the page is
        ever on screen. */
     var prevOp = handover;
@@ -5793,7 +5807,7 @@
     // inherited, so this is what pulls the monitor's preview clone out of the
     // accessibility tree and the tab order; leave it "visible" and the page
     // carries a second, invisible ask bar and hero forever. Keying it to
-    // p >= 0.999 was safe only while p tracked scroll exactly — the damped
+    // p >= 0.999 was safe only while p tracked scroll exactly - the damped
     // follow converges asymptotically and the rAF loop stops on the same
     // threshold the snap uses, so p could strand a hair short and the clone
     // never left the tree.
@@ -5859,7 +5873,7 @@
         /* The independent `translate` property, not `transform`.
            Ten of the fourteen elements this loop moves are also GSAP reveal
            targets, and GSAP writes `transform`. Two writers on one property,
-           sixty times a second, overwrite each other frame by frame — which
+           sixty times a second, overwrite each other frame by frame - which
            is exactly the flicker the user reported. `translate`, `rotate` and
            `scale` are separate properties that compose with `transform`
            rather than replacing it, so the reveal and the parallax can both
@@ -5882,7 +5896,7 @@
     }
 
     // The intro runs on its own clock, so the loop has to outlive the scroll
-    // that started it — otherwise a flick freezes the sequence part-played.
+    // that started it - otherwise a flick freezes the sequence part-played.
     // Only relevant to the fallback: when ScrollTrigger owns progress it runs
     // on GSAP's ticker and needs nothing from this loop.
     var introBusy = !introST && M.intro && el("stage") && el("stage").classList.contains("live") &&
@@ -5933,7 +5947,7 @@
     }, { rootMargin: "0px 0px -6% 0px", threshold: 0.05 });
 
     Array.prototype.forEach.call(items, function (n) {
-      // anything already on screen shows immediately — the first frame is never blank
+      // anything already on screen shows immediately - the first frame is never blank
       if (n.getBoundingClientRect().top < window.innerHeight * 0.96) {
         n.classList.add("instant", "in");
       } else {
@@ -5951,7 +5965,7 @@
        drift    a constant slow velocity per particle, so it is alive when
                 nothing is happening
        scroll   scroll delta pushes particles against the scroll direction,
-                scaled by depth — near ones move more than far ones, which is
+                scaled by depth - near ones move more than far ones, which is
                 what reads as parallax
        pointer  particles inside a radius are pushed gently away, so the
                 cursor leaves a wake
@@ -5960,7 +5974,7 @@
      vanish, so the target colour is tweened toward near-black whenever a band
      covers the middle of the viewport.
 
-     It runs on GSAP's ticker like everything else — a private rAF loop here
+     It runs on GSAP's ticker like everything else - a private rAF loop here
      would be a second clock competing with Lenis and ScrollTrigger. */
   var dust = null;
 
@@ -5981,7 +5995,7 @@
     function resize() {
       /* Fill rate is the whole cost of this effect. A 2x buffer on a tablet is
          3.1M pixels cleared and redrawn every frame to draw dots under 2px
-         across — the buffer resolution buys nothing at that size. Coarse
+         across - the buffer resolution buys nothing at that size. Coarse
          pointers get 1x, which is a quarter of the fill for no visible
          difference; mice keep 2x since a desktop GPU does not notice. */
       var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
@@ -6014,7 +6028,7 @@
        neighbouring angles, so particles that are near each other sweep along
        together in bands and eddies rather than each wandering independently.
        That coherence is what makes a field read as soothing instead of
-       twitchy — random per-particle drift at this speed just looks like
+       twitchy - random per-particle drift at this speed just looks like
        static.
 
        Cheap on purpose: two sin and one cos per particle per frame, no
@@ -6124,7 +6138,7 @@
 
      The section sticks to the viewport and vertical scroll drives the track
      sideways, so a single downward gesture walks along the work. The scroll
-     distance is the track's own overflow — pin for exactly as far as there is
+     distance is the track's own overflow - pin for exactly as far as there is
      track to move, never a fixed number, or the section either releases with
      cards still off-screen or holds the visitor on a finished track.
 
@@ -6179,7 +6193,7 @@
      text unreadable while it runs, so on a paragraph it is a readability
      cost paid for decoration; on a short heading it resolves before anyone
      has started reading. chars is the mono-ish set the reference appears to
-     use — uppercase plus a few symbols, no lowercase, so the line does not
+     use - uppercase plus a few symbols, no lowercase, so the line does not
      visibly change width as it resolves.
 
      revealDelay holds the real text hidden for the first third, so the word
@@ -6190,7 +6204,7 @@
     /* Short headings only. The reference scrambles labels a few words long,
        which resolve before anyone starts reading. At 90 the limit let the
        76-character hero line through, and on a phone that line decoded as
-       rows of random glyphs through the intro's dissolve — recorded as
+       rows of random glyphs through the intro's dissolve - recorded as
        "AVQ-OS47UYKRM" across the headline. */
     if (!text || text.length > 40) return null;
     return window.gsap.to(node, {
@@ -6212,13 +6226,13 @@
      and a rootMargin, and ScrollTrigger recomputes them on resize, which the
      observer never did.
 
-     The motion is deliberately identical to what the CSS produced — 0.62s on
-     the same curve, 30px rise, capped 45ms stagger — because this is a port,
+     The motion is deliberately identical to what the CSS produced - 0.62s on
+     the same curve, 30px rise, capped 45ms stagger - because this is a port,
      not a redesign. Changing the feel and the mechanism in one step would
      leave nothing to compare against if it looked wrong. */
   function setupRevealsGsap(items) {
     /* Complete before killing. These are from() tweens, so killing one
-       mid-flight abandons the element wherever the tween had reached — which
+       mid-flight abandons the element wherever the tween had reached - which
        for a reveal means stranded at opacity 0, invisible and permanent. It
        happens whenever this re-runs while a reveal is still playing, which a
        route change or a ScrollTrigger.refresh will do. progress(1) lands the
@@ -6246,7 +6260,7 @@
       // scrollbar. Reading the class here has to respect the same breakpoint.
       // 1160, not 1100. At exactly 1100 the 34px offset still reached past the
       // content box and produced 4px of real horizontal scroll on the case
-      // study — the precise failure the breakpoint exists to prevent. The
+      // study - the precise failure the breakpoint exists to prevent. The
       // extra 60px is the margin that was missing.
       var wide = window.matchMedia("(min-width: 1160px)").matches;
       if (n.classList.contains("rv-l") && wide) from.x = -34;
@@ -6376,7 +6390,7 @@
      visible once already.
 
      end is a function so the runway is re-read on resize instead of baked in
-     at creation — the spacer is sized in viewport units. */
+     at creation - the spacer is sized in viewport units. */
   /* Smooth scroll.
 
      Lenis intercepts wheel and touch input and eases the scroll position
@@ -6398,8 +6412,8 @@
      It is off under prefers-reduced-motion: easing someone's scroll when they
      have asked for less motion is precisely the wrong thing.
 
-     Native scroll position stays authoritative — Lenis drives window.scrollY
-     rather than transforming a wrapper — so window.scrollTo, the spacer
+     Native scroll position stays authoritative - Lenis drives window.scrollY
+     rather than transforming a wrapper - so window.scrollTo, the spacer
      runway, the intro's ScrollTrigger and the QA harness all keep working
      against real coordinates. */
   var lenis = null;
@@ -6438,7 +6452,7 @@
        480px/s, scrub 1.5 lagged 12.9% of the intro and scrub 2 lagged 16.4%,
        against 5.8% for the rate-capped follow below, which passes small deltas
        through 1:1 and only paces large ones. Same flick coverage, a third of
-       the lag — so the follow stays and only the clock changes, from a private
+       the lag - so the follow stays and only the clock changes, from a private
        rAF loop to GSAP's ticker. */
     window.ScrollTrigger.config({ ignoreMobileResize: true });
     introST = window.ScrollTrigger.create({
@@ -6533,7 +6547,7 @@
   }
 
   /* =========================================================
-     LOAD SEQUENCE — one orchestrated moment, home only
+     LOAD SEQUENCE - one orchestrated moment, home only
      ========================================================= */
 
   var countIO = null;
@@ -6594,7 +6608,7 @@
   }
 
   /* =========================================================
-     MENU DRAWER — reaches every page at any screen size
+     MENU DRAWER - reaches every page at any screen size
      ========================================================= */
 
   function refreshLayout() {
@@ -6754,7 +6768,7 @@
   }
 
   /* Reaching for anything while the page is still a preview lands the intro
-     instead. The first tap is spent settling — the targets under it are a
+     instead. The first tap is spent settling - the targets under it are a
      fraction of their real size and still moving, so acting on it would mean
      hitting whatever happened to be under the finger mid-flight. */
   el("view").addEventListener("pointerdown", function (e) {

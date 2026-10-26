@@ -22,7 +22,7 @@ let body = readFileSync(SRC, "utf8");
  * The source carries CDN URLs because it is also previewed as a fragment in
  * the Claude Artifact host, which has no build step to rewrite anything. The
  * deployed site should not depend on a third party staying up, and the QA
- * harness loads the built file over file:// with no network at all — a CDN
+ * harness loads the built file over file:// with no network at all - a CDN
  * script there would silently fail and every motion assertion would go with
  * it. So the build copies the exact installed version next to the page and
  * points the tags at it. Version drift is impossible: these are the same
@@ -54,11 +54,11 @@ for (const [from, to, cdn] of VENDOR) {
   body = body.split(cdn).join("vendor/" + to);
 }
 if (body.includes("cdn.jsdelivr.net")) {
-  throw new Error("a CDN URL survived vendoring — add it to VENDOR or fix the version in the source");
+  throw new Error("a CDN URL survived vendoring - add it to VENDOR or fix the version in the source");
 }
 
 const DESCRIPTION =
-  "Avinash Garudapalli — AI product manager. Voice AI, generative and " +
+  "Avinash Garudapalli - AI product manager. Voice AI, generative and " +
   "agentic products, and the business case underneath them.";
 
 // All deployments name the preferred public domain; SITE_URL can override it.
@@ -85,7 +85,7 @@ const page = `<!doctype html>
   html, body { margin: 0; }
   /* The intro lives at the very top of the page, so any swipe that ran past
      the top edge fired Chrome's pull-to-refresh and reloaded the whole site
-     mid-animation — caught on a real phone recording, where it looked like the
+     mid-animation - caught on a real phone recording, where it looked like the
      intro randomly restarting. overscroll-behavior does not make html a scroll
      container, so unlike overflow-x: clip it leaves position: sticky alone. */
   html { overscroll-behavior-y: none; }
@@ -99,7 +99,7 @@ ${body}
 <noscript>
 <style>.stage, .vload, .topbar, #spacer, #view, .site-footer, .edge-rail, .intro-resume { display: none !important; } .offline-profile { max-width: 760px; margin: 60px auto; padding: 24px; color: #f4f4f4; font: 18px/1.6 system-ui, sans-serif; } .offline-profile a { color: #79B397; display: inline-block; margin: 10px 18px 10px 0; }</style>
 <main class="offline-profile">
-<h1>Avinash Garudapalli — AI Product Manager</h1>
+<h1>Avinash Garudapalli - AI Product Manager</h1>
 <p>Enterprise Voice AI product work and end-to-end business ownership at Nosh House Cafe.</p>
 <p>Enable JavaScript to explore the interactive case studies. You can also read the résumé or contact me directly.</p>
 <a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a>
