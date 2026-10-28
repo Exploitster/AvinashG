@@ -2,6 +2,11 @@ name: Deploy AI assistant to Cloudflare
 
 on:
   workflow_dispatch:
+    inputs:
+      diagnostics_only:
+        description: Check Gemini access without deploying anything
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -11,9 +16,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  diagnose:
+    if: inputs.diagnostics_only
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Check configured Gemini models without deploying
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node rag/scripts/check-provider.mjs
   deploy:
     # Run production deployments only from the reviewed main branch.
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !inputs.diagnostics_only
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -38,7 +56,11 @@ jobs:
         run: npx playwright install --with-deps chromium
       - run: npm run build
       - name: Test assistant behaviour
-        run: node --test rag/worker/test/worker.test.mjs
+        run: node --test rag/worker/test/*.test.mjs
+      - name: Verify Gemini models before deployment
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node rag/scripts/check-provider.mjs
       - name: Generate genuine content embeddings
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -75,3 +97,5 @@ jobs:
             }
           }
           JS
+      - name: Verify real assistant answers and citations
+        run: node rag/scripts/check-live-assistant.mjs
