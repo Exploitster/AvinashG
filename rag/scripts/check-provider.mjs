@@ -23,8 +23,8 @@ try {
   await check('CHAT_MODEL', 'generateContent', () => ({ contents: [{ role: 'user', parts: [{ text: 'Reply with the word READY.' }] }], generationConfig: { maxOutputTokens: 256 } }), data => data.candidates?.some(c => c.content?.parts?.some(p => typeof p.text === 'string' && p.text.trim())));
 } catch (error) {
   // Do not forward arbitrary fetch error text (it can contain request details).
-  if (error.name === 'TimeoutError') console.error('Gemini connectivity check exceeded 20 seconds; production was not replaced.');
-  else if (/^(EMBED_MODEL|CHAT_MODEL|Missing)/.test(error.message)) console.error(error.message);
-  else console.error('Gemini connectivity check failed; check provider access before deploying.');
+  if (error.name === 'TimeoutError') console.error('::error::Gemini connectivity check exceeded 20 seconds; production was not replaced.');
+  else if (/^(EMBED_MODEL|CHAT_MODEL|Missing)/.test(error.message)) console.error('::error::' + error.message);
+  else console.error('::error::Gemini connectivity check failed; check provider access before deploying.');
   process.exitCode = 1;
 }
