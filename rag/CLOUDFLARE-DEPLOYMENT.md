@@ -1,63 +1,21 @@
-# Restore Cloudflare Worker builds
+# Deploy the assistant through GitHub Actions
 
-The frontend is deployed by Vercel. Cloudflare runs only the portfolio assistant.
-The failed GitHub check links to build `85a18b91-8491-4435-955f-0b6f533549e2`, but does not expose its error text; the exact remote failure must be read in Cloudflare's build log.
+Vercel hosts the portfolio. Cloudflare runs the AI assistant. The deployment workflow in `.github/workflows/deploy-assistant.yml` builds the current main-branch content index and deploys `rag/worker/wrangler.toml` to the existing `quiet-frog-766b` Worker.
 
-Three repository issues have been identified:
+Cloudflare Builds cannot run the current browser-based indexer: `playwright install --with-deps` fails because root access is unavailable, and downloading the browser alone fails with missing `libatk-1.0.so.0`. The workflow uses a GitHub-hosted Ubuntu runner where Playwright can install its system dependencies.
 
-- The connected Worker is `quiet-frog-766b`; the Wrangler name previously targeted `avinashg-rag`. It now matches the existing Worker.
-- `rag/worker/src/index-data.json` is generated and intentionally ignored by Git. A clean checkout must generate it before deploying the Worker that imports it.
-- The index builder previously required a machine-specific Chromium path. It now uses Playwright's installed browser, with `CHROMIUM_EXECUTABLE_PATH` as an optional local override.
+## One-time setup
 
-## Dashboard configuration
+1. Merge the workflow PR into main.
+2. In Cloudflare, open the Worker's Settings → Builds and disconnect its Git repository build integration (or disable automatic builds if that option is offered). Keep the Worker itself. This prevents the old static-site build from overwriting the assistant deployment. Vercel's separate Git integration remains connected.
+3. Open https://github.com/Exploitster/AvinashG/settings/secrets/actions . Add repository secrets `GEMINI_API_KEY` and `CLOUDFLARE_API_TOKEN`. Do not add them to source files. Cloudflare build secrets are not shared with GitHub Actions.
+4. Create the Cloudflare token through https://dash.cloudflare.com/profile/api-tokens using the Edit Cloudflare Workers template, scoped to account `470d4ae994bae7d6a4b4d9f216501197`. Use a token with permission to deploy Workers and update their secrets. No domain or nameserver changes are needed.
+5. Open the repository's Actions tab → Deploy AI assistant to Cloudflare → Run workflow → select main → Run workflow.
+6. Wait for all steps, including Verify deployed backend health, to succeed. The workflow sets the runtime Gemini secret as well as using it for indexing.
+7. Open https://quiet-frog-766b.avinashdevg09.workers.dev/api/health . Expect `ok`, `keyConfigured`, and `indexReady` to be true, with a nonzero `chunks` count. Then test questions about Chat360 and contact details on the website.
 
-Open Workers & Pages → quiet-frog-766b → Settings → Builds. Set:
+## Subsequent updates
 
-- Repository: `Exploitster/AvinashG`
-- Production branch: `main`
-- Root directory: repository root (leave blank or `/`)
-- Build command:
+Run the same workflow from main after merging portfolio content changes. The workflow is manual so repository pushes alone do not trigger Gemini usage or replace production. It does not deploy or change Vercel. Backend tests and real embedding generation must succeed before the deployment step runs. A successful health check verifies backend configuration and embeddings; a real chat question is still needed to verify the Gemini chat model and quota.
 
-```sh
-npm ci && npx playwright install --with-deps chromium && npm run build && npm run rag:index
-```
-
-- Deploy command:
-
-```sh
-npx wrangler@3 deploy --config rag/worker/wrangler.toml
-```
-
-If non-production branch builds are enabled, use this non-production deploy command:
-
-```sh
-npx wrangler@3 versions upload --config rag/worker/wrangler.toml
-```
-
-Add `GEMINI_API_KEY` as a **secret build variable** in Builds. This is required by the index builder. Separately, ensure the Worker has a **runtime secret** named `GEMINI_API_KEY` under Variables and Secrets. Runtime secrets are not automatically available to the build. Keep the key out of repository files, command text, and browser code. The key must have access to `gemini-embedding-001` and the configured chat model.
-
-Save, then retry the latest build after these repository changes are merged. Do not deploy a placeholder or dry-run index; the dry-run output contains no embeddings.
-
-## Verify
-
-Visit:
-
-https://quiet-frog-766b.avinashdevg09.workers.dev/api/health
-
-It should report that the key and index are available, with a nonzero chunk count. Then ask the website assistant about Chat360 and the current contact email. Confirm it cites the relevant case study and uses `avinashdev.garudapalli2027@mastersunion.org`.
-
-If the build still fails, open its **View logs** link and copy the first error plus surrounding lines. Typical remaining failures are a missing build secret, Gemini API quota/model access, or Chromium installation restrictions. Do not replace the running Worker until the index build succeeds.
-
-## Local validation without a key
-
-```sh
-npm ci
-npx playwright install chromium
-npm run build
-node rag/scripts/build-rag-index.mjs --dry-run
-node --test rag/worker/test/worker.test.mjs
-```
-
-For a preinstalled system browser, prefix the dry-run command with `CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium`.
-
-The current agent environment has no configured Cloudflare credentials or Gemini secret, so remote settings and production deployment cannot be completed here. The published Worker remains separate from these source fixes.
+If deployment fails, open the failed step's log. Do not substitute the dry-run index, remove tests, or rerun the Cloudflare browser build.
