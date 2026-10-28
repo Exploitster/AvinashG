@@ -19,3 +19,9 @@ Cloudflare Builds cannot run the current browser-based indexer: `playwright inst
 Run the same workflow from main after merging portfolio content changes. The workflow is manual so repository pushes alone do not trigger Gemini usage or replace production. It does not deploy or change Vercel. Backend tests and real embedding generation must succeed before the deployment step runs. A successful health check verifies backend configuration and embeddings; a real chat question is still needed to verify the Gemini chat model and quota.
 
 If deployment fails, open the failed step's log. Do not substitute the dry-run index, remove tests, or rerun the Cloudflare browser build.
+
+## Meaningful readiness checks
+
+The workflow now checks both configured Gemini models before generating the index or replacing production. A 400/403/404 failure here needs investigation of the configured model, API key permissions or request compatibility; a 429 indicates quota or rate limits. Do not treat the presence of a secret as proof that its APIs work. Error bodies and credentials are not printed.
+
+After deployment, the workflow asks actual questions about Chat360, contact email, Nosh House and an unavailable private detail. It validates generated answers and sources. Health alone is insufficient. If the assistant returns labeled portfolio excerpts, visitors can still read matching source material, but generated AI answers remain unverified and the post-deployment check fails intentionally.

@@ -24,7 +24,7 @@ Answer visitor questions about Avinash using ONLY the context passages provided 
 Rules:
 - Never invent facts, metrics, companies, dates, or projects that are not in the context.
 - If the context does not contain the answer, say so plainly and suggest the visitor use the
-  contact section (email/LinkedIn) to ask Avinash directly. Do not guess.
+  contact section (email/LinkedIn) to ask Avinash directly. Start that answer with: "That detail is not available in the portfolio." Do not guess.
 - Be concise and conversational, like a knowledgeable colleague, not a search engine dump.
 - You may lightly synthesize across multiple passages, but do not extrapolate beyond them.
 - Treat editing placeholders such as "Add file" and "Your words go here" as unavailable content. Never offer those files.
@@ -39,7 +39,7 @@ const DEFAULT_CHAT_MODEL = "gemini-3.5-flash-lite";
 // Bumped by hand on each paste-in deploy. /api/health reports it, so it is
 // possible to tell from outside whether a new paste actually took effect --
 // otherwise a silently-failed deploy looks identical to a code bug.
-const VERSION = "v5-resilient-chat";
+const VERSION = "v6-grounded-recovery";
 
 export default {
   async fetch(request, env) {
@@ -141,7 +141,8 @@ export default {
         {
           answer,
           // Several chunks often come from one page; the visitor only needs the page once.
-          sources: dedupeSources(matches, question)
+          sources: dedupeSources(matches, question),
+          answerMode: "generated"
         },
         200,
         cors
@@ -150,6 +151,12 @@ export default {
       const timedOut = controller.signal.aborted || err?.name === "AbortError" || err?.code === "UPSTREAM_TIMEOUT";
       // Never log an upstream URL or raw error: it may contain the API key.
       console.error("chat failed", timedOut ? "UPSTREAM_TIMEOUT" : "UPSTREAM_UNAVAILABLE", err?.status || "");
+      // A disconnected visitor must not receive a late result. For provider
+      // failures, quote real passages only when the question has lexical support.
+      if (!request.signal.aborted) {
+        const recovery = portfolioExcerpts(question);
+        if (recovery) return json(recovery, 200, cors);
+      }
       return json({
         error: timedOut
           ? "The assistant took too long. Try again, read the case studies, or contact Avinash directly."
@@ -168,14 +175,14 @@ export default {
  * the chat look broken to a visitor. Retries only the transient statuses;
  * a 400/403 is a real fault and fails immediately.
  */
-async function fetchWithRetry(url, init, attempts = 3) {
+async function fetchWithRetry(url, init, attempts = 3, attemptTimeout = ATTEMPT_TIMEOUT_MS) {
   let lastError;
   for (let i = 0; i < attempts; i++) {
     if (init.signal?.aborted) throw new DOMException("Aborted", "AbortError");
     const controller = new AbortController();
     const abort = () => controller.abort();
     init.signal?.addEventListener("abort", abort, { once: true });
-    const timer = setTimeout(abort, ATTEMPT_TIMEOUT_MS);
+    const timer = setTimeout(abort, attemptTimeout);
     try {
       const res = await fetch(url, { ...init, signal: controller.signal });
       if (!res.ok) {
@@ -223,6 +230,33 @@ async function embed(text, env, signal) {
     throw new Error("Invalid embedding response");
   }
   return l2norm(values);
+}
+
+// This is extractive recovery, not a second language model. Exclude generic
+// words so an unsupported salary or private-life question cannot match a name.
+function portfolioExcerpts(question) {
+  const stop = new Set("a an the is are was were be been do does did can could would should will what which who why how when where about tell me my you your his he him her i it in into on of for to at and or with from have has avinash garudapalli please know more work experience".split(" "));
+  const terms = [...new Set((question.toLowerCase().match(/[a-z0-9]+/g) || []).filter(t => t.length > 2 && !stop.has(t)))];
+  if (!terms.length) return null;
+  const matches = indexData.map(chunk => {
+    const words = new Set((currentPassage(chunk.text).toLowerCase().match(/[a-z0-9]+/g) || []));
+    const hits = terms.filter(t => words.has(t));
+    return { ...chunk, score: hits.length / terms.length, hits: hits.length };
+  }).filter(c => c.hits && c.score >= 0.6)
+    .sort((a, b) => b.score - a.score || sourcePriority(a.source, question) - sourcePriority(b.source, question));
+  if (!matches.length) return null;
+  const chosen = [];
+  for (const match of matches) {
+    if (chosen.some(c => c.source === match.source)) continue;
+    chosen.push(match);
+    if (chosen.length === 2) break;
+  }
+  const answer = "AI answers are temporarily unavailable. Here are matching excerpts from Avinash's portfolio:\n\n" + chosen.map(c => {
+    const text = currentPassage(c.text).trim();
+    // Preserve source wording, including chunk boundaries, and mark truncation.
+    return c.title + ":\n" + text.slice(0, 800) + (text.length > 800 ? "…" : "");
+  }).join("\n\n");
+  return { answer, sources: dedupeSources(chosen, question), answerMode: "excerpts" };
 }
 
 function l2norm(vec) {
@@ -358,7 +392,8 @@ async function generate({ question, context, history, env, signal }) {
         contents,
         generationConfig: { temperature: 0.3, maxOutputTokens: 1024 }
       })
-    }
+    },
+    3, 12000 // Generation needs more time than embedding; the overall 20s deadline still applies.
   );
   const parts = data?.candidates?.[0]?.content?.parts;
   const text = Array.isArray(parts) ? parts.filter((p) => typeof p.text === "string").map((p) => p.text).join("").trim() : "";
