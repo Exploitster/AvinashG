@@ -175,14 +175,14 @@ export default {
  * the chat look broken to a visitor. Retries only the transient statuses;
  * a 400/403 is a real fault and fails immediately.
  */
-async function fetchWithRetry(url, init, attempts = 3) {
+async function fetchWithRetry(url, init, attempts = 3, attemptTimeout = ATTEMPT_TIMEOUT_MS) {
   let lastError;
   for (let i = 0; i < attempts; i++) {
     if (init.signal?.aborted) throw new DOMException("Aborted", "AbortError");
     const controller = new AbortController();
     const abort = () => controller.abort();
     init.signal?.addEventListener("abort", abort, { once: true });
-    const timer = setTimeout(abort, ATTEMPT_TIMEOUT_MS);
+    const timer = setTimeout(abort, attemptTimeout);
     try {
       const res = await fetch(url, { ...init, signal: controller.signal });
       if (!res.ok) {
@@ -392,7 +392,8 @@ async function generate({ question, context, history, env, signal }) {
         contents,
         generationConfig: { temperature: 0.3, maxOutputTokens: 1024 }
       })
-    }
+    },
+    3, 12000 // Generation needs more time than embedding; the overall 20s deadline still applies.
   );
   const parts = data?.candidates?.[0]?.content?.parts;
   const text = Array.isArray(parts) ? parts.filter((p) => typeof p.text === "string").map((p) => p.text).join("").trim() : "";

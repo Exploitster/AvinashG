@@ -267,3 +267,25 @@ test('generation failures also recover from portfolio text without inventing cla
     assert.equal(calls, 2);
   });
 });
+
+test('a generation taking over six seconds can finish within the overall deadline', async () => {
+  const { default: worker } = await loadWorker();
+  const originalTimer = globalThis.setTimeout;
+  globalThis.setTimeout = (fn, delay, ...args) => originalTimer(fn, delay / 100, ...args);
+  let calls = 0;
+  try {
+    await withFetch(async (url, init) => {
+      if (++calls === 1) return okEmbedding();
+      return new Promise((resolve, reject) => {
+        const onAbort = () => { clearTimeout(timer); reject(new DOMException('Aborted', 'AbortError')); };
+        const timer = originalTimer(() => { init.signal.removeEventListener('abort', onAbort); resolve(okAnswer()); }, 80);
+        init.signal.addEventListener('abort', onAbort, { once: true });
+      });
+    }, async () => {
+      const response = await worker.fetch(request({ message: 'What did he own?' }), { GEMINI_API_KEY: 'test-key' });
+      assert.equal(response.status, 200);
+      assert.equal((await response.json()).answerMode, 'generated');
+      assert.equal(calls, 2);
+    });
+  } finally { globalThis.setTimeout = originalTimer; }
+});

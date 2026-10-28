@@ -6,8 +6,13 @@ The live Vercel page is byte-for-byte identical to the locally built `docs/index
 
 Real generated answers remain unhealthy: the latest roles question returned `UPSTREAM_UNAVAILABLE`. Earlier Chat360/contact checks returned timeout or unavailable errors. Health alone does not prove that Gemini can answer. The underlying provider status/model/quota cannot be verified here because Cloudflare account tools, its API credentials, and Gemini credentials are unavailable. No credentials were printed, fetched from GitHub secrets, or placed in source files.
 
+## Credentialed diagnostic follow-up
+
+GitHub accepted diagnostic-only workflow runs using its existing Gemini secret. Run 40707609594 failed; the environment could not download its logs from GitHub's restricted log host. Run 40707793347 then succeeded, verifying both configured Gemini APIs from the GitHub runner without deploying. This confirms working model access at that moment, not reliable latency or equivalence to the current Worker's runtime secret. A subsequent live Chat360 request still returned HTTP 504 after 19.74 seconds. No production replacement was triggered.
+
 ## Fixes prepared
 
+- Generation attempts now have up to 12 seconds rather than six, while embedding attempts retain six seconds and the overall server deadline remains 20 seconds (below the browser’s 25-second limit). A scaled-time regression verifies that generation taking longer than six seconds can complete.
 - On provider failure, supported questions can receive clearly labeled quotations from the actual indexed portfolio, with citations. This is extractive recovery and does not pretend to be a generated answer. Questions without sufficient lexical support keep the existing actionable error. Disconnected requests are not recovered after cancellation.
 - The deployment workflow now calls both Gemini APIs before replacing production. Model-access, quota and empty-response errors cause a failed preflight rather than a misleading successful deployment. Provider response bodies and credential-bearing URLs are excluded from logs.
 - The deployment workflow now asks real post-deployment questions about Chat360, contact email, Nosh House and an unavailable private detail. It checks answers, citations and generated-answer mode. A quotation fallback does not count as successful Gemini generation.
@@ -22,7 +27,7 @@ The configured Gemini model was not changed speculatively. The new preflight can
 - Browser journey suite passed at 320, 393, 768, 1100, 1440 and 1920 pixels. Routes include overview, work, experience, About, résumé, Contact, Story, Thinking, Lab, Beyond, all five case studies and an unknown route.
 - Journey assertions include headings, overflow, navigation/history, mobile case-study disclosure, print visibility, all résumé actions pointing to the exact supplied Drive URL, no generated PDF action, loader facts and timing, slow/failed-script escape, normal/reduced motion, assistant success/failure/retry/citations, malformed responses, offline/timeout/cancellation, keyboard focus, blocked storage, missing libraries and JavaScript-disabled recovery.
 - Full responsive matrix passed: 13 viewport configurations × 15 routes, zero failures and zero warnings.
-- All 19 backend/deployment regression tests passed.
+- All 20 backend/deployment regression tests passed.
 - Index dry run rendered 15 routes and produced 46 passages. No empty/fake embeddings were written to the deployment index.
 - Corpus quotation recovery passed for Chat360, Nosh House, Cordelia, Yapita, BITS Pilani, metacognist, Himalayan trek and contact email. Unsupported salary and private medical questions returned no quotation answer.
 - Workflow YAML parsed; new Node scripts passed syntax checks; `git diff --check` passed.
