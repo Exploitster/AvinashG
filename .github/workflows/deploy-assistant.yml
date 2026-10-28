@@ -1,0 +1,77 @@
+name: Deploy AI assistant to Cloudflare
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-assistant-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Run production deployments only from the reviewed main branch.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            rag/worker/package-lock.json
+      - name: Check required credentials
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          test -n "$GEMINI_API_KEY" || { echo 'Add the GEMINI_API_KEY repository Actions secret.'; exit 1; }
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Add the CLOUDFLARE_API_TOKEN repository Actions secret.'; exit 1; }
+      - run: npm ci
+      - run: npm ci --prefix rag/worker
+      - name: Install browser and operating system dependencies
+        run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Test assistant behaviour
+        run: node --test rag/worker/test/worker.test.mjs
+      - name: Generate genuine content embeddings
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run rag:index
+      - name: Deploy assistant backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: '470d4ae994bae7d6a4b4d9f216501197'
+        run: rag/worker/node_modules/.bin/wrangler deploy --config rag/worker/wrangler.toml
+      - name: Configure runtime Gemini secret
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: '470d4ae994bae7d6a4b4d9f216501197'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: printf '%s' "$GEMINI_API_KEY" | rag/worker/node_modules/.bin/wrangler secret put GEMINI_API_KEY --config rag/worker/wrangler.toml
+      - name: Verify deployed backend health
+        run: |
+          node --input-type=module <<'JS'
+          const url = 'https://quiet-frog-766b.avinashdevg09.workers.dev/api/health';
+          for (let attempt = 0; attempt < 5; attempt++) {
+            try {
+              const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+              if (!response.ok) throw new Error(`Health returned HTTP ${response.status}`);
+              const health = await response.json();
+              if (!health.ok || !health.keyConfigured || !health.indexReady || !(health.chunks > 0)) {
+                throw new Error('Backend key or content index is not ready');
+              }
+              console.log(`Backend ready: ${health.chunks} indexed passages, version ${health.version}`);
+              process.exit(0);
+            } catch (error) {
+              console.log(error.message);
+              if (attempt === 4) throw error;
+              await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+          }
+          JS
