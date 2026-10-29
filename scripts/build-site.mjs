@@ -16,6 +16,8 @@ const SRC = resolve(root, "design/avinash-console.html");
 const OUT = resolve(root, "docs/index.html");
 
 let body = readFileSync(SRC, "utf8");
+mkdirSync(resolve(root, "docs/images"), { recursive: true });
+copyFileSync(resolve(root, "assets/images/avinash-portrait.webp"), resolve(root, "docs/images/avinash-portrait.webp"));
 
 /* GSAP is vendored rather than fetched.
  *
