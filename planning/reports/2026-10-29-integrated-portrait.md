@@ -2,7 +2,7 @@
 
 The supplied photo was processed with the image editing tool to remove its background. Its transparent WebP remains at assets/images/avinash-portrait.webp. The hero and About introduction now use an actual animated GIF at assets/images/avinash-portrait-glitch.gif, rather than CSS glitch overlays.
 
-The GIF has 20 frames with 150ms delays: a 2.25-second normal-photo hold followed by a 0.75-second mint/cyan glitch burst, looping continuously. Its 480 × 639 pixel canvas preserves the original portrait proportions. The optimized file is about 228 KiB. GIF supports a transparent palette entry rather than partial alpha; the existing CSS bottom fade blends the rendered portrait into the website background.
+The GIF has 20 frames with 150ms delays: a 2.25-second normal-photo hold followed by a 0.75-second mint/cyan glitch burst, looping continuously. The higher-resolution rebuild uses the original cutout; its 960 × 1278 pixel canvas preserves the original portrait proportions. The optimized file is about 737 KiB. GIF supports a transparent palette entry rather than partial alpha; the existing CSS bottom fade blends the rendered portrait into the website background.
 
 A picture element selects the static WebP for prefers-reduced-motion: reduce. Normal-motion browsers load the GIF directly. Both assets are copied into docs/images by the build. The same cached animation is reused across hero and About. No JavaScript animation library or CSS glitch simulation is required for playback.
 

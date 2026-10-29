@@ -98,7 +98,7 @@ function audit(isTouch) {
   const stuck = [];
   document.querySelectorAll(".rv").forEach((n) => {
     const r = n.getBoundingClientRect();
-    const visibleEnough = r.top < innerHeight * 0.75 && r.bottom > 0;
+    const visibleEnough = r.top < innerHeight * 0.75 && r.bottom > 0 && r.left < innerWidth && r.right > 0;
     if (visibleEnough && parseFloat(getComputedStyle(n).opacity) < 0.5) {
       stuck.push((n.className || "").slice(0, 40));
     }
@@ -264,8 +264,13 @@ function audit(isTouch) {
       const t = document.getElementById("navToggle");
       if (!t) return { err: "no menu button" };
       t.click();
-      await new Promise((r) => setTimeout(r, 500));
       const d = document.getElementById("navDrawer");
+      // Wait for the actual transition end state rather than sampling during
+      // a delayed initial frame on a busy browser runner.
+      const deadline = performance.now() + 2000;
+      while (d && (!d.classList.contains("open") || d.getBoundingClientRect().right > innerWidth + 1) && performance.now() < deadline) {
+        await new Promise((r) => setTimeout(r, 16));
+      }
       const open = d && d.classList.contains("open");
       const links = document.querySelectorAll("#navBody .drawer-link").length;
       const onScreen = d ? d.getBoundingClientRect().left < innerWidth - 10 : false;

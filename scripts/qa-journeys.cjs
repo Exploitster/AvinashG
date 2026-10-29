@@ -14,11 +14,17 @@ async function assertDriveClick(page, selector) {
     seen(route.request().url());
     await route.fulfill({ contentType: 'text/html', body: '<h1>Drive destination intercepted for QA</h1>' });
   });
-  await page.locator(selector).click({ timeout: 5000 });
+  const originalUrl = page.url();
+  const popupPromise = page.context().waitForEvent('page', { timeout: 5000 });
+  const [popup] = await Promise.all([popupPromise, page.locator(selector).click({ timeout: 5000 })]);
   let timer;
   try {
     const url = await Promise.race([requested, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Résumé click did not reach Google Drive')), 5000); })]);
     assert.equal(url, RESUME_URL);
+    await popup.waitForLoadState('domcontentloaded');
+    assert.equal(popup.url(), RESUME_URL);
+    assert.equal(page.url(), originalUrl, 'resume leaves original page intact');
+    await popup.close();
   } finally { clearTimeout(timer); }
 }
 const docs = path.resolve(__dirname, '../docs');
@@ -79,11 +85,15 @@ const server = createServer((req, res) => {
       await page.evaluate(() => window.scrollTo({ top: 450, behavior: 'instant' }));
       await page.waitForTimeout(150);
       const browsingY = await page.evaluate(() => scrollY);
+      const popupPromise = context.waitForEvent('page');
       await page.locator('a[href="#/work/chat360"]').first().evaluate(n => n.click());
-      await page.waitForFunction(() => location.hash === '#/work/chat360');
-      await page.waitForTimeout(100);
-      await page.goBack();
-      await page.waitForFunction(y => Math.abs(scrollY - y) < 10 && location.hash === '#/work', browsingY);
+      const popup = await popupPromise;
+      await popup.waitForLoadState('domcontentloaded');
+      assert.equal(new URL(popup.url()).hash, '#/work/chat360');
+      assert.equal(await popup.evaluate(() => window.opener), null, 'new page has no opener access');
+      assert.equal(await page.evaluate(() => location.hash), '#/work', 'original route preserved');
+      assert(Math.abs((await page.evaluate(() => scrollY)) - browsingY) < 10, 'original browsing position preserved');
+      await popup.close();
       await page.evaluate(() => { location.hash = '#/resume'; });
       await page.locator('[data-resume-download]').first().waitFor();
       assert.equal(await page.locator('[data-resume-download]').first().getAttribute('href'), RESUME_URL);
@@ -99,12 +109,14 @@ const server = createServer((req, res) => {
       await page.keyboard.press('Escape');
       assert.equal(await page.locator('#navToggle').getAttribute('aria-expanded'), 'false');
       await page.evaluate(() => { location.hash = '#/'; });
-      await page.locator('#workMore').waitFor({ state: width <= 600 ? 'visible' : 'hidden' });
+      await page.locator('#workMore').waitFor({ state: 'hidden' });
+      assert.equal(await page.locator('#selectedResults .rcard:visible').count(), 3);
       if (width <= 600) {
-        assert.equal(await page.locator('#selectedResults .rcard:visible').count(), 1);
-        await page.locator('#workMore').evaluate(n => n.click());
-        assert.equal(await page.locator('#selectedResults .rcard:visible').count(), 3);
-      } else assert.equal(await page.locator('#selectedResults .rcard:visible').count(), 3);
+        const rail = page.locator('#selectedResults');
+        assert(await rail.evaluate(n => n.scrollWidth > n.clientWidth), 'mobile case studies scroll horizontally');
+        await rail.evaluate(n => { n.scrollLeft = n.scrollWidth; });
+        assert(await rail.evaluate(n => n.scrollLeft > 0), 'mobile case studies can reach later cards');
+      }
       const order = await page.locator('#view > section').evaluateAll(nodes => nodes.slice(0, 3).map(n => n.className));
       assert(order[0].includes('hero') && order[1].includes('ask'), 'assistant follows hero');
       assert.equal(await page.locator('[data-ask]').count(), 3);
@@ -173,7 +185,8 @@ const server = createServer((req, res) => {
     await intro.close();
     const firstLoadResume = await browser.newContext({ viewport: { width: 393, height: 851 } });
     const firstLoadPage = await firstLoadResume.newPage();
-    await firstLoadPage.goto(base);
+    await firstLoadPage.goto(base, { waitUntil: 'commit' });
+    await firstLoadPage.locator('.vload-actions a').waitFor({ state: 'visible' });
     await assertDriveClick(firstLoadPage, '.vload-actions a');
     await firstLoadResume.close();
     for (const action of ['skip', 'resume']) {
@@ -197,11 +210,14 @@ const server = createServer((req, res) => {
     await experiencePage.evaluate(() => window.scrollTo({ top: 1800, behavior: 'instant' }));
     await experiencePage.waitForTimeout(500);
     const experienceY = await experiencePage.evaluate(() => scrollY);
+    const experiencePopupPromise = experience.waitForEvent('page');
     await experiencePage.locator('.xp-link[href="#/work/chat360"]').evaluate(n => n.click());
-    await experiencePage.waitForFunction(() => location.hash === '#/work/chat360');
-    await experiencePage.waitForTimeout(200);
-    await experiencePage.goBack();
-    await experiencePage.waitForFunction(y => location.hash === '#/experience' && Math.abs(scrollY - y) < 10, experienceY);
+    const experiencePopup = await experiencePopupPromise;
+    await experiencePopup.waitForLoadState('domcontentloaded');
+    assert.equal(new URL(experiencePopup.url()).hash, '#/work/chat360');
+    assert.equal(await experiencePage.evaluate(() => location.hash), '#/experience');
+    assert(Math.abs((await experiencePage.evaluate(() => scrollY)) - experienceY) < 10, 'experience scroll stays in the original tab');
+    await experiencePopup.close();
     await experience.close();
     const bypass = await browser.newContext({ viewport: { width: 393, height: 851 } });
     const bypassPage = await bypass.newPage();
