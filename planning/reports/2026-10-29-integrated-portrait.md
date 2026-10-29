@@ -9,3 +9,7 @@ The visual treatment uses muted colour, a bottom transparency fade, portrait-mas
 Validation: build succeeded; browser journey suite passed at six widths; hero and About were visually inspected at 393px and 1440px; portrait bounds were checked at 320, 393, 768 and 1440px; the image loaded at its expected width and retained alpha transparency. Focused reduced-motion and normal-motion assertions checked loading, mobile gutters and animation state. Full responsive matrix results are recorded in the delivery message.
 
 The previous FigJam request is delivered separately under /workspace/deliverables/portfolio-flowcharts: a combined SVG, three section diagrams, DOT sources, JSON nodes/connections, a navigator and a ZIP. It describes the existing website and proposed admin/lead flows. Figma tools were unavailable, so no live FigJam board or native FigJam objects were created.
+
+## Stronger glitch revision
+
+Following feedback that the first treatment appeared plain, both portrait placements now use a 3.6-second cycle of clearly displaced horizontal slices and mint/cyan ghosting. The stationary base portrait remains legible. Both decorative layers disappear under reduced motion. Focused checks passed for hero and About at 320, 393, 768 and 1440 pixels in normal and reduced-motion modes, verifying image loading, animation state and no horizontal overflow. The earlier complete matrix covered the unchanged layout; this revision changes only decorative overlay timing and appearance.
