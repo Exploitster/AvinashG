@@ -1,15 +1,15 @@
-# Integrated portfolio portrait
+# Integrated animated portrait
 
-The supplied photo was processed with the image editing tool to remove its background. The original generated PNG is retained outside the repository. A transparent 104 KB WebP is stored at assets/images/avinash-portrait.webp and copied to docs/images/avinash-portrait.webp by the build.
+The supplied photo was processed with the image editing tool to remove its background. Its transparent WebP remains at assets/images/avinash-portrait.webp. The hero and About introduction now use an actual animated GIF at assets/images/avinash-portrait-glitch.gif, rather than CSS glitch overlays.
 
-The hero and About introduction share the same image and CSS treatment. The desktop layout places the portrait beside the introduction. Mobile places it alongside the heading, with supporting text and actions spanning the full section width. No separate card, panel, or new portrait section was introduced.
+The GIF has 20 frames with 150ms delays: a 2.25-second normal-photo hold followed by a 0.75-second mint/cyan glitch burst, looping continuously. Its 480 × 639 pixel canvas preserves the original portrait proportions. The optimized file is about 228 KiB. GIF supports a transparent palette entry rather than partial alpha; the existing CSS bottom fade blends the rendered portrait into the website background.
 
-The visual treatment uses muted colour, a bottom transparency fade, portrait-masked scanlines and brief mint glitch slices. The base face remains stationary and visible; the glitch is a decorative overlay. Reduced-motion settings disable that animation. Image dimensions reserve layout space, and decorative overlays do not intercept input. The hero loads eagerly; About loads lazily, using the same cached asset.
+A picture element selects the static WebP for prefers-reduced-motion: reduce. Normal-motion browsers load the GIF directly. Both assets are copied into docs/images by the build. The same cached animation is reused across hero and About. No JavaScript animation library or CSS glitch simulation is required for playback.
 
-Validation: build succeeded; browser journey suite passed at six widths; hero and About were visually inspected at 393px and 1440px; portrait bounds were checked at 320, 393, 768 and 1440px; the image loaded at its expected width and retained alpha transparency. Focused reduced-motion and normal-motion assertions checked loading, mobile gutters and animation state. Full responsive matrix results are recorded in the delivery message.
+The layout remains integrated into the existing introduction: portrait beside copy on desktop, alongside the heading on mobile, with full-width supporting text and actions. The image reserves its aspect ratio; the hero loads eagerly and About lazily.
 
-The previous FigJam request is delivered separately under /workspace/deliverables/portfolio-flowcharts: a combined SVG, three section diagrams, DOT sources, JSON nodes/connections, a navigator and a ZIP. It describes the existing website and proposed admin/lead flows. Figma tools were unavailable, so no live FigJam board or native FigJam objects were created.
+Validation: build and diff checks passed. Focused browser checks passed for both routes at 320, 393, 768 and 1440 pixels in normal/reduced-motion modes, checking the actual selected image source, successful image loading and horizontal overflow. Native browser screenshots over a complete loop produced three visibly distinct samples, confirming actual GIF playback. ImageMagick confirmed 20 frames, a looping GIF and five distinct coalesced image states. The earlier full responsive matrix passed at 13 viewport configurations × 15 routes; this revision replaces image playback while retaining that layout.
 
-## Stronger glitch revision
+Reference consulted: MDN image formats, GIF section, https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types#gif_graphics_interchange_format (via its public content repository).
 
-Following feedback that the first treatment appeared plain, both portrait placements now use a 3.6-second cycle of clearly displaced horizontal slices and mint/cyan ghosting. The stationary base portrait remains legible. Both decorative layers disappear under reduced motion. Focused checks passed for hero and About at 320, 393, 768 and 1440 pixels in normal and reduced-motion modes, verifying image loading, animation state and no horizontal overflow. The earlier complete matrix covered the unchanged layout; this revision changes only decorative overlay timing and appearance.
+The earlier FigJam request remains separate under /workspace/deliverables/portfolio-flowcharts. No live FigJam board was created because Figma tools were unavailable.

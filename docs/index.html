@@ -749,23 +749,6 @@
   .portrait-copy { min-width:0; }
   .portrait { position:relative; width:100%; max-width:380px; aspect-ratio: .82; justify-self:center; overflow:hidden; isolation:isolate; pointer-events:none; mask-image:linear-gradient(#000 0%,#000 78%,transparent 100%); }
   .portrait img { position:absolute; top:0; left:-30%; width:160%; max-width:none; height:auto; display:block; filter:saturate(.65) contrast(1.04); }
-  .portrait::before, .portrait::after { content:""; position:absolute; inset:0; z-index:1; background-image:url("images/avinash-portrait.webp"); background-size:160% auto; background-position:50% 0; background-repeat:no-repeat; opacity:0; }
-  .portrait img { filter:saturate(.55) contrast(1.08) drop-shadow(2px 0 rgba(121,179,151,.22)); }
-  .portrait::before { filter:sepia(1) saturate(3) hue-rotate(85deg); animation:portrait-signal 3.6s steps(1,end) infinite; }
-  .portrait::after { filter:sepia(1) saturate(2) hue-rotate(125deg); mix-blend-mode:screen; animation:portrait-echo 3.6s steps(1,end) infinite; }
-  @keyframes portrait-signal {
-    0%,10% { opacity:.72; transform:translateX(7px); clip-path:polygon(0 12%,100% 12%,100% 17%,0 17%,0 37%,100% 37%,100% 44%,0 44%,0 68%,100% 68%,100% 73%,0 73%); }
-    11%,17% { opacity:.58; transform:translateX(-6px); clip-path:polygon(0 21%,100% 21%,100% 25%,0 25%,0 49%,100% 49%,100% 55%,0 55%,0 77%,100% 77%,100% 81%,0 81%); }
-    18%,53% { opacity:0; transform:none; }
-    54%,62% { opacity:.64; transform:translateX(5px); clip-path:inset(32% 0 56%); }
-    63%,100% { opacity:0; transform:none; }
-  }
-  @keyframes portrait-echo {
-    0%,17% { opacity:.34; transform:translateX(-5px); clip-path:inset(16% 0 22%); }
-    18%,53% { opacity:.12; transform:translateX(2px); clip-path:inset(46% 0 42%); }
-    54%,62% { opacity:.38; transform:translateX(-7px); clip-path:inset(58% 0 31%); }
-    63%,100% { opacity:.1; transform:translateX(2px); clip-path:inset(20% 0 73%); }
-  }
   .about-intro .portrait { max-width:310px; }
   @media(max-width:780px) {
     .portrait-layout { grid-template-columns:minmax(0,1fr) minmax(100px,36%); gap:16px; align-items:start; }
@@ -779,7 +762,6 @@
     .about-intro > .portrait { grid-row:1; }
     .about-intro .portrait-copy h2, .about-intro .portrait-copy h1 { font-size:clamp(1.55rem,5.6vw,2.6rem); }
   }
-  @media(prefers-reduced-motion:reduce) { .portrait::before, .portrait::after { animation:none; opacity:0; transform:none; } }
 
   .hero-kicker {
     font-size: .9rem;
@@ -4587,7 +4569,7 @@
   }
 
   function portraitMarkup(eager) {
-    return '<div class="portrait"><img src="images/avinash-portrait.webp" width="1087" height="1447" alt="Avinash Garudapalli smiling in a black suit" decoding="async" loading="' + (eager ? 'eager' : 'lazy') + '"></div>';
+    return '<div class="portrait"><picture><source media="(prefers-reduced-motion: reduce)" srcset="images/avinash-portrait.webp"><img src="images/avinash-portrait-glitch.gif" width="480" height="639" alt="Avinash Garudapalli smiling in a black suit" decoding="async" loading="' + (eager ? 'eager' : 'lazy') + '"></picture></div>';
   }
 
   function viewHome() {
