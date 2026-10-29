@@ -2622,7 +2622,7 @@
   .band .hero-act.primary { color: var(--ground); background: var(--paper); border-color: var(--paper); }
   .rcard-fig .v { font-size: clamp(1.5rem, 2.4vw, 2.1rem); white-space: nowrap; }
   @media (max-width: 600px) {
-    #selectedResults:not(.expanded) .rcard:nth-child(n+2) { display: none; }
+
     .work-more { display: inline-flex; }
     .case-summary { grid-template-columns: 1fr; }
     .case-summary > div { padding: 20px; }
@@ -2694,13 +2694,50 @@
   @media (max-width: 780px) { .bento, .skill-icons { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 480px) { .bento, .skill-icons { grid-template-columns: 1fr; } .intro-actions { max-width: calc(100% - 32px); } }
 
+
+  @media(max-width:360px) { .intro-actions .scroll-cue,.intro-actions .intro-resume { font-size:.72rem; padding:8px 6px; } .intro-actions { gap:6px; } }
+  /* Shared, manually controlled rails: no auto-advance or hidden card content. */
+  .card-rail { display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; overscroll-behavior-x:contain; padding:4px 0 16px; scrollbar-width:thin; scrollbar-color:var(--signal) var(--panel); }
+  .card-rail > * { flex:0 0 calc((100% - 32px)/2.5); min-width:0; scroll-snap-align:start; }
+  .rail-controls { display:flex; justify-content:flex-end; gap:10px; margin:12px 0; }
+  .rail-controls button,.map-next { min-width:44px; min-height:44px; padding:8px 14px; border:1px solid var(--signal); border-radius:999px; background:var(--panel); color:var(--signal); font:inherit; cursor:pointer; }
+  .rail-controls button:disabled { opacity:.45; cursor:default; }
+  .outcome-rail { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); overflow:visible; }
+  .outcome-controls { display:none; }
+  @media(max-width:780px) { .outcome-rail { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .recent.card-rail > * { flex-basis:clamp(260px,40%,430px); }
+  .skill-icons { display:flex; flex-wrap:wrap; gap:8px; }
+  .skill-icons li { padding:9px 12px; gap:8px; }
+  .skill-icons .highlight-icon { width:24px; height:24px; }
+  .business-skills { gap:8px; }
+  .business-skills li { padding:7px 10px; }
+  .foundation-heading { display:inline-block; padding:12px 18px; border:1px solid var(--signal); border-radius:10px; color:var(--signal); margin-bottom:20px; }
+  .map-next { display:none; }
+  @media(max-width:600px) {
+    .outcome-rail { display:flex; overflow-x:auto; }
+    .outcome-rail .bento-cell { padding:12px; overflow-wrap:anywhere; }
+    .outcome-rail .bento-label { font-size:.78rem; letter-spacing:.02em; }
+    .outcome-rail .bento-fig { font-size:2rem; }
+    .outcome-controls { display:flex; }
+    .recent.card-rail > * { flex-basis:85%; }
+    #selectedResults { display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 0 16px; }
+    #selectedResults > .rcard { display:flex; flex:0 0 86%; scroll-snap-align:start; }
+    #workMore { display:none; }
+    .sys-project-list { display:flex; overflow-x:auto; gap:10px; scroll-snap-type:x mandatory; padding:4px 0 12px; }
+    .sys-project-list .sysnode { flex:0 0 82%; scroll-snap-align:start; }
+    .map-next { display:inline-flex; margin-top:10px; }
+    .intro-actions .scroll-cue { font-size:.78rem; padding:8px; }
+    .intro-resume { font-size:.78rem; padding:8px; }
+    .intro-actions .cue-icon { width:24px; height:24px; }
+  }
+
 </style>
 
 <div class="vload" id="vload" aria-label="Opening animation">
   <div class="vload-wave" id="vloadWave" aria-hidden="true"></div>
   <p class="vload-fact" id="vloadFact" aria-live="polite" aria-atomic="true"></p>
   <p class="vload-name">Avinash Garudapalli<span>AI Product Manager</span></p>
-  <div class="vload-actions"><button type="button" id="loaderSkip">Skip intro →</button><a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a></div>
+  <div class="vload-actions"><button type="button" id="loaderSkip">Skip intro →</button><a target="_blank" rel="noopener noreferrer" href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a></div>
 </div>
 <script>
   /* =========================================================
@@ -2733,7 +2770,7 @@
     }
     function openResume(event) {
       event.preventDefault();
-      window.location.assign("https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing");
+      window.open("https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing", "_blank", "noopener,noreferrer");
       finish();
     }
     if (node) {
@@ -2741,7 +2778,7 @@
       var resume = node.querySelector(".vload-actions a");
       ["pointerdown", "click"].forEach(function (eventName) {
         if (skip) skip.addEventListener(eventName, requestSkip);
-        if (resume) resume.addEventListener(eventName, openResume);
+        if (resume && eventName === "click") resume.addEventListener(eventName, openResume);
       });
     }
 
@@ -2970,8 +3007,8 @@
   </div>
 
   <div class="intro-actions">
-  <button class="scroll-cue" id="scrollCue" type="button" aria-label="View my work; skip intro">
-    <span class="cue-label">View <span class="cue-my">my </span>work<span class="cue-extra"> · skip intro</span></span>
+  <button class="scroll-cue" id="scrollCue" type="button" aria-label="Scroll to know more">
+    <span class="cue-label">Scroll to know more</span>
     <span class="cue-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
            stroke-linecap="round" stroke-linejoin="round">
@@ -3978,10 +4015,14 @@
   // Deterministic positions, so nothing ever overlaps.
   var CAP_ORDER = ["ai-product", "product-strategy", "technical-product", "ux", "analytics", "business-growth"];
 
+  function projectLabel(w) {
+    var labels = { "chat360":"Chat360 - Voice AI", "cordelia-cruises":"Cordelia - Mobile app & CMS", "nosh-house":"Nosh House - Cafe operations", "yapita-health":"Yapita - Healthcare chatbot", "events-fusion":"Events Fusion - Enterprise decks" };
+    return labels[w.slug] || w.org;
+  }
   function buildMap() {
     var projects = WORK.map(function (w) {
       return '<button type="button" class="sysnode" data-p="' + w.slug + '" aria-pressed="false">' +
-        '<span><span class="sysnode-name">' + esc(w.org) + '</span>' +
+        '<span><span class="sysnode-name">' + esc(projectLabel(w)) + '</span>' +
         '<span class="sysnode-sub">' + esc(w.role) + '</span></span>' +
         '<span class="sysnode-n">' + w.caps.length + '</span>' +
       '</button>';
@@ -3996,7 +4037,7 @@
         '<svg class="sysmap-wires" id="sysWires" aria-hidden="true"></svg>' +
         '<div class="sys-col">' +
           '<div class="sys-col-head">What I built</div>' +
-          '<div class="sys-list">' + projects + '</div>' +
+          '<div class="sys-list sys-project-list" id="projectTabs">' + projects + '</div><button class="map-next" id="mapNext" type="button" aria-controls="projectTabs">Next project →</button>' +
         '</div>' +
         '<div class="sys-col">' +
           '<div class="sys-col-head">What it exercised</div>' +
@@ -4084,24 +4125,29 @@
     if (!wrap) return;
     mapSelection = null;
 
+    var nextProject = el("mapNext");
+    if (nextProject) nextProject.addEventListener("click", function () {
+      var index = WORK.findIndex(function (w) { return w.slug === mapSelection; });
+      var next = WORK[(index + 1) % WORK.length];
+      mapSelection = next.slug;
+      paintMap(mapSelection);
+      var node = wrap.querySelector('[data-p="' + next.slug + '"]');
+      var list = el("projectTabs");
+      list.scrollTo({ left: node.offsetLeft - list.offsetLeft, behavior: reduceMotion ? "auto" : "smooth" });
+    });
     var canHover = window.matchMedia("(hover: hover)").matches;
 
     Array.prototype.forEach.call(wrap.querySelectorAll(".sysnode"), function (node) {
       var slug = node.getAttribute("data-p");
 
-      var clickTimer = null;
-      node.addEventListener("click", function () {
-        if (clickTimer) return;
-        clickTimer = setTimeout(function () {
-          clickTimer = null;
-          mapSelection = mapSelection === slug ? null : slug;
-          paintMap(mapSelection);
-        }, 240);
+      node.addEventListener("click", function (event) {
+        if (event.detail > 1) return;
+        mapSelection = mapSelection === slug ? null : slug;
+        paintMap(mapSelection);
       });
-      node.addEventListener("dblclick", function (ev) {
-        ev.preventDefault();
-        if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
-        window.location.hash = "#/work/" + slug;
+      node.addEventListener("dblclick", function (event) {
+        event.preventDefault();
+        window.open("#/work/" + slug, "_blank", "noopener,noreferrer");
       });
 
       // pointer preview is a desktop nicety only; the click above is the real control
@@ -4546,7 +4592,7 @@
     var skills = SKILLS_TECH.map(function (skill, i) {
       return '<li><span class="highlight-icon">' + depictionIcon(techIcons[i]) + '</span><span>' + esc(skill) + '</span></li>';
     }).join("");
-    return '<h2>Outcomes generated</h2><p class="highlight-intro">Results from my product work and business ownership.</p><div class="bento">' + outcomes + '</div><div class="highlight-skills"><h2>Skills used &amp; developed</h2><p class="highlight-intro">Tools and capabilities documented in my résumé.</p><ul class="skill-icons">' + skills + '</ul><h3>Business &amp; product skills</h3><ul class="business-skills">' + SKILLS_BIZ.map(function (skill) { return '<li>' + esc(skill) + '</li>'; }).join("") + '</ul></div>';
+    return '<h2>Outcomes generated</h2><p class="highlight-intro">Results from my product work and business ownership.</p><div class="bento card-rail outcome-rail" id="outcomeRail" tabindex="0" aria-label="Outcomes generated">' + outcomes + '</div>' + railControls('outcomeRail', 'outcomes') + '<div class="highlight-skills"><h2>Skills used &amp; developed</h2><p class="highlight-intro">Tools and capabilities documented in my résumé.</p><ul class="skill-icons">' + skills + '</ul><h3>Business &amp; product skills</h3><ul class="business-skills">' + SKILLS_BIZ.map(function (skill) { return '<li>' + esc(skill) + '</li>'; }).join("") + '</ul></div>';
   }
 
   function resultCards() {
@@ -4568,8 +4614,51 @@
     }).join("");
   }
 
+  function preparePageLink(anchor) {
+    var href = anchor.getAttribute("href") || "";
+    if (!/^https?:/i.test(anchor.href) || (href.charAt(0) === "#" && href.indexOf("#/") !== 0)) return;
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+    anchor.setAttribute("aria-description", "Opens in a new tab");
+  }
+  function preparePageLinks() {
+    Array.prototype.forEach.call(document.querySelectorAll("a[href]"), preparePageLink);
+  }
+  // Capture prepares dynamically generated assistant citations before navigation.
+  document.addEventListener("click", function (event) {
+    var anchor = event.target.closest && event.target.closest("a[href]");
+    if (anchor) preparePageLink(anchor);
+  }, true);
+
+  function railControls(id, label) {
+    return '<div class="rail-controls' + (id === 'outcomeRail' ? ' outcome-controls' : '') + '"><button type="button" data-rail="' + id + '" data-direction="-1" aria-label="Previous ' + label + '">←</button><button type="button" data-rail="' + id + '" data-direction="1" aria-label="Next ' + label + '">→</button></div>';
+  }
+  function updateRailButtons() {
+    Array.prototype.forEach.call(document.querySelectorAll("#view [data-rail]"), function (button) {
+      var rail = el(button.getAttribute("data-rail"));
+      if (!rail) return;
+      var previous = Number(button.getAttribute("data-direction")) < 0;
+      button.disabled = previous ? rail.scrollLeft < 2 : rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 2;
+    });
+  }
+  window.addEventListener("resize", updateRailButtons);
+  function bindRails() {
+    var bound = {};
+    Array.prototype.forEach.call(document.querySelectorAll("#view [data-rail]"), function (button) {
+      var id = button.getAttribute("data-rail"), rail = el(id);
+      if (!rail) return;
+      var direction = Number(button.getAttribute("data-direction"));
+      button.addEventListener("click", function () {
+        var card = rail.firstElementChild;
+        rail.scrollBy({ left: direction * (card.getBoundingClientRect().width + 16), behavior: reduceMotion ? "auto" : "smooth" });
+      });
+      if (!bound[id]) { rail.addEventListener("scroll", updateRailButtons, { passive:true }); bound[id] = true; }
+    });
+    updateRailButtons();
+  }
+
   function portraitMarkup(eager) {
-    return '<div class="portrait"><picture><source media="(prefers-reduced-motion: reduce)" srcset="images/avinash-portrait.webp"><img src="images/avinash-portrait-glitch.gif" width="480" height="639" alt="Avinash Garudapalli smiling in a black suit" decoding="async" loading="' + (eager ? 'eager' : 'lazy') + '"></picture></div>';
+    return '<div class="portrait"><picture><source media="(prefers-reduced-motion: reduce)" srcset="images/avinash-portrait.webp"><img src="images/avinash-portrait-glitch.gif" width="960" height="1278" alt="Avinash Garudapalli smiling in a black suit" decoding="async" loading="' + (eager ? 'eager' : 'lazy') + '"></picture></div>';
   }
 
   function viewHome() {
@@ -4586,7 +4675,7 @@
 
       var st = r.site ? siteById(r.site) : null;
       return '<article class="rec rv" style="--i:' + i + '">' +
-        '<div class="recent-depiction">' + depictionIcon(r.id === 'kasol' || r.id === 'travel-ai' ? 'map' : r.id === 'blankstore' ? 'store' : 'workflow') + '</div>' +
+        '<div class="recent-depiction">' + depictionIcon(r.id === 'kasol' ? 'mountain' : r.id === 'travel-ai' ? 'map' : r.id === 'blankstore' ? 'store' : 'workflow') + '</div>' +
         '<div class="rec-body">' +
           '<span class="rec-kind">' + (st ? brandMark(st, 20) + " " : "") + esc(r.kind) + '</span>' +
           '<h3>' + esc(r.title) + '</h3>' +
@@ -4671,7 +4760,7 @@
       '<section data-scene>' +
         secHead("Lately", "What I’ve been up to",
           "What I have been doing lately. This list keeps moving.") +
-        '<div class="recent">' + recent + '</div>' +
+        '<div class="recent card-rail" id="recentRail" tabindex="0" aria-label="Recent updates">' + recent + '</div>' + railControls('recentRail', 'recent updates') +
       '</section>' +
 
       '<section data-scene>' +
@@ -4900,11 +4989,11 @@
       '<a class="xp-link" href="#/beyond">Explore my interests →</a></section>' +
       '<section>' + secHead("learning", "The foundations I keep building on") +
       '<div class="cols">' +
-        '<div><h3 class="rv" style="margin-bottom:18px">Education</h3><div class="stack">' + edu + '</div></div>' +
-        '<div><h3 class="rv" style="margin-bottom:18px">Certifications</h3><div class="stack">' + certs + '</div></div>' +
+        '<div><h3 class="rv foundation-heading">Education</h3><div class="stack">' + edu + '</div></div>' +
+        '<div><h3 class="rv foundation-heading">Certifications</h3><div class="stack">' + certs + '</div></div>' +
       '</div></section>' +
       '<section>' + secHead("today", "The perspective I bring") +
-      '<p class="lede rv">I bring the curiosity to explore widely, the empathy to consider different people, and the willingness to revisit my own reasoning. In product work, I use that combination to connect customer needs, team realities and business outcomes, then learn from what happens next.</p>' +
+      '<p class="lede rv">I bring the curiosity to explore widely, the empathy to consider different people, and the willingness to revisit my own reasoning. In product work, I use that combination to connect customer needs, team realities and business outcomes, then learn from what happens next.</p><p class="lede rv">My design work encourages me to examine the journey from the customer’s side. Product and AI work make me consider what engineering, support and operations need to deliver that journey. Running Nosh House brings costs, service and repeat customers into the same decision. I use those perspectives together when deciding which problem deserves attention and what a useful result would look like.</p><p class="lede rv">Being a philomath keeps me curious about unfamiliar approaches. Being a metacognist reminds me to examine why I prefer one of them. I ask what I might be assuming, whose perspective is missing and what evidence would change my mind. I want the next decision to be clearer because of what I learned from the last one.</p>' +
       '<div class="hero-acts"><a class="hero-act primary" href="#/work">See that thinking in my work</a><a class="hero-act" href="#/contact">Start a conversation</a></div>' +
       '</section>';
   }
@@ -5439,7 +5528,8 @@
     }
     closeMenu();
 
-    if (isHome) { bindMap(); askBind(); fillPreview(); }
+    if (isHome) { bindMap(); askBind(); bindRails(); }
+    preparePageLinks();
     // the lab now lives on the Chat360 case study, so bind it wherever it rendered
     if (el("lab")) labBind();
 
@@ -5694,14 +5784,6 @@
     applyIntro(clamp01(M.introP));
   }
 
-  // Portrait screens get a different handover and framing: see applyIntro.
-  var portraitIntro = window.matchMedia && window.matchMedia("(orientation: portrait)").matches;
-  if (window.matchMedia) {
-    var pq = window.matchMedia("(orientation: portrait)");
-    var onPq = function () { portraitIntro = pq.matches; };
-    if (pq.addEventListener) pq.addEventListener("change", onPq); else if (pq.addListener) pq.addListener(onPq);
-  }
-
   function introSpan() {
     var sp = el("spacer");
     return Math.max(1, sp ? sp.offsetHeight : M.vh * 1.2);
@@ -5729,53 +5811,7 @@
     M.introOut = 1;
   }
 
-  /* Fills the monitor with a still of the page that is coming. It is a clone,
-     stripped of anything interactive, living inside the SVG - so it scales
-     with the monitor on its own and nothing has to be recomputed per frame. */
-  function fillPreview() {
-    var body = el("scrPreviewBody");
-    var view = el("view");
-    if (!body || !view) return;
-    body.innerHTML = "";
-
-    var want = [view.querySelector(".ask"), view.querySelector(".hero")];
-    for (var i = 0; i < want.length; i++) {
-      if (!want[i]) continue;
-      var copy = want[i].cloneNode(true);
-      // Duplicate ids would collide with the real controls below.
-      copy.removeAttribute("id");
-      Array.prototype.forEach.call(copy.querySelectorAll("[id]"), function (n) {
-        n.removeAttribute("id");
-      });
-      Array.prototype.forEach.call(copy.querySelectorAll("input"), function (n) {
-        n.setAttribute("tabindex", "-1");
-        n.setAttribute("readonly", "readonly");
-      });
-      Array.prototype.forEach.call(copy.querySelectorAll("a, button"), function (n) {
-        n.setAttribute("tabindex", "-1");
-      });
-      // Behavioural hooks must not survive into a decorative copy, or a
-      // selector meant for the real control finds the picture of one first.
-      Array.prototype.forEach.call(copy.querySelectorAll("[data-gal], [data-ask], [data-resume]"), function (n) {
-        n.removeAttribute("data-gal");
-        n.removeAttribute("data-ask");
-        n.removeAttribute("data-resume");
-      });
-      // A resume chip is conversation state, meaningless in a still of the
-      // page - and leaving the class on a hidden copy makes ".ask-resume"
-      // resolve to the picture rather than the real control.
-      Array.prototype.forEach.call(copy.querySelectorAll(".ask-resume"), function (n) {
-        n.parentNode.removeChild(n);
-      });
-      body.appendChild(copy);
-    }
-  }
-
-  /* The intro no longer scales the page itself. Transforming and re-clipping
-     #view - which contains the whole document - forced the compositor to
-     re-rasterise an enormous layer every frame, and that is what flickered
-     while scrolling. Only the desk SVG moves now, and the preview inside it
-     is part of that SVG, so it is genuinely fixed to the screen it sits on. */
+  /* Scroll zoom transforms the desk only; terminal text stays unchanged. */
   /* Progress source, when GSAP is absent.
 
      Scroll sets a target; the intro plays toward it at its own pace. Bound
@@ -5830,27 +5866,6 @@
     setLayer("layDesk", e * 62, 1 + e * 0.16);
     setLayer("layMid", e * 6, 1 + e * 0.04);
     setLayer("layBack", e * -22, 1 - e * 0.03);
-
-    // The terminal line hands the screen over to a still of the real page,
-    // early, so what is coming is legible for most of the scroll.
-    var handover = clamp01((p - 0.04) / 0.14);
-    var scrText = el("scrText");
-    if (scrText) scrText.setAttribute("opacity", (1 - handover).toFixed(3));
-    var prev = el("scrPreview");
-    /* On a portrait screen the preview leaves the monitor before the desk
-       starts to dissolve.
-
-       The preview is a copy of the page. On a landscape screen the zoom makes
-       the monitor fill the viewport, so the copy lands on top of the real page
-       and the dissolve is seamless. On a portrait phone the monitor is a small
-       part of a wide scene and cannot fill the screen, so for the whole
-       dissolve the visitor saw two copies of the same headline at two sizes,
-       misaligned - recorded on a real phone, and exactly the flicker that was
-       reported. Clearing the monitor first means only one copy of the page is
-       ever on screen. */
-    var prevOp = handover;
-    if (portraitIntro) prevOp *= 1 - clamp01((p - 0.48) / 0.12);
-    if (prev) prev.setAttribute("opacity", prevOp.toFixed(3));
 
     // Then the desk dissolves and the real page is simply behind it.
     var fadeFrom = 0.62;
@@ -6560,43 +6575,10 @@
   }
 
   function typeScreen() {
-    var nameNode = el("scName");
-    var tagNode = el("scTag");
-    var caret = el("scCaret");
-    if (!nameNode || !tagNode) return;
-
-    var NAME = "Avinash";
-    var TAG = "AI Product Manager · Metacognist & Philomath";
-
-    // Deep-linked to an inner route: the scene is hidden, so measuring text would fail.
-    if (staticIntro || !el("stage").classList.contains("live")) {
-      nameNode.textContent = NAME;
-      tagNode.textContent = TAG;
-      if (caret) caret.setAttribute("x", "379");
-      return;
-    }
-
-    var i = 0, j = 0;
-    caret.style.display = "none";
-
-    var t1 = setInterval(function () {
-      i++;
-      nameNode.textContent = NAME.slice(0, i);
-      if (i >= NAME.length) {
-        clearInterval(t1);
-        caret.style.display = "";
-        setTimeout(function () {
-          var t2 = setInterval(function () {
-            j++;
-            tagNode.textContent = TAG.slice(0, j);
-            try {
-              caret.setAttribute("x", String(379 + tagNode.getComputedTextLength() + 4));
-            } catch (e) { /* text not measurable yet */ }
-            if (j >= TAG.length) clearInterval(t2);
-          }, 34);
-        }, 260);
-      }
-    }, 90);
+    var name = el("scName"), tag = el("scTag"), caret = el("scCaret");
+    if (name) name.textContent = "Avinash";
+    if (tag) tag.textContent = "AI Product Manager · Metacognist & Philomath";
+    if (caret) caret.style.display = "none";
   }
 
   /* =========================================================
@@ -6855,6 +6837,14 @@
   el("scrollCue").addEventListener("click", skipIntroToContent);
 
   // On a phone the full desk is too small to read, so frame the monitor instead.
+  function positionIntroActions() {
+    var actions = document.querySelector(".intro-actions");
+    var monitor = el("scrArea");
+    var stage = el("stage");
+    if (!actions || !monitor || !stage) return;
+    var top = monitor.getBoundingClientRect().top - stage.getBoundingClientRect().top - actions.offsetHeight - 24;
+    actions.style.top = Math.max(16, top) + "px";
+  }
   function fitScene() {
     var svg = document.querySelector(".scene");
     if (!svg) return;
@@ -6862,6 +6852,7 @@
     if (w <= 560) svg.setAttribute("viewBox", "300 96 600 470");
     else if (w <= 860) svg.setAttribute("viewBox", "170 80 860 560");
     else svg.setAttribute("viewBox", "0 0 1200 700");
+    requestAnimationFrame(positionIntroActions);
   }
 
   // Delegated so it survives every re-render.
@@ -6905,9 +6896,9 @@
 <h1>Avinash Garudapalli - AI Product Manager</h1>
 <p>Enterprise Voice AI product work and end-to-end business ownership at Nosh House Cafe.</p>
 <p>Enable JavaScript to explore the interactive case studies. You can also read the résumé or contact me directly.</p>
-<a href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a>
+<a target="_blank" rel="noopener noreferrer" href="https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing">Download résumé</a>
 <a href="mailto:avinashdev.garudapalli2027@mastersunion.org">Email Avinash</a>
-<a href="https://www.linkedin.com/in/avinashdevg/">LinkedIn</a>
+<a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/avinashdevg/">LinkedIn</a>
 </main>
 </noscript>
 </body>
