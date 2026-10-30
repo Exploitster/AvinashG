@@ -13,6 +13,27 @@ const base = process.env.QA_BASE_URL || 'http://127.0.0.1:8086/';
       await page.goto(base);
       
       await page.locator('#vload').waitFor({ state: 'hidden' });
+      const disclosures = page.locator('.skill-disclosure');
+      assert.equal(await disclosures.count(), 2, 'both skill groups are independently collapsible');
+      for (const disclosure of await disclosures.all()) {
+        assert.equal(await disclosure.getAttribute('open'), null);
+        const summary = disclosure.locator('summary');
+        assert.match(await summary.innerText(), /View more/);
+        await summary.scrollIntoViewIfNeeded();
+        await summary.focus();
+        await page.keyboard.press('Enter');
+        assert.notEqual(await disclosure.getAttribute('open'), null);
+        assert(await disclosure.locator('li').last().isVisible(), 'all skills remain accessible');
+        assert.match(await summary.innerText(), /View less/);
+        await page.keyboard.press('Space');
+        assert.equal(await disclosure.getAttribute('open'), null);
+      }
+      await page.locator('#navToggle').click();
+      const menuResume = page.locator('#menuResume');
+      assert(await menuResume.isVisible());
+      assert.equal(await menuResume.getAttribute('target'), '_blank');
+      assert.equal(await menuResume.getAttribute('href'), 'https://drive.google.com/file/d/1FetKoTI3R4i9ifAlpLTDsdYSYlU3Ortm/view?usp=sharing');
+      await page.locator('#navClose').click();
       const geometry = await page.locator('#outcomeRail').evaluate(rail => {
         const cards = [...rail.children].map(n => n.getBoundingClientRect());
         const bounds = rail.getBoundingClientRect();
@@ -94,8 +115,59 @@ const base = process.env.QA_BASE_URL || 'http://127.0.0.1:8086/';
       assert.equal(await page.locator('#scrPreview').getAttribute('opacity'), '0');
     }
     assert.match(await page.locator('#scrollCue').innerText(), /Scroll to know more/);
+    await page.evaluate(() => window.scrollTo(0, document.querySelector('#spacer').offsetHeight + 900));
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('#stage')).visibility === 'hidden');
+    const landing = await page.locator('#view .hero h1').boundingBox();
+    assert(landing.y >= 50 && landing.y < 260, 'a fast intro flick lands on the first hero heading');
+    const landedY = await page.evaluate(() => scrollY);
+    await page.mouse.wheel(0, 400);
+    await page.waitForFunction(y => scrollY > y + 100, landedY);
+    assert.equal(await page.locator('#stage').evaluate(n => getComputedStyle(n).visibility), 'hidden', 'normal scrolling continues after landing');
     await context.close();
     console.log('PASS normal-motion intro text, button spacing and zoom scroll');
+    for (const [width, missingLibraries] of [[320, false], [768, false], [1440, false], [393, true]]) {
+      const flickContext = await browser.newContext({ viewport: { width, height: 900 } });
+      if (missingLibraries) await flickContext.route('**/vendor/**', route => route.abort());
+      const flickPage = await flickContext.newPage();
+      await flickPage.goto(base);
+      await flickPage.reload(); // persisted history entries must still land at the hero
+      await flickPage.locator('#vload').waitFor({ state: 'hidden' });
+      await flickPage.mouse.wheel(0, 2500);
+      await flickPage.waitForFunction(() => getComputedStyle(document.querySelector('#stage')).visibility === 'hidden');
+      const hero = await flickPage.locator('#view .hero').boundingBox();
+      const heading = await flickPage.locator('#view .hero h1').boundingBox();
+      const barHeight = await flickPage.locator('#topbar').evaluate(n => n.offsetHeight);
+      assert(Math.abs(hero.y - barHeight) <= 2 && heading.y >= barHeight && heading.y + heading.height < 900, `${width}px: wheel flick lands at the start of the hero, missingLibraries=${missingLibraries}`);
+      const startY = await flickPage.evaluate(() => scrollY);
+      await flickPage.mouse.wheel(0, 500);
+      await flickPage.waitForFunction(y => scrollY > y + 200, startY);
+      await flickContext.close();
+    }
+    console.log('PASS fast wheel handoff and continued scrolling on mobile, tablet, desktop and missing-library fallback');
+    const touchContext = await browser.newContext({ viewport: { width: 393, height: 851 }, isMobile: true, hasTouch: true });
+    const touchPage = await touchContext.newPage();
+    await touchPage.goto(base);
+    await touchPage.locator('#vload').waitFor({ state: 'hidden' });
+    await touchPage.evaluate(() => scrollTo(0, 400));
+    await touchPage.waitForTimeout(400);
+    const touchSession = await touchContext.newCDPSession(touchPage);
+    async function swipe() {
+      await touchSession.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 190, y: 770 }] });
+      for (let y = 700; y >= 20; y -= 60) {
+        await touchSession.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 190, y }] });
+        await touchPage.waitForTimeout(5);
+      }
+      await touchSession.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    }
+    await swipe();
+    await touchPage.waitForFunction(() => getComputedStyle(document.querySelector('#stage')).visibility === 'hidden');
+    await touchPage.waitForTimeout(300);
+    assert(Math.abs(await touchPage.locator('.hero').evaluate(n => n.getBoundingClientRect().top) - await touchPage.locator('#topbar').evaluate(n => n.offsetHeight)) <= 2, 'native mobile swipe settles at the hero');
+    const touchLandingY = await touchPage.evaluate(() => scrollY);
+    await swipe();
+    await touchPage.waitForFunction(y => scrollY > y + 200, touchLandingY);
+    await touchContext.close();
+    console.log('PASS native touch swipe handoff');
     const links = await browser.newContext({ reducedMotion: 'reduce' });
     const sourcePage = await links.newPage();
     await sourcePage.route('**/api/chat', route => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ answer: 'Voice AI at Chat360.', sources: [{ title: 'Chat360', route: '#/work/chat360' }] }) }));
