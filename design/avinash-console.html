@@ -2708,10 +2708,8 @@
   .skill-disclosure { margin:16px 0 28px; }
   .skill-disclosure ul { margin-top:0; margin-bottom:12px; }
   .skill-disclosure:not(.expanded) ul { max-height:var(--skill-row-height,48px); overflow:hidden; }
-  .skill-toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; min-height:48px; padding:12px 16px; border:1px solid currentColor; border-radius:10px; background:transparent; color:inherit; cursor:pointer; font:inherit; font-weight:600; text-align:left; }
-  .skill-toggle::after { content:"+"; font-size:1.3rem; }
-  .skill-toggle[aria-expanded="true"]::after { content:"−"; }
-  .skill-toggle:hover { background:rgba(0,0,0,.06); }
+  .skill-toggle { display:inline-flex; align-items:center; width:auto; min-height:48px; padding:10px 0; border:0; border-radius:0; background:transparent; color:inherit; cursor:pointer; font:inherit; font-weight:600; text-align:left; text-decoration:underline; text-underline-offset:5px; text-decoration-thickness:1px; }
+  .skill-toggle:hover { text-decoration-thickness:2px; }
   .skill-toggle:focus-visible { outline:3px solid currentColor; outline-offset:4px; }
   .drawer-link.drawer-download { margin:12px 18px; padding:14px; border:1px solid var(--signal-deep); border-radius:10px; background:rgba(var(--signal-rgb),.1); }
   .drawer-download .dl-name { color:var(--signal); }
