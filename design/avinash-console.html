@@ -720,6 +720,9 @@
   .portrait-copy { min-width:0; }
   .portrait { position:relative; width:100%; max-width:380px; aspect-ratio: .82; justify-self:center; overflow:hidden; isolation:isolate; pointer-events:none; mask-image:linear-gradient(#000 0%,#000 78%,transparent 100%); }
   .portrait img { position:absolute; top:0; left:-30%; width:160%; max-width:none; height:auto; display:block; filter:saturate(.65) contrast(1.04); }
+  .portrait-motion { opacity:0; }
+  .portrait-motion.ready { opacity:1; }
+  @media (prefers-reduced-motion:reduce) { .portrait .portrait-motion { display:none; } }
   .about-intro .portrait { max-width:310px; }
   @media(max-width:780px) {
     .portrait-layout { grid-template-columns:minmax(0,1fr) minmax(100px,36%); gap:16px; align-items:start; }
@@ -2702,6 +2705,17 @@
     .intro-actions .cue-icon { width:24px; height:24px; }
   }
 
+  .skill-disclosure { margin:16px 0 28px; }
+  .skill-disclosure ul { margin-top:0; margin-bottom:12px; }
+  .skill-disclosure:not(.expanded) ul { max-height:var(--skill-row-height,48px); overflow:hidden; }
+  .skill-toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; min-height:48px; padding:12px 16px; border:1px solid currentColor; border-radius:10px; background:transparent; color:inherit; cursor:pointer; font:inherit; font-weight:600; text-align:left; }
+  .skill-toggle::after { content:"+"; font-size:1.3rem; }
+  .skill-toggle[aria-expanded="true"]::after { content:"−"; }
+  .skill-toggle:hover { background:rgba(0,0,0,.06); }
+  .skill-toggle:focus-visible { outline:3px solid currentColor; outline-offset:4px; }
+  .drawer-link.drawer-download { margin:12px 18px; padding:14px; border:1px solid var(--signal-deep); border-radius:10px; background:rgba(var(--signal-rgb),.1); }
+  .drawer-download .dl-name { color:var(--signal); }
+
 </style>
 
 <div class="vload" id="vload" aria-label="Opening animation">
@@ -2755,25 +2769,76 @@
 
     if (!node) { finish(); return; }
     var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Personal learning and principles already described in About, ten words each.
     var facts = [
-      "I helped launch enterprise Voice AI and halve response latency.",
-      "I run Nosh House Cafe, owning its operations and growth.",
-      "I helped build Cordelia Cruises’ first mobile app from scratch.",
-      "I combine user research, product strategy, and hands-on business ownership.",
-      "I explore agentic AI through prototypes, automation, and product experiments.",
-      "I completed a four-day Himalayan trek, carrying my own gear."
+      "I learned to see customers through sales, support, and operations.",
+      "Running a cafe taught me to connect decisions with consequences.",
+      "Voice AI taught me that milliseconds can change customer trust.",
+      "Different roles taught me to question my first product instinct.",
+      "I study different disciplines to see what one perspective misses.",
+      "I reflect on how I think, then question my assumptions.",
+      "Curiosity helps me connect customer needs with wider business realities.",
+      "I learn from customer conversations, then test ideas through experiments.",
+      "Owning operations keeps my product thinking close to everyday realities.",
+      "I bring engineering, customers, and business constraints into one conversation.",
+      "Being a philomath means following questions beyond one familiar subject.",
+      "Being a metacognist means examining how I reach each conclusion.",
+      "My internships taught me that teams experience problems very differently.",
+      "I connect course learning with decisions I face in practice.",
+      "I look beyond features to understand the problem underneath them.",
+      "I want decisions to work for customers and internal teams."
     ];
-    var factIndex = 0;
-    try { factIndex = Number(window.sessionStorage.getItem("vload-fact-index")) || 0; }
-    catch (e) { factIndex = Math.floor(Math.random() * facts.length); }
-    if (!isFinite(factIndex) || factIndex < 0) factIndex = 0;
-    factIndex = Math.floor(factIndex) % facts.length;
-    function showFact() {
-      elFact.textContent = facts[factIndex];
-      factIndex = (factIndex + 1) % facts.length;
-      try { window.sessionStorage.setItem("vload-fact-index", String(factIndex)); } catch (e) { /* rotation still works in memory */ }
-    }
+    var personalFactCount = facts.length;
+    // Additional combinations keep longer sessions fresh after the personal lines.
+    var starts = ["I connect perspectives", "I question assumptions", "I follow curiosity", "I explore possibilities", "I welcome feedback", "I value reflection", "I seek context", "I study patterns"];
+    var middles = ["explore customer needs", "consider team constraints", "connect different disciplines", "learn through experiments", "listen before deciding", "test my understanding", "look beyond features", "consider business realities"];
+    var endings = ["and reconsider my assumptions.", "and reflect before deciding.", "and keep learning deliberately.", "and question easy answers.", "and learn across disciplines.", "and examine different perspectives.", "and connect the dots.", "and stay open minded."];
+    starts.forEach(function (start) {
+      middles.forEach(function (middle) {
+        endings.forEach(function (end) { facts.push(start + ", " + middle + ", " + end); });
+      });
+    });
+    // A session cookie shares the history across tabs without persisting it
+    // into a fresh browser session. Blocked cookies fall back to tab storage.
+    var historyKey = "vload-thought-facts-v2", factStore = null, sessionId = "tab";
+    var seen = [];
     var elFact = document.getElementById("vloadFact");
+    function claimFact() {
+      if (gate.done || leaving) return;
+      if (!factStore) {
+        try {
+          var cookie = document.cookie.match(/(?:^|; )ag_loader_session=([a-z0-9]+)/);
+          sessionId = cookie ? cookie[1] : Date.now().toString(36) + Math.random().toString(36).slice(2);
+          if (!cookie) document.cookie = "ag_loader_session=" + sessionId + "; Path=/; SameSite=Lax";
+          if (document.cookie.indexOf("ag_loader_session=" + sessionId) >= 0) factStore = window.localStorage;
+          else { sessionId = "tab"; factStore = window.sessionStorage; }
+        } catch (e) { sessionId = "tab"; try { factStore = window.sessionStorage; } catch (ignored) { /* memory-only rotation */ } }
+      }
+      // Another tab may have shown a line since this loader last rotated.
+      try {
+        var saved = JSON.parse(factStore.getItem(historyKey));
+        if (saved && saved.session === sessionId && Array.isArray(saved.seen)) {
+          saved.seen.forEach(function (index) { if (seen.indexOf(index) < 0) seen.push(index); });
+        }
+      } catch (e) { /* first visit or unavailable browser storage */ }
+      var available = [];
+      for (var i = 0; i < personalFactCount; i++) if (seen.indexOf(i) < 0) available.push(i);
+      if (!available.length) {
+        for (var j = personalFactCount; j < facts.length; j++) if (seen.indexOf(j) < 0) available.push(j);
+      }
+      // Never wrap back to a quote already displayed in this session.
+      if (!available.length) { elFact.textContent = ""; return; }
+      var index = available[Math.floor(Math.random() * available.length)];
+      elFact.textContent = facts[index];
+      seen.push(index);
+      try { factStore.setItem(historyKey, JSON.stringify({ session: sessionId, seen: seen })); } catch (e) { /* rotation still works in memory */ }
+    }
+    function showFact() {
+      // Claim atomically so simultaneous tabs cannot choose the same line.
+      if (window.navigator.locks && window.isSecureContext) {
+        window.navigator.locks.request(historyKey, claimFact).catch(function () { claimFact(); });
+      } else claimFact();
+    }
     showFact();
     node.classList.add("on", "named");
     var wave = document.getElementById("vloadWave"), bars = [], N = 25;
@@ -4563,7 +4628,8 @@
     var skills = SKILLS_TECH.map(function (skill, i) {
       return '<li><span class="highlight-icon">' + depictionIcon(techIcons[i]) + '</span><span>' + esc(skill) + '</span></li>';
     }).join("");
-    return '<h2>Outcomes generated</h2><p class="highlight-intro">Results from my product work and business ownership.</p><div class="bento card-rail outcome-rail" id="outcomeRail" tabindex="0" aria-label="Outcomes generated">' + outcomes + '</div>' + railControls('outcomeRail', 'outcomes') + '<div class="highlight-skills"><h2>Skills used &amp; developed</h2><p class="highlight-intro">Tools and capabilities documented in my résumé.</p><ul class="skill-icons">' + skills + '</ul><h3>Business &amp; product skills</h3><ul class="business-skills">' + SKILLS_BIZ.map(function (skill) { return '<li>' + esc(skill) + '</li>'; }).join("") + '</ul></div>';
+    return '<h2>Outcomes generated</h2><p class="highlight-intro">Results from my product work and business ownership.</p><div class="bento card-rail outcome-rail" id="outcomeRail" tabindex="0" aria-label="Outcomes generated">' + outcomes + '</div>' + railControls('outcomeRail', 'outcomes') + '<div class="highlight-skills"><h2>Skills used &amp; developed</h2><p class="highlight-intro">Tools and capabilities documented in my résumé.</p>' + skillDisclosure('technicalSkills', 'skill-icons', skills, 'tools and capabilities') + '<h3>Business &amp; product skills</h3>' + skillDisclosure('businessSkills', 'business-skills', SKILLS_BIZ.map(function (skill) { return '<li>' + esc(skill) + '</li>'; }).join(""), 'business and product skills') + '</div>';
+
   }
 
   function resultCards() {
@@ -4628,8 +4694,58 @@
     updateRailButtons();
   }
 
+  function skillDisclosure(id, listClass, items, label) {
+    return '<div class="skill-disclosure"><ul id="' + id + '" class="' + listClass + '">' + items + '</ul><button type="button" class="skill-toggle" aria-expanded="false" aria-controls="' + id + '" aria-label="View more ' + label + '" data-skill-label="' + label + '">View more</button></div>';
+  }
+
+  function updateSkillRows(group) {
+    var list = group.querySelector('ul');
+    var button = group.querySelector('button');
+    var items = Array.prototype.slice.call(list.children);
+    var expanded = group.classList.contains('expanded');
+    items.forEach(function (item) { item.hidden = false; });
+    if (!items.length) { button.hidden = true; return; }
+    var firstTop = items[0].offsetTop;
+    var firstRow = items.map(function (item) { return Math.abs(item.offsetTop - firstTop) < 2; });
+    var rowHeight = Math.max.apply(null, items.filter(function (_, i) { return firstRow[i]; }).map(function (item) { return item.offsetHeight; }));
+    group.style.setProperty('--skill-row-height', (rowHeight + 1) + 'px');
+    items.forEach(function (item, i) { item.hidden = !expanded && !firstRow[i]; });
+    button.hidden = firstRow.every(function (inRow) { return inRow; });
+    button.setAttribute('aria-expanded', String(expanded));
+    button.textContent = expanded ? 'View less' : 'View more';
+    button.setAttribute('aria-label', button.textContent + ' ' + button.getAttribute('data-skill-label'));
+  }
+
+  function updateSkillPreviews() {
+    Array.prototype.forEach.call(document.querySelectorAll('.skill-disclosure'), updateSkillRows);
+  }
+  var skillPreviewWidth = window.innerWidth;
+  var skillPreviewFrame = null;
+  window.addEventListener('resize', function () {
+    if (window.innerWidth === skillPreviewWidth) return;
+    skillPreviewWidth = window.innerWidth;
+    if (skillPreviewFrame !== null) return;
+    skillPreviewFrame = requestAnimationFrame(function () {
+      skillPreviewFrame = null;
+      updateSkillPreviews();
+    });
+  });
+  if (document.fonts) document.fonts.ready.then(updateSkillPreviews);
+
+  function bindSkillDisclosures() {
+    Array.prototype.forEach.call(document.querySelectorAll('.skill-disclosure'), function (group) {
+      group.querySelector('button').addEventListener('click', function () {
+        group.classList.toggle('expanded');
+        updateSkillRows(group);
+        refreshLayout();
+      });
+      updateSkillRows(group);
+    });
+  }
+
   function portraitMarkup(eager) {
-    return '<div class="portrait"><picture><source media="(prefers-reduced-motion: reduce)" srcset="images/avinash-portrait.webp"><img src="images/avinash-portrait-glitch.gif" width="960" height="1278" alt="Avinash Garudapalli smiling in a black suit" decoding="async" loading="' + (eager ? 'eager' : 'lazy') + '"></picture></div>';
+    var loading = eager ? 'eager' : 'lazy';
+    return '<div class="portrait" role="img" aria-label="Avinash Garudapalli smiling in a black suit"><img class="portrait-still" src="images/avinash-portrait.webp" width="1087" height="1447" alt="" aria-hidden="true" decoding="async" loading="' + loading + '"><picture><source media="(prefers-reduced-motion: reduce)" srcset="images/avinash-portrait.webp"><img class="portrait-motion" src="images/avinash-portrait-glitch.gif" width="960" height="1278" alt="" aria-hidden="true" decoding="async" loading="' + loading + '" onload="this.classList.add(\'ready\')" onerror="this.hidden=true"></picture></div>';
   }
 
   function viewHome() {
@@ -5438,6 +5554,7 @@
     activeEntry = entry;
     activeRoute = route;
     var restoreY = returning ? (scrollPositions[entry] != null ? scrollPositions[entry] : routeScrollPositions[route] || 0) : 0;
+    view.style.translate = "";
 
     if (isHome) html = viewHome();
     else if (route === "#/story") html = viewStory();
@@ -5483,6 +5600,7 @@
     var spacer = el("spacer");
     stage.classList.toggle("live", isHome);
     spacer.classList.toggle("on", isHome);
+    introNeedsLanding = isHome && restoreY < introSpan();
     // A route change should land at the top instantly. Without an explicit
     // auto behaviour the page inherits scroll-behavior: smooth and animates
     // the jump, which reads as lag when switching pages.
@@ -5499,7 +5617,7 @@
     }
     closeMenu();
 
-    if (isHome) { bindMap(); askBind(); bindRails(); }
+    if (isHome) { bindMap(); askBind(); bindRails(); bindSkillDisclosures(); }
     preparePageLinks();
     // the lab now lives on the Chat360 case study, so bind it wherever it rendered
     if (el("lab")) labBind();
@@ -5737,6 +5855,9 @@
   // the damped rAF fallback in updateIntro is in charge.
   var introST = null;
   var introTarget = 0;
+  var introNeedsLanding = true;
+  var introTouchActive = false;
+  var introTouchSeen = false;
 
   /* The rate-capped follow, on GSAP's ticker. Bound rigidly to scroll, a hard
      flick advanced this by a third per frame and the whole sequence rendered
@@ -5770,6 +5891,7 @@
   function releaseView() {
     var view = el("view");
     if (!view) return;
+    view.style.translate = "";
     // Left over from the version that scaled the page itself; clearing these
     // keeps an older cached build from stranding the content mid-transform.
     if (view.style.transform || view.style.clipPath) {
@@ -5827,6 +5949,33 @@
     var stage = el("stage");
     if (!stage || staticIntro) return;
     if (!stage.classList.contains("live")) { releaseView(); return; }
+    // A fast flick can spend the runway before the paced zoom finishes.
+    // Keep the hero at its starting position while the desk dissolves, then
+    // discard only that intro overshoot. Later scrolling remains unrestricted.
+    if (introNeedsLanding) {
+      var span = introSpan();
+      var overshoot = Math.max(0, window.scrollY - span);
+      var view = el("view");
+      view.style.translate = overshoot ? "0 " + overshoot + "px" : "";
+      if (p >= 0.96 && !introTouchActive) {
+        introNeedsLanding = false;
+        view.style.translate = "";
+        if (overshoot > 0) {
+          // Native touch inertia can outlive touchend and another scrollTo.
+          // Briefly disable vertical scrolling to cancel only that old fling.
+          var root = document.documentElement;
+          var previousOverflow = root.style.overflowY;
+          if (introTouchSeen) root.style.overflowY = "hidden";
+          window.scrollTo({ top: span, behavior: "instant" });
+          if (lenis) lenis.scrollTo(span, { immediate: true });
+          M.sy = span;
+          if (introTouchSeen) requestAnimationFrame(function () {
+            requestAnimationFrame(function () { root.style.overflowY = previousOverflow; refreshLayout(); });
+          });
+        }
+        refreshLayout();
+      }
+    }
     var e = smoothstep(p);
 
     // A slow push toward the desk, so the monitor grows as it is approached.
@@ -6541,6 +6690,10 @@
       // Passive: the listener only wakes the loop, it never blocks the scroll.
       window.addEventListener("scroll", wake, { passive: true });
       window.addEventListener("scroll", dustTone, { passive: true });
+      window.addEventListener("touchstart", function () { introTouchActive = true; introTouchSeen = true; }, { passive: true });
+      function finishTouch(event) { introTouchActive = event.touches.length > 0; wake(); }
+      window.addEventListener("touchend", finishTouch, { passive: true });
+      window.addEventListener("touchcancel", finishTouch, { passive: true });
     }
     wake();
   }
@@ -6628,7 +6781,7 @@
   function renderMenu() {
     el("navBody").innerHTML = MENU.map(function (g) {
       var items = g.items.map(function (i) {
-        return '<a class="drawer-link" href="' + i.path + '">' +
+        return '<a class="drawer-link' + (i.path === PROFILE.resume ? ' drawer-download' : '') + '"' + (i.path === PROFILE.resume ? ' id="menuResume"' : '') + ' href="' + i.path + '">' +
           '<span class="dl-name">' + esc(i.label) + '</span>' +
           '<span class="dl-note">' + esc(i.note) + '</span>' +
         '</a>';
@@ -6778,13 +6931,22 @@
      fraction of their real size and still moving, so acting on it would mean
      hitting whatever happened to be under the finger mid-flight. */
   el("view").addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "touch") return; // a swipe is scrolling, not an intro skip
     if (!introHolding() || (M.introOut || 0) > 0.82) return;
     e.preventDefault();
     e.stopPropagation();
-    window.scrollTo({ top: Math.round(introSpan()), behavior: "auto" });
+    skipIntroToContent();
+  }, true);
+  el("view").addEventListener("click", function (e) {
+    if (!introHolding() || (M.introOut || 0) > 0.82) return;
+    e.preventDefault();
+    e.stopPropagation();
+    skipIntroToContent();
   }, true);
 
   function skipIntroToContent() {
+    introNeedsLanding = false;
+    el("view").style.translate = "";
     var top = staticIntro ? el("view").getBoundingClientRect().top + window.scrollY - el("topbar").offsetHeight : Math.round(introSpan());
     if ((window.location.hash || "#/") !== "#/") top = 0;
     window.scrollTo({ top: top, behavior: "instant" });
@@ -6798,8 +6960,8 @@
   if (window.__vload) window.__vload.skipToContent = skipIntroToContent;
   el("skipContent").addEventListener("click", function (e) { e.preventDefault(); skipIntroToContent(); });
   el("view").addEventListener("toggle", function (e) {
-    if (e.target.tagName !== "DETAILS" || !e.target.open) return;
-    Array.prototype.forEach.call(e.target.querySelectorAll(".rv"), function (n) { n.classList.add("in"); });
+    if (e.target.tagName !== "DETAILS") return;
+    if (e.target.open) Array.prototype.forEach.call(e.target.querySelectorAll(".rv"), function (n) { n.classList.add("in"); });
     refreshLayout();
   }, true);
 

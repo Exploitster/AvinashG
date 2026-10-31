@@ -129,7 +129,7 @@ const server = createServer((req, res) => {
     await loaderPage.clock.install();
     await loaderPage.clock.pauseAt(new Date());
     await loaderPage.goto(base);
-    const firstFact = await loaderPage.locator('#vloadFact').innerText();
+    const firstFact = await loaderPage.locator('#vloadFact:not(:empty)').innerText();
     assert.equal(firstFact.trim().split(/\s+/).length, 10);
     const waveBefore = await loaderPage.locator('#vloadWave').innerHTML();
     await loaderPage.clock.runFor(100);
@@ -139,12 +139,45 @@ const server = createServer((req, res) => {
     await loaderPage.clock.runFor(600);
     assert.equal(await loaderPage.locator('#vload').count(), 0);
     await loaderPage.reload();
-    const nextFact = await loaderPage.locator('#vloadFact').innerText();
+    const nextFact = await loaderPage.locator('#vloadFact:not(:empty)').innerText();
     assert.notEqual(nextFact, firstFact, 'a new fact appears on the next load');
     assert.equal(nextFact.trim().split(/\s+/).length, 10);
+    const seenFacts = new Set([firstFact, nextFact]);
+    for (let i = 0; i < 10; i++) {
+      await loaderPage.reload();
+      const fact = await loaderPage.locator('#vloadFact:not(:empty)').innerText();
+      assert(!seenFacts.has(fact), 'loader facts never repeat during the session');
+      assert.equal(fact.trim().split(/\s+/).length, 10);
+      seenFacts.add(fact);
+    }
+    const siblingPage = await loaderContext.newPage();
+    await siblingPage.goto(base);
+    assert(!seenFacts.has(await siblingPage.locator('#vloadFact:not(:empty)').innerText()), 'new tabs share session fact history');
+    await siblingPage.close();
     await loaderPage.locator('#loaderSkip').click();
     assert.equal(await loaderPage.locator('#vload').count(), 0, 'explicit skip bypasses the minimum timer');
     await loaderContext.close();
+    const cookieBlocked = await browser.newContext({ reducedMotion: 'reduce' });
+    await cookieBlocked.addInitScript(() => Object.defineProperty(document, 'cookie', { get: () => '', set: () => {}, configurable: true }));
+    const blockedPage = await cookieBlocked.newPage();
+    const blockedFacts = new Set();
+    for (let i = 0; i < 8; i++) {
+      await blockedPage.goto(base);
+      const fact = await blockedPage.locator('#vloadFact:not(:empty)').innerText();
+      assert(!blockedFacts.has(fact), 'blocked cookies retain tab-session non-repetition');
+      blockedFacts.add(fact);
+    }
+    await cookieBlocked.close();
+    const simultaneous = await browser.newContext({ reducedMotion: 'reduce' });
+    await simultaneous.addInitScript(() => { Math.random = () => 0; });
+    const tabs = await Promise.all(Array.from({ length: 6 }, () => simultaneous.newPage()));
+    await Promise.all(tabs.map(tab => tab.goto(base)));
+    const simultaneousFacts = await Promise.all(tabs.map(async tab => {
+      await tab.locator('#vloadFact:not(:empty)').waitFor();
+      return tab.locator('#vloadFact:not(:empty)').innerText();
+    }));
+    assert.equal(new Set(simultaneousFacts).size, tabs.length, 'simultaneous fresh tabs claim distinct session quotes');
+    await simultaneous.close();
     for (const width of [320, 393, 768, 1440]) {
       const controls = await browser.newContext({ viewport: { width, height: 851 }, reducedMotion: 'reduce' });
       const controlsPage = await controls.newPage();
@@ -166,10 +199,10 @@ const server = createServer((req, res) => {
     await stalledPage.clock.install();
     await stalledPage.clock.pauseAt(new Date());
     await stalledPage.goto(base + 'loader-only.html');
-    const stalledFact = await stalledPage.locator('#vloadFact').innerText();
+    const stalledFact = await stalledPage.locator('#vloadFact:not(:empty)').innerText();
     const staticWave = await stalledPage.locator('#vloadWave').innerHTML();
     await stalledPage.clock.runFor(3200);
-    assert.notEqual(await stalledPage.locator('#vloadFact').innerText(), stalledFact, 'slow loads rotate facts');
+    assert.notEqual(await stalledPage.locator('#vloadFact:not(:empty)').innerText(), stalledFact, 'slow loads rotate facts');
     assert.equal(await stalledPage.locator('#vloadWave').innerHTML(), staticWave, 'reduced motion keeps waveform static');
     await stalledPage.clock.runFor(9500);
     assert(await stalledPage.locator('#vload').isVisible(), 'the last fact retains a full reading window');
