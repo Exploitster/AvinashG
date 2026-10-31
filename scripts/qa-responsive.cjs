@@ -308,6 +308,12 @@ function audit(isTouch) {
     // capability map selects by tap, and wires only on wide screens
     await page.evaluate(() => { location.hash = "#/"; });
     await page.waitForTimeout(800);
+    // Finish the intro before selecting a project in the page underneath.
+    // A click during the intro deliberately settles it instead of activating
+    // an off-screen destination, so that is not a project-selection test.
+    await page.evaluate(() => document.getElementById("scrollCue").click());
+    await page.waitForFunction(() => getComputedStyle(document.getElementById("stage")).visibility === "hidden");
+    await page.locator('.sysnode[data-p="chat360"]').scrollIntoViewIfNeeded();
     const map = await page.evaluate(async () => {
       const n = document.querySelector('.sysnode[data-p="chat360"]');
       if (!n) return { err: "no map node" };

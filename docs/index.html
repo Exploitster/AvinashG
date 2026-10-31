@@ -749,6 +749,9 @@
   .portrait-copy { min-width:0; }
   .portrait { position:relative; width:100%; max-width:380px; aspect-ratio: .82; justify-self:center; overflow:hidden; isolation:isolate; pointer-events:none; mask-image:linear-gradient(#000 0%,#000 78%,transparent 100%); }
   .portrait img { position:absolute; top:0; left:-30%; width:160%; max-width:none; height:auto; display:block; filter:saturate(.65) contrast(1.04); }
+  .portrait-motion { opacity:0; }
+  .portrait-motion.ready { opacity:1; }
+  @media (prefers-reduced-motion:reduce) { .portrait .portrait-motion { display:none; } }
   .about-intro .portrait { max-width:310px; }
   @media(max-width:780px) {
     .portrait-layout { grid-template-columns:minmax(0,1fr) minmax(100px,36%); gap:16px; align-items:start; }
@@ -2732,16 +2735,13 @@
   }
 
   .skill-disclosure { margin:16px 0 28px; }
-  .skill-disclosure summary { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:48px; padding:12px 16px; border:1px solid currentColor; border-radius:10px; cursor:pointer; font-weight:600; list-style:none; }
-  .skill-disclosure summary::-webkit-details-marker { display:none; }
-  .skill-disclosure .when-open { display:none; }
-  .skill-disclosure[open] .when-open { display:inline; }
-  .skill-disclosure[open] .when-closed { display:none; }
-  .skill-disclosure .disclosure-mark::before { content:"+"; font-size:1.3rem; }
-  .skill-disclosure[open] .disclosure-mark::before { content:"−"; }
-  .skill-disclosure ul { margin-top:16px; margin-bottom:0; }
-  .skill-disclosure summary:hover { background:rgba(0,0,0,.06); }
-  .skill-disclosure summary:focus-visible { outline:3px solid currentColor; outline-offset:4px; }
+  .skill-disclosure ul { margin-top:0; margin-bottom:12px; }
+  .skill-disclosure:not(.expanded) ul { max-height:var(--skill-row-height,48px); overflow:hidden; }
+  .skill-toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; min-height:48px; padding:12px 16px; border:1px solid currentColor; border-radius:10px; background:transparent; color:inherit; cursor:pointer; font:inherit; font-weight:600; text-align:left; }
+  .skill-toggle::after { content:"+"; font-size:1.3rem; }
+  .skill-toggle[aria-expanded="true"]::after { content:"−"; }
+  .skill-toggle:hover { background:rgba(0,0,0,.06); }
+  .skill-toggle:focus-visible { outline:3px solid currentColor; outline-offset:4px; }
   .drawer-link.drawer-download { margin:12px 18px; padding:14px; border:1px solid var(--signal-deep); border-radius:10px; background:rgba(var(--signal-rgb),.1); }
   .drawer-download .dl-name { color:var(--signal); }
 
@@ -4657,7 +4657,8 @@
     var skills = SKILLS_TECH.map(function (skill, i) {
       return '<li><span class="highlight-icon">' + depictionIcon(techIcons[i]) + '</span><span>' + esc(skill) + '</span></li>';
     }).join("");
-    return '<h2>Outcomes generated</h2><p class="highlight-intro">Results from my product work and business ownership.</p><div class="bento card-rail outcome-rail" id="outcomeRail" tabindex="0" aria-label="Outcomes generated">' + outcomes + '</div>' + railControls('outcomeRail', 'outcomes') + '<div class="highlight-skills"><h2>Skills used &amp; developed</h2><p class="highlight-intro">Tools and capabilities documented in my résumé.</p><details class="skill-disclosure"><summary><span class="when-closed">View more</span><span class="when-open">View less</span><span class="sr-only"> tools and capabilities</span><span class="disclosure-mark" aria-hidden="true"></span></summary><ul class="skill-icons">' + skills + '</ul></details><h3>Business &amp; product skills</h3><details class="skill-disclosure"><summary><span class="when-closed">View more</span><span class="when-open">View less</span><span class="sr-only"> business and product skills</span><span class="disclosure-mark" aria-hidden="true"></span></summary><ul class="business-skills">' + SKILLS_BIZ.map(function (skill) { return '<li>' + esc(skill) + '</li>'; }).join("") + '</ul></details></div>';
+    return '<h2>Outcomes generated</h2><p class="highlight-intro">Results from my product work and business ownership.</p><div class="bento card-rail outcome-rail" id="outcomeRail" tabindex="0" aria-label="Outcomes generated">' + outcomes + '</div>' + railControls('outcomeRail', 'outcomes') + '<div class="highlight-skills"><h2>Skills used &amp; developed</h2><p class="highlight-intro">Tools and capabilities documented in my résumé.</p>' + skillDisclosure('technicalSkills', 'skill-icons', skills, 'tools and capabilities') + '<h3>Business &amp; product skills</h3>' + skillDisclosure('businessSkills', 'business-skills', SKILLS_BIZ.map(function (skill) { return '<li>' + esc(skill) + '</li>'; }).join(""), 'business and product skills') + '</div>';
+
   }
 
   function resultCards() {
@@ -4722,8 +4723,58 @@
     updateRailButtons();
   }
 
+  function skillDisclosure(id, listClass, items, label) {
+    return '<div class="skill-disclosure"><ul id="' + id + '" class="' + listClass + '">' + items + '</ul><button type="button" class="skill-toggle" aria-expanded="false" aria-controls="' + id + '" aria-label="View more ' + label + '" data-skill-label="' + label + '">View more</button></div>';
+  }
+
+  function updateSkillRows(group) {
+    var list = group.querySelector('ul');
+    var button = group.querySelector('button');
+    var items = Array.prototype.slice.call(list.children);
+    var expanded = group.classList.contains('expanded');
+    items.forEach(function (item) { item.hidden = false; });
+    if (!items.length) { button.hidden = true; return; }
+    var firstTop = items[0].offsetTop;
+    var firstRow = items.map(function (item) { return Math.abs(item.offsetTop - firstTop) < 2; });
+    var rowHeight = Math.max.apply(null, items.filter(function (_, i) { return firstRow[i]; }).map(function (item) { return item.offsetHeight; }));
+    group.style.setProperty('--skill-row-height', (rowHeight + 1) + 'px');
+    items.forEach(function (item, i) { item.hidden = !expanded && !firstRow[i]; });
+    button.hidden = firstRow.every(function (inRow) { return inRow; });
+    button.setAttribute('aria-expanded', String(expanded));
+    button.textContent = expanded ? 'View less' : 'View more';
+    button.setAttribute('aria-label', button.textContent + ' ' + button.getAttribute('data-skill-label'));
+  }
+
+  function updateSkillPreviews() {
+    Array.prototype.forEach.call(document.querySelectorAll('.skill-disclosure'), updateSkillRows);
+  }
+  var skillPreviewWidth = window.innerWidth;
+  var skillPreviewFrame = null;
+  window.addEventListener('resize', function () {
+    if (window.innerWidth === skillPreviewWidth) return;
+    skillPreviewWidth = window.innerWidth;
+    if (skillPreviewFrame !== null) return;
+    skillPreviewFrame = requestAnimationFrame(function () {
+      skillPreviewFrame = null;
+      updateSkillPreviews();
+    });
+  });
+  if (document.fonts) document.fonts.ready.then(updateSkillPreviews);
+
+  function bindSkillDisclosures() {
+    Array.prototype.forEach.call(document.querySelectorAll('.skill-disclosure'), function (group) {
+      group.querySelector('button').addEventListener('click', function () {
+        group.classList.toggle('expanded');
+        updateSkillRows(group);
+        refreshLayout();
+      });
+      updateSkillRows(group);
+    });
+  }
+
   function portraitMarkup(eager) {
-    return '<div class="portrait"><picture><source media="(prefers-reduced-motion: reduce)" srcset="images/avinash-portrait.webp"><img src="images/avinash-portrait-glitch.gif" width="960" height="1278" alt="Avinash Garudapalli smiling in a black suit" decoding="async" loading="' + (eager ? 'eager' : 'lazy') + '"></picture></div>';
+    var loading = eager ? 'eager' : 'lazy';
+    return '<div class="portrait" role="img" aria-label="Avinash Garudapalli smiling in a black suit"><img class="portrait-still" src="images/avinash-portrait.webp" width="1087" height="1447" alt="" aria-hidden="true" decoding="async" loading="' + loading + '"><picture><source media="(prefers-reduced-motion: reduce)" srcset="images/avinash-portrait.webp"><img class="portrait-motion" src="images/avinash-portrait-glitch.gif" width="960" height="1278" alt="" aria-hidden="true" decoding="async" loading="' + loading + '" onload="this.classList.add(\'ready\')" onerror="this.hidden=true"></picture></div>';
   }
 
   function viewHome() {
@@ -5595,7 +5646,7 @@
     }
     closeMenu();
 
-    if (isHome) { bindMap(); askBind(); bindRails(); }
+    if (isHome) { bindMap(); askBind(); bindRails(); bindSkillDisclosures(); }
     preparePageLinks();
     // the lab now lives on the Chat360 case study, so bind it wherever it rendered
     if (el("lab")) labBind();
