@@ -56,5 +56,14 @@ scrolls past it; new checks must too.
 Do not invent portfolio content — metrics, companies, projects, achievements,
 or technologies. Where something is genuinely not written yet, the page says
 so visibly rather than filling the space with plausible text. The assistant in
+
+## PR previews
+
+Whenever creating or updating a PR:
+- Wait for the Vercel preview deployment to succeed.
+- Read the actual preview URL from Vercel’s PR comment.
+- Include both the clickable preview URL and PR URL in the final response.
+- Never substitute the Vercel dashboard URL for the website preview.
+- If deployment fails, investigate and fix it before reporting completion.
 `rag/` follows the same rule: it answers only from indexed site content and
 declines otherwise.
