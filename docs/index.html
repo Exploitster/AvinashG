@@ -6401,38 +6401,37 @@
     }).scrollTrigger;
   }
 
-  /* Scramble decode, the reference's signature text reveal: letters cycle
-     through random glyphs before settling into the real word.
-
-     Applied only to section headings, never to body copy. The effect makes
-     text unreadable while it runs, so on a paragraph it is a readability
-     cost paid for decoration; on a short heading it resolves before anyone
-     has started reading. chars is the mono-ish set the reference appears to
-     use - uppercase plus a few symbols, no lowercase, so the line does not
-     visibly change width as it resolves.
-
-     revealDelay holds the real text hidden for the first third, so the word
-     does not flash before it scrambles. */
-  function scrambleIn(node, delay) {
-    if (!hasGsap() || typeof window.ScrambleTextPlugin === "undefined") return null;
-    var text = (node.textContent || "").trim();
-    /* Short headings only. The reference scrambles labels a few words long,
-       which resolve before anyone starts reading. At 90 the limit let the
-       76-character hero line through, and on a phone that line decoded as
-       rows of random glyphs through the intro's dissolve - recorded as
-       "AVQ-OS47UYKRM" across the headline. */
-    if (!text || text.length > 40) return null;
-    return window.gsap.to(node, {
-      duration: Math.min(0.5 + text.length * 0.018, 1.4),
+  /* Keep the complete heading in layout; reveal real letters using opacity
+     so typing never changes line wrapping or moves surrounding sections. */
+  function typeHeadingIn(node, delay) {
+    if (!hasGsap() || reduceMotion || node.getAttribute('data-typed') === 'true') return null;
+    var text = (node.textContent || '').trim();
+    if (!text || text.length > 90) return null;
+    node.setAttribute('data-typed', 'true');
+    if (!node.hasAttribute('aria-label')) node.setAttribute('aria-label', text);
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    var textNodes = [], current, letters = [];
+    while ((current = walker.nextNode())) textNodes.push(current);
+    textNodes.forEach(function (textNode) {
+      var fragment = document.createDocumentFragment();
+      Array.from(textNode.nodeValue).forEach(function (character) {
+        if (/\s/.test(character)) { fragment.appendChild(document.createTextNode(character)); return; }
+        var letter = document.createElement('span');
+        letter.textContent = character;
+        letter.setAttribute('aria-hidden', 'true');
+        letter.style.opacity = '0';
+        letters.push(letter);
+        fragment.appendChild(letter);
+      });
+      textNode.parentNode.replaceChild(fragment, textNode);
+    });
+    return window.gsap.to(letters, {
+      opacity: 1,
+      duration: 0.12,
+      stagger: 0.022,
       delay: delay || 0,
-      ease: "none",
-      overwrite: "auto",
-      scrambleText: {
-        text: text,
-        chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\<>*+-",
-        revealDelay: 0.24,
-        speed: 0.5
-      }
+      ease: 'power1.out',
+      overwrite: 'auto'
     });
   }
 
@@ -6483,7 +6482,7 @@
       else if (n.classList.contains("rv-scale")) { from.y = 26; from.scale = 0.975; }
       else from.y = 30;
 
-      // A heading inside this block decodes as the block rises. Queried once
+      // A heading inside this block types in as the block rises. Queried once
       // here rather than given its own observer, so the two stay in step.
       var head = n.matches("h1, h2, h3, .sec-title") ? n : n.querySelector("h1, h2, h3, .sec-title");
 
@@ -6492,7 +6491,7 @@
       if (n.getBoundingClientRect().top < window.innerHeight * 0.96) {
         n.classList.add("in");
         revealTweens.push(window.gsap.from(n, from));
-        if (head) { var t0 = scrambleIn(head, delay + 0.1); if (t0) revealTweens.push(t0); }
+        if (head) { var t0 = typeHeadingIn(head, delay + 0.1); if (t0) revealTweens.push(t0); }
         return;
       }
 
@@ -6500,7 +6499,7 @@
       from.scrollTrigger = { id: "rv", trigger: n, start: "top 94%", once: true };
       if (head) {
         from.onStart = function () {
-          var t = scrambleIn(head, 0.08);
+          var t = typeHeadingIn(head, 0.08);
           if (t) revealTweens.push(t);
         };
       }
