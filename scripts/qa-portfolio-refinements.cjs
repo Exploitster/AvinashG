@@ -192,7 +192,7 @@ const base = process.env.QA_BASE_URL || 'http://127.0.0.1:8086/';
     for (const scenario of ['normal', 'blocked-gif', 'reduced-motion']) {
       const portraitContext = await browser.newContext({ viewport: { width: 393, height: 851 }, reducedMotion: scenario === 'reduced-motion' ? 'reduce' : 'no-preference' });
       const portraitPage = await portraitContext.newPage();
-      if (scenario === 'blocked-gif') await portraitContext.route('**/images/avinash-portrait-glitch.gif', route => route.abort());
+      if (scenario === 'blocked-gif') await portraitContext.route('**/images/avinash-portrait-glitch-*.webp', route => route.abort());
       await portraitPage.goto(base);
       await portraitPage.locator('#vload').waitFor({ state: 'hidden' });
       await portraitPage.locator('#scrollCue').click();
