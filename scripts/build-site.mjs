@@ -7,9 +7,12 @@
  * viewport meta in particular has to be added here or the site renders at a
  * 980px fallback width on phones.
  */
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { minify } from "terser";
+import CleanCSS from "clean-css";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = resolve(root, "design/avinash-console.html");
@@ -17,7 +20,7 @@ const OUT = resolve(root, "docs/index.html");
 
 let body = readFileSync(SRC, "utf8");
 mkdirSync(resolve(root, "docs/images"), { recursive: true });
-for (const image of ["avinash-portrait.webp", "avinash-portrait-glitch.gif"]) {
+for (const image of ["avinash-portrait.webp", "avinash-portrait-480.webp", "avinash-portrait-768.webp", "avinash-portrait-glitch-480.webp", "avinash-portrait-glitch-768.webp", "avinash-portrait-glitch-960.webp"]) {
   copyFileSync(resolve(root, "assets/images", image), resolve(root, "docs/images", image));
 }
 
@@ -43,10 +46,6 @@ const VENDOR = [
    "https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"],
   ["lenis/dist/lenis.min.js", "lenis.min.js",
    "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"],
-  ["gsap/dist/SplitText.min.js", "SplitText.min.js",
-   "https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"],
-  ["gsap/dist/ScrambleTextPlugin.min.js", "ScrambleTextPlugin.min.js",
-   "https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrambleTextPlugin.min.js"],
 ];
 const vendorDir = resolve(root, "docs/vendor");
 mkdirSync(vendorDir, { recursive: true });
@@ -61,6 +60,10 @@ if (body.includes("cdn.jsdelivr.net")) {
   throw new Error("a CDN URL survived vendoring - add it to VENDOR or fix the version in the source");
 }
 
+for (const obsolete of ["vendor/SplitText.min.js", "vendor/ScrambleTextPlugin.min.js", "images/avinash-portrait-glitch.gif"]) {
+  rmSync(resolve(root, "docs", obsolete), { force: true });
+}
+
 const DESCRIPTION =
   "Avinash Garudapalli - AI product manager. Voice AI, generative and " +
   "agentic products, and the business case underneath them.";
@@ -70,7 +73,7 @@ const SITE_URL = new URL(
   process.env.SITE_URL || "https://avinashg.tech/"
 ).href;
 
-const page = `<!doctype html>
+let page = `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -115,6 +118,17 @@ ${body}
 </html>
 `;
 
+// Compress only the published output; the authored source stays readable.
+page = page.replace(/<style>([\s\S]*?)<\/style>/g, (_, css) => {
+  const result = new CleanCSS({ level: 1 }).minify(css);
+  if (result.errors.length) throw new Error(result.errors.join("\n"));
+  return "<style>" + result.styles + "</style>";
+});
+const inlineScripts = [...page.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+for (const match of inlineScripts) {
+  const result = await minify(match[1], { format: { inline_script: true, comments: false } });
+  page = page.replace(match[0], "<script>" + result.code + "</script>");
+}
 mkdirSync(dirname(OUT), { recursive: true });
 writeFileSync(OUT, page);
 console.log(`built ${OUT} (${(page.length / 1024).toFixed(1)} KB)`);
